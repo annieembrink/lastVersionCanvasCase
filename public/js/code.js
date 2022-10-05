@@ -31,13 +31,16 @@ fetch('motive.json')
     }
     GenerateRandomWords()
 
-      wordDiv.addEventListener('click', (e) => {
+    wordDiv.querySelectorAll('p').forEach(tag => {
+      tag.addEventListener('click', (e) => {
         e.preventDefault();
         let pTag = document.createElement('p');
         pTag.textContent = e.target.innerText;
+        console.log(e.target)
         chosenWord.appendChild(pTag);
         wordDiv.remove()
       })
+    })
 
     function generateColors() {
       data.colors.map(color => {
@@ -50,19 +53,19 @@ fetch('motive.json')
     }
     generateColors()
 
-    
-    
-    
   })
   .catch(err => console.log(err))
 
 
-  const theChosenColor = () => {
-    colors.addEventListener('click', (e) => {
-    })
-  }
-  theChosenColor()
  
+    let color = []
+    let slicedColor = color.slice(-1).pop()
+    console.log(color, slicedColor)
+
+    colors.addEventListener('click', (e) => {
+      color.push(e.target.id)
+    })
+
 // variable current user | nickname
 let nickname;
 
@@ -214,7 +217,7 @@ function init(e) {
     ctx.arc(e.clientX, e.clientY, 2, 0, 2 * Math.PI); // Draw 10px radius circle
     ctx.fill() // hmmm... 
     ctx.beginPath()
-
+    // theChosenColor(ctx)
   };
 
   // TODO: Connecting events with functions
