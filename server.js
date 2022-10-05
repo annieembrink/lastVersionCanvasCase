@@ -1,10 +1,15 @@
 import { WebSocketServer } from 'ws';
+import { v4 as uuidv4 } from "uuid";
 
 // import functions
 import { parseJSON, broadcast, broadcastButExclude } from './libs/functions.js';
 
 // create WebSocket server
 const wss = new WebSocketServer({port: 8081});
+
+// Create state of canvas
+const state = [];
+const log = (message) => console.log(`[SERVER] ${message}`);
 
 // listen on new connections
 wss.on('connection', (ws) => {

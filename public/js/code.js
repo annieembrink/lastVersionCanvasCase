@@ -2,16 +2,11 @@
 const inputText = document.getElementById("inputText");
 const setNickname = document.querySelector("#setNickname");
 
-
 // variable current user | nickname
 let nickname;
 
-
 // use WebSocket >>> make sure server uses same ws port!
 const websocket = new WebSocket("ws://localhost:80");  
-
-
-
 
 /* event listeners
 ------------------------------- */
@@ -77,13 +72,8 @@ inputText.addEventListener("keydown", (event) => {
     }
 });
 
-
-
-
-
 /* functions...
 ------------------------------- */
-
 
 /**
  * parse JSON
@@ -134,3 +124,39 @@ function renderMessage(obj) {
     // render using prepend method - last message first
     document.getElementById("conversation").prepend(newMsg);
 }
+
+const log = (message) => console.log(`[CLIENT] ${message}`);
+
+function init(e) {
+  // DONE: Setup Canvas 
+  const canvas = document.querySelector("#canvas");
+  canvas.width = 300
+  canvas.height = 300
+  const ctx = canvas.getContext("2d");
+
+  // DONE: Handle painting
+  let isPainting = false;
+  const initPaint = (e) => {
+    isPainting = true;
+    paint(e); // needed to be able to make dots
+  };
+
+  const finishPaint = () => {
+    isPainting = false;
+  };
+
+  const paint = (e) => {
+    if (!isPainting) return;
+    ctx.arc(e.clientX, e.clientY, 10, 0, 2*Math.PI); // Draw 10px radius circle
+    ctx.fill() // hmmm... 
+    ctx.beginPath()
+    // Perhaps something else needed?
+  };
+  
+
+  // TODO: Connecting events with functions
+  canvas.onmousedown = initPaint
+  canvas.onmousemove = paint
+  canvas.onmouseup = finishPaint
+}
+window.onload = init
