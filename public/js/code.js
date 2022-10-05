@@ -2,6 +2,9 @@
 const inputText = document.getElementById("inputText");
 const setNickname = document.querySelector("#setNickname");
 const chatDiv = document.getElementById("chatDiv");
+const wordDiv = document.getElementById("wordDiv");
+const chosenWord = document.getElementById("chosenWord");
+const colors = document.getElementById("colors");
 
 fetch('motive.json')
   .then((response) => response.json())
@@ -13,30 +16,53 @@ fetch('motive.json')
       for (let i = 0; i < 3; i++) {
         test[i] = data.words[Math.floor(Math.random() * data.words.length)]
       }
-      console.log(test)
       createRandomWordElement(test);
-  
     }
+
     function createRandomWordElement(data) {
 
       data.map((tag) => {
         let pTag = document.createElement('p');
         pTag.classList = "randomWordTag"
         pTag.innerText = tag;
-        chatDiv.appendChild(pTag)
+        wordDiv.appendChild(pTag)
       })
-      
+
     }
     GenerateRandomWords()
 
+      wordDiv.addEventListener('click', (e) => {
+        e.preventDefault();
+        let pTag = document.createElement('p');
+        pTag.textContent = e.target.innerText;
+        chosenWord.appendChild(pTag);
+        wordDiv.remove()
+      })
 
+    function generateColors() {
+      data.colors.map(color => {
+        let pTag = document.createElement('p');
+        pTag.classList = "theColorTags"
+        pTag.id = color;
+        pTag.style.backgroundColor = color;
+        colors.appendChild(pTag);
+      })
+    }
+    generateColors()
 
-
-
-
+    
+    
+    
   })
   .catch(err => console.log(err))
 
+
+  const theChosenColor = () => {
+    colors.addEventListener('click', (e) => {
+    })
+  }
+  theChosenColor()
+ 
 // variable current user | nickname
 let nickname;
 
@@ -188,7 +214,7 @@ function init(e) {
     ctx.arc(e.clientX, e.clientY, 2, 0, 2 * Math.PI); // Draw 10px radius circle
     ctx.fill() // hmmm... 
     ctx.beginPath()
-    // Perhaps something else needed?
+
   };
 
   // TODO: Connecting events with functions
