@@ -28,3 +28,10 @@ li p {
     border: 1px solid black;
     /* display: none; */
 }
+
+.randomWordTag {
+    border: 1px solid black;
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+}

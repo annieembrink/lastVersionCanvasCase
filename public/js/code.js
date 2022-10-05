@@ -1,75 +1,110 @@
 // DOM elements
 const inputText = document.getElementById("inputText");
 const setNickname = document.querySelector("#setNickname");
+const chatDiv = document.getElementById("chatDiv");
+
+fetch('motive.json')
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data)
+
+    const GenerateRandomWords = () => {
+      let test = []
+      for (let i = 0; i < 3; i++) {
+        test[i] = data.words[Math.floor(Math.random() * data.words.length)]
+      }
+      console.log(test)
+      createRandomWordElement(test);
+  
+    }
+    function createRandomWordElement(data) {
+
+      data.map((tag) => {
+        let pTag = document.createElement('p');
+        pTag.classList = "randomWordTag"
+        pTag.innerText = tag;
+        chatDiv.appendChild(pTag)
+      })
+      
+    }
+    GenerateRandomWords()
+
+
+
+
+
+
+  })
+  .catch(err => console.log(err))
 
 // variable current user | nickname
 let nickname;
 
 // use WebSocket >>> make sure server uses same ws port!
-const websocket = new WebSocket("ws://localhost:80");  
+const websocket = new WebSocket("ws://localhost:80");
 
 /* event listeners
 ------------------------------- */
 
 // listen on close event (server)
 websocket.addEventListener("close", (event) => {
-    // console.log('Server down...', event);
-    document.getElementById("status").textContent = "Sry....server down";
+  // console.log('Server down...', event);
+  document.getElementById("status").textContent = "Sry....server down";
 });
 
 // listen to messages from client | server
 websocket.addEventListener("message", (event) => {
-    // console.log(event.data);
+  // console.log(event.data);
 
-    let obj = parseJSON(event.data);
+  let obj = parseJSON(event.data);
 
-    // todo
-    // use obj property 'type' to handle message event
-    switch (obj.type) {
-        case "text":
-            break;
-        case "somethingelse":
-            break;
-        default:
-            break;
-    }
+  // todo
+  // use obj property 'type' to handle message event
+  switch (obj.type) {
+    case "text":
+      break;
+    case "somethingelse":
+      break;
+    default:
+      break;
+  }
 
-    // ...
-    renderMessage(obj);
+  // ...
+  renderMessage(obj);
 });
 
 setNickname.addEventListener("click", () => {
-    // get value from input nickname
-    nickname = document.getElementById("nickname").value;
+  // get value from input nickname
+  nickname = document.getElementById("nickname").value;
 
-    // if set - disable input nickname
-    document.getElementById("nickname").setAttribute("disabled", true);
+  // if set - disable input nickname
+  document.getElementById("nickname").setAttribute("disabled", true);
 
-    // enable input field
-    document.getElementById("inputText").removeAttribute("disabled");
+  // enable input field
+  document.getElementById("inputText").removeAttribute("disabled");
 
-    // focus input field
-    document.getElementById("inputText").focus();
+  // focus input field
+  document.getElementById("inputText").focus();
 });
 
 inputText.addEventListener("keydown", (event) => {
-    // press Enter...make sure at least one char
-    if (event.key === "Enter" && inputText.value.length > 0) {
-        // chat message object
-        let objMessage = {
-            msg: inputText.value,
-            nickname: nickname,
-        };
+  // press Enter...make sure at least one char
+  if (event.key === "Enter" && inputText.value.length > 0) {
+    // chat message object
+    let objMessage = {
+      msg: inputText.value,
+      nickname: nickname,
+    };
 
-        // show new message for this user
-        renderMessage(objMessage);
+    // show new message for this user
+    renderMessage(objMessage);
 
-        // send to server
-        websocket.send(JSON.stringify(objMessage));
+    // send to server
+    websocket.send(JSON.stringify(objMessage));
 
-        // reset input field
-        inputText.value = "";
-    }
+    // reset input field
+    inputText.value = "";
+  }
 });
 
 /* functions...
@@ -82,15 +117,17 @@ inputText.addEventListener("keydown", (event) => {
  * @return {obj}
  */
 function parseJSON(data) {
-    // try to parse json
-    try {
-        let obj = JSON.parse(data);
+  // try to parse json
+  try {
+    let obj = JSON.parse(data);
 
-        return obj;
-    } catch (error) {
-        // log to file in real application....
-        return { error: "An error receving data...expected json format" };
-    }
+    return obj;
+  } catch (error) {
+    // log to file in real application....
+    return {
+      error: "An error receving data...expected json format"
+    };
+  }
 }
 
 /**
@@ -99,34 +136,35 @@ function parseJSON(data) {
  * @param {obj}
  */
 function renderMessage(obj) {
-    // use template - cloneNode to get a document fragment
-    let template = document.getElementById("message").cloneNode(true);
+  // use template - cloneNode to get a document fragment
+  let template = document.getElementById("message").cloneNode(true);
 
-    // access content
-    let newMsg = template.content;
+  // access content
+  let newMsg = template.content;
 
-    // change content...
-    newMsg.querySelector("span").textContent = obj.nickname;
-    newMsg.querySelector("p").textContent = obj.msg;
+  // change content...
+  newMsg.querySelector("span").textContent = obj.nickname;
+  newMsg.querySelector("p").textContent = obj.msg;
 
-    // new date object
-    let objDate = new Date();
+  // new date object
+  let objDate = new Date();
 
-    // visual: 10:41 .. 9:5 ... leading zero....
-    newMsg.querySelector("time").textContent =
-        objDate.getHours() + ":" + objDate.getMinutes();
+  // visual: 10:41 .. 9:5 ... leading zero....
+  newMsg.querySelector("time").textContent =
+    objDate.getHours() + ":" + objDate.getMinutes();
 
-    // set datetime attribute - see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time
-    newMsg
-        .querySelector("time")
-        .setAttribute("datetime", objDate.toISOString());
+  // set datetime attribute - see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time
+  newMsg
+    .querySelector("time")
+    .setAttribute("datetime", objDate.toISOString());
 
-    // render using prepend method - last message first
-    document.getElementById("conversation").prepend(newMsg);
+  // render using prepend method - last message first
+  document.getElementById("conversation").prepend(newMsg);
 }
 
 const log = (message) => console.log(`[CLIENT] ${message}`);
 
+//DRAW FUNCTION
 function init(e) {
   // DONE: Setup Canvas 
   const canvas = document.querySelector("#canvas");
@@ -147,12 +185,11 @@ function init(e) {
 
   const paint = (e) => {
     if (!isPainting) return;
-    ctx.arc(e.clientX, e.clientY, 10, 0, 2*Math.PI); // Draw 10px radius circle
+    ctx.arc(e.clientX, e.clientY, 2, 0, 2 * Math.PI); // Draw 10px radius circle
     ctx.fill() // hmmm... 
     ctx.beginPath()
     // Perhaps something else needed?
   };
-  
 
   // TODO: Connecting events with functions
   canvas.onmousedown = initPaint
