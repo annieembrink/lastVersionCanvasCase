@@ -1,0 +1,15 @@
+ul {
+    margin: 2rem 0;
+    padding: 0;
+    list-style: none;
+}
+
+li {
+    display: grid;
+    /* child elements */
+    grid-template-columns: 1fr 5fr 1fr;
+}
+
+li p {
+    margin: 0
+}
