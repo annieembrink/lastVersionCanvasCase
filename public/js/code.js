@@ -1,6 +1,7 @@
 // DOM elements
 const inputText = document.getElementById("inputText");
 const setNickname = document.querySelector("#setNickname");
+const nicknameInput = document.getElementById("nickname");
 const chatDiv = document.getElementById("chatDiv");
 const wordDiv = document.getElementById("wordDiv");
 const chosenWord = document.getElementById("chosenWord");
@@ -11,7 +12,6 @@ const clearBtn = document.getElementById("clearBtn");
 fetch('motive.json')
   .then((response) => response.json())
   .then((data) => {
-    console.log(data)
 
     const GenerateRandomWords = () => {
       let test = []
@@ -63,26 +63,22 @@ fetch('motive.json')
       })
     }
     generatePen()
-
-
   })
   .catch(err => console.log(err))
 
-
-  //Outside fetch
+//Outside fetch
 let objWithCurrentColor = {
   color: 'black'
 }
 
 colors.addEventListener('click', (e) => {
   objWithCurrentColor.color = e.target.id;
- 
-  let test = colors.querySelectorAll('p');
-  
-  for (let i = 0; i < test.length; i++) {
-    const element = test[i];
-    console.log(element.classList)
-    if(element.classList.contains('colorBoxFocus')) {
+
+  let pTags = colors.querySelectorAll('p');
+
+  for (let i = 0; i < pTags.length; i++) {
+    const element = pTags[i];
+    if (element.classList.contains('colorBoxFocus')) {
       element.classList.remove('colorBoxFocus')
     }
   }
@@ -132,7 +128,17 @@ websocket.addEventListener("message", (event) => {
   renderMessage(obj);
 });
 
+nicknameInput.addEventListener('keydown', (e) => {
+  if (e.key === "Enter") {
+    setNickName()
+  }
+})
+
 setNickname.addEventListener("click", () => {
+  setNickName()
+});
+
+function setNickName() {
   // get value from input nickname
   nickname = document.getElementById("nickname").value;
 
@@ -144,7 +150,7 @@ setNickname.addEventListener("click", () => {
 
   // focus input field
   document.getElementById("inputText").focus();
-});
+}
 
 inputText.addEventListener("keydown", (event) => {
   // press Enter...make sure at least one char
@@ -227,8 +233,8 @@ const log = (message) => console.log(`[CLIENT] ${message}`);
 function init(e) {
   // DONE: Setup Canvas 
   const canvas = document.querySelector("#canvas");
-  canvas.width = 500
-  canvas.height = 500
+  canvas.width = 350
+  canvas.height = 350
   const ctx = canvas.getContext("2d");
 
   // DONE: Handle painting

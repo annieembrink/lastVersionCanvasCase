@@ -13,41 +13,47 @@
 
 <body>
 
+    <div class="forWords">
+        <div id="wordDiv"></div>
+        <div id="chosenWord"></div>
+    </div>
+
     <canvas id="canvas"></canvas>
 
-<div id="chatDiv">
-    <!-- server status -->
-    <div id="status"></div>
+    <div id="chatDiv">
+        <!-- server status -->
+        <div id="status"></div>
 
-    <!-- input nickname -->
-    <input type="text" id="nickname" placeholder="Enter nickname">
-    <button id="setNickname">Set nickname</button>
+        <!-- input nickname -->
+        <div class="inputContainer">
+            <input type="text" id="nickname" placeholder="Enter nickname">
+            
+            <button id="setNickname">Set nickname</button>
 
-    <!-- input chat -->
-    <input type="text" id="inputText" placeholder="Type and press Enter" disabled>
+            <!-- input chat -->
+            <input type="text" id="inputText" placeholder="Type and press Enter" disabled>
+        </div>
+        <!-- DOM chat -->
+        <ul id="conversation"></ul>
 
-    <!-- DOM chat -->
-    <ul id="conversation"></ul>
+        <!-- use template to set html structure for a message -->
+        <template id="message">
 
-    <!-- use template to set html structure for a message -->
-    <template id="message">
+            <li>
+                <span></span>
+                <p></p>
+                <time datetime=""></time>
+            </li>
+        </template>
 
-        <li>
-            <span></span>
-            <p></p>
-            <time datetime=""></time>
-        </li>
-    </template>
+    </div>
 
-    <div id="wordDiv"></div>
-    <div id="chosenWord"></div>
-    <div id="colors"></div>
-    <div id="pen"></div>
+    <button id="clearBtn">Clear canvas</button>
 
-</div>
-<button id="clearBtn">Clear canvas</button>
-
-
+    <div class="colorPen">
+        <div id="colors"></div>
+        <div id="pen"></div>
+    </div>
 
     <script src="js/code.js"></script>
     <!-- <script src="js/canvas.js"></script> -->

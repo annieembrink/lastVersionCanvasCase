@@ -1,6 +1,37 @@
 body {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+}
+
+.forWords {
+    border: 1px solid black;
+    grid-area: 1 / 1 / 1 / 6;
+}
+
+#canvas {
+    border: 1px solid black;
+    grid-area: 2 / 1 / 5 / 3;
+}
+
+.colorPen {
+    border: 1px solid black;
+    grid-area: 5 / 1 / 6 / 6;
+}
+
+#chatDiv {
+    border: 1px solid black;
+    grid-area: 2 / 3 / 5 / 5;
+}
+
+.clearBtn {
+    grid-area: 2 / 5 / 5 / 6;
+}
+
+.inputContainer {
+    margin: 10px;
 }
 
 ul {
@@ -11,22 +42,11 @@ ul {
 
 li {
     display: grid;
-    /* child elements */
     grid-template-columns: 1fr 5fr 1fr;
 }
 
 li p {
     margin: 0
-}
-
-#canvas {
-    border: 1px solid black;
-}
-
-#chatDiv {
-    max-width: 50%;
-    border: 1px solid black;
-    /* display: none; */
 }
 
 .randomWordTag {
@@ -49,24 +69,32 @@ li p {
     height: 20px;
     margin: 5px;
     border-radius: 100%;
-    border: 1px solid black;
+
+    border-radius: 150px;
+    box-shadow: 2px 2px 5px #bebebe,
+        -2px -2px 5px #ffffff;
 }
 
 .pen {
     background-color: black;
     margin: 5px;
     width: 30px;
+
+    box-shadow: 2px 2px 5px #bebebe,
+        -2px -2px 5px #ffffff;
 }
 
 .small-2 {
     height: 5px;
-}   
+}
+
 .medium-5 {
     height: 10px;
-}   
+}
+
 .large-9 {
     height: 15px;
-}   
+}
 
 .colorBoxFocus {
     transform: 0.8;
