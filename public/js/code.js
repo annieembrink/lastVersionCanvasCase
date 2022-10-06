@@ -40,6 +40,9 @@ fetch('motive.json')
         pTag.textContent = e.target.innerText;
         chosenWord.appendChild(pTag);
         wordDiv.remove()
+
+        //Start timer
+        printDuration()        
       })
     })
 
@@ -67,6 +70,49 @@ fetch('motive.json')
   .catch(err => console.log(err))
 
 //Outside fetch
+
+//Testing timer
+
+  // let seconds = 5;
+  // let timerEl = document.getElementById('timer');
+  
+  // function incrementSeconds() {
+  //     seconds -= 1;
+  //     timerEl.innerText = seconds + " seconds left.";
+
+  //     if (seconds === 0) {
+  //       console.log('0')
+  //       stopTimer()
+  //     }
+  // }
+
+  // function stopTimer() {
+    
+  // }
+
+  var check = null;
+
+  function printDuration() {
+      if (check == null) {
+          var cnt = 5;
+
+          check = setInterval(function () {
+              cnt -= 1;
+      document.getElementById('timer').innerText = cnt;
+          }, 1000);
+      }
+  }
+
+  function stop() {
+      clearInterval(check);
+      check = null;
+      document.getElementById("para").innerHTML = '0';
+  }
+  
+
+// ------------------
+
+
 let objWithCurrentColor = {
   color: 'black'
 }
@@ -237,6 +283,8 @@ function init(e) {
   canvas.height = 350
   const ctx = canvas.getContext("2d");
 
+  console.log(canvas.offsetTop);
+
   // DONE: Handle painting
   let isPainting = false;
   const initPaint = (e) => {
@@ -251,7 +299,7 @@ function init(e) {
   const paint = (e) => {
     if (!isPainting) return;
     ctx.fillStyle = objWithCurrentColor.color;
-    ctx.arc(e.clientX, e.clientY, objWithCurrentPen.pen, 0, 2 * Math.PI);
+    ctx.arc(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop, objWithCurrentPen.pen, 0, 2 * Math.PI);
     ctx.fill()
     ctx.beginPath()
 
