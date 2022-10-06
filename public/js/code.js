@@ -13,6 +13,7 @@ fetch('motive.json')
   .then((response) => response.json())
   .then((data) => {
 
+    //Generating three random words
     const GenerateRandomWords = () => {
       let test = []
       for (let i = 0; i < 3; i++) {
@@ -20,19 +21,19 @@ fetch('motive.json')
       }
       createRandomWordElement(test);
     }
+    GenerateRandomWords()
 
+    //Filling the wordDiv with three random wordTags
     function createRandomWordElement(data) {
-
       data.map((tag) => {
         let pTag = document.createElement('p');
         pTag.classList = "randomWordTag"
         pTag.innerText = tag;
         wordDiv.appendChild(pTag)
       })
-
     }
-    GenerateRandomWords()
 
+    //For each word withing word Div, add listener to each tag, create element for the chosen word, remove the div with the words to choose from, and start timer
     wordDiv.querySelectorAll('p').forEach(tag => {
       tag.addEventListener('click', (e) => {
         e.preventDefault();
@@ -46,6 +47,7 @@ fetch('motive.json')
       })
     })
 
+    //Generat colors
     function generateColors() {
       data.colors.map(color => {
         let pTag = document.createElement('p');
@@ -57,6 +59,7 @@ fetch('motive.json')
     }
     generateColors()
 
+    //Generate pensize
     function generatePen() {
       data.pen.map(onePen => {
         let pTag = document.createElement('p');
@@ -71,25 +74,7 @@ fetch('motive.json')
 
 //Outside fetch
 
-//Testing timer
-
-// let seconds = 5;
-// let timerEl = document.getElementById('timer');
-
-// function incrementSeconds() {
-//     seconds -= 1;
-//     timerEl.innerText = seconds + " seconds left.";
-
-//     if (seconds === 0) {
-//       console.log('0')
-//       stopTimer()
-//     }
-// }
-
-// function stopTimer() {
-
-// }
-
+//TIMER------------------------------
 var check = null;
 
 function printDuration() {
@@ -98,11 +83,9 @@ function printDuration() {
 
     check = setInterval(function () {
       cnt -= 1;
-      let timerEl = document.getElementById('timer').innerText = cnt;
+      let timerEl = document.getElementById('timer').innerText = `${cnt} seconds left`;
 
       if (cnt === 0) {
-        timerEl.innerText = '0'
-        console.log('0')
         stop()
       }
     }, 1000);
@@ -114,13 +97,13 @@ function printDuration() {
 function stop() {
   clearInterval(check);
   check = null;
-  document.getElementById("para").innerHTML = '0';
+  // document.getElementById("para").innerHTML = '0';
 }
 
 
 // ------------------
 
-
+//Chosen color
 let objWithCurrentColor = {
   color: 'black'
 }
@@ -139,6 +122,7 @@ colors.addEventListener('click', (e) => {
   e.target.classList.add('colorBoxFocus');
 })
 
+//Chosen pen size
 let objWithCurrentPen = {
   pen: '2'
 }
@@ -290,8 +274,10 @@ function init(e) {
   canvas.width = 350
   canvas.height = 350
   const ctx = canvas.getContext("2d");
-
-  console.log(canvas.offsetTop);
+  
+  let lineWidth = 5;
+  let startX;
+  let startY;
 
   // DONE: Handle painting
   let isPainting = false;
@@ -307,9 +293,12 @@ function init(e) {
   const paint = (e) => {
     if (!isPainting) return;
     ctx.fillStyle = objWithCurrentColor.color;
-    ctx.arc(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop, objWithCurrentPen.pen, 0, 2 * Math.PI);
-    ctx.fill()
-    ctx.beginPath()
+
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
+
+    ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    ctx.stroke();
 
   };
 

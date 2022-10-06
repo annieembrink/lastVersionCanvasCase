@@ -18,7 +18,10 @@ body {
 
 .colorPen {
     border: 1px solid black;
-    grid-area: 5 / 1 / 6 / 6;
+    grid-area: 5 / 1 / 5/ 3;
+
+    display: flex;
+    justify-content: space-between;
 }
 
 #chatDiv {
@@ -57,10 +60,16 @@ li p {
 }
 
 #chosenWord p {
-    border: 1px solid black;
-    display: inline-block;
+    text-align: center;
+    /* display: inline-block; */
     margin: 10px;
     padding: 10px;
+    font-size: 3rem;
+}
+
+#colors {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
 }
 
 .theColorTags {
@@ -82,6 +91,9 @@ li p {
 
     box-shadow: 2px 2px 5px #bebebe,
         -2px -2px 5px #ffffff;
+
+    display: flex;
+    flex-direction: row;
 }
 
 .small-2 {
@@ -99,4 +111,8 @@ li p {
 .colorBoxFocus {
     transform: 0.8;
     border-radius: 0%;
+}
+
+#timer {
+    margin: 5px;
 }
