@@ -36,7 +36,6 @@ fetch('motive.json')
         e.preventDefault();
         let pTag = document.createElement('p');
         pTag.textContent = e.target.innerText;
-        console.log(e.target)
         chosenWord.appendChild(pTag);
         wordDiv.remove()
       })
@@ -56,12 +55,11 @@ fetch('motive.json')
   })
   .catch(err => console.log(err))
 
-  let objWithCurrentColor = {color: 'red'}
+  let objWithCurrentColor = {color: 'black'}
   colors.addEventListener('click', (e) => {
     objWithCurrentColor.color = e.target.id
   })
 
-  console.log(objWithCurrentColor.color)
 
 // variable current user | nickname
 let nickname;
@@ -211,8 +209,9 @@ function init(e) {
 
   const paint = (e) => {
     if (!isPainting) return;
-    ctx.fillStyle = objWithCurrentColor.color
-    ctx.arc(e.clientX, e.clientY, 2, 0, 2 * Math.PI); 
+    ctx.fillStyle = objWithCurrentColor.color;
+    ctx.globalAlpha = 1
+    ctx.arc(e.clientX, e.clientY, 5, 0, 2 * Math.PI); 
     ctx.fill() 
     ctx.beginPath()
 
@@ -221,7 +220,7 @@ function init(e) {
   // TODO: Connecting events with functions
   canvas.onmousedown = initPaint
   canvas.onmousemove = paint
-  canvas.onmouseup = finishPaint
+  window.onmouseup = finishPaint
 }
 
 window.onload = init
