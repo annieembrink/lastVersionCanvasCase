@@ -42,7 +42,7 @@ fetch('motive.json')
         wordDiv.remove()
 
         //Start timer
-        printDuration()        
+        printDuration()
       })
     })
 
@@ -73,42 +73,50 @@ fetch('motive.json')
 
 //Testing timer
 
-  // let seconds = 5;
-  // let timerEl = document.getElementById('timer');
-  
-  // function incrementSeconds() {
-  //     seconds -= 1;
-  //     timerEl.innerText = seconds + " seconds left.";
+// let seconds = 5;
+// let timerEl = document.getElementById('timer');
 
-  //     if (seconds === 0) {
-  //       console.log('0')
-  //       stopTimer()
-  //     }
-  // }
+// function incrementSeconds() {
+//     seconds -= 1;
+//     timerEl.innerText = seconds + " seconds left.";
 
-  // function stopTimer() {
-    
-  // }
+//     if (seconds === 0) {
+//       console.log('0')
+//       stopTimer()
+//     }
+// }
 
-  var check = null;
+// function stopTimer() {
 
-  function printDuration() {
-      if (check == null) {
-          var cnt = 5;
+// }
 
-          check = setInterval(function () {
-              cnt -= 1;
-      document.getElementById('timer').innerText = cnt;
-          }, 1000);
+var check = null;
+
+function printDuration() {
+  if (check == null) {
+    var cnt = 5;
+
+    check = setInterval(function () {
+      cnt -= 1;
+      let timerEl = document.getElementById('timer').innerText = cnt;
+
+      if (cnt === 0) {
+        timerEl.innerText = '0'
+        console.log('0')
+        stop()
       }
-  }
+    }, 1000);
 
-  function stop() {
-      clearInterval(check);
-      check = null;
-      document.getElementById("para").innerHTML = '0';
+    
   }
-  
+}
+
+function stop() {
+  clearInterval(check);
+  check = null;
+  document.getElementById("para").innerHTML = '0';
+}
+
 
 // ------------------
 
