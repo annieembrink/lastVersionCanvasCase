@@ -7,8 +7,12 @@ body {
 }
 
 .forWords {
-    border: 1px solid black;
     grid-area: 1 / 1 / 1 / 6;
+    margin: auto;
+}
+
+.forWords p {
+    cursor: pointer;
 }
 
 #canvas {
@@ -29,8 +33,8 @@ body {
     grid-area: 2 / 3 / 5 / 5;
 }
 
-.clearBtn {
-    grid-area: 2 / 5 / 5 / 6;
+#clearBtn {
+    grid-area: 5 / 3 /  5 / 5;   
 }
 
 .inputContainer {
@@ -59,9 +63,8 @@ li p {
     padding: 10px;
 }
 
-#chosenWord p {
+#chosenWord h1 {
     text-align: center;
-    /* display: inline-block; */
     margin: 10px;
     padding: 10px;
     font-size: 3rem;
@@ -70,6 +73,8 @@ li p {
 #colors {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    max-height: 50%;
+    margin: 5px;
 }
 
 .theColorTags {
@@ -84,10 +89,15 @@ li p {
         -2px -2px 5px #ffffff;
 }
 
+#penContainer {
+    margin: 5px;
+}
+
 .pen {
     background-color: black;
     margin: 5px;
     width: 30px;
+    margin: 5px;
 
     box-shadow: 2px 2px 5px #bebebe,
         -2px -2px 5px #ffffff;
@@ -113,6 +123,11 @@ li p {
     border-radius: 0%;
 }
 
+.penBoxFocus {
+    transform: scaleX(1.4);
+}
+
 #timer {
     margin: 5px;
+    text-align: center;
 }

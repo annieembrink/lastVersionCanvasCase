@@ -6,7 +6,7 @@ const chatDiv = document.getElementById("chatDiv");
 const wordDiv = document.getElementById("wordDiv");
 const chosenWord = document.getElementById("chosenWord");
 const colors = document.getElementById("colors");
-const pen = document.getElementById("pen");
+const penContainer = document.getElementById("penContainer");
 const clearBtn = document.getElementById("clearBtn");
 
 fetch('motive.json')
@@ -37,7 +37,7 @@ fetch('motive.json')
     wordDiv.querySelectorAll('p').forEach(tag => {
       tag.addEventListener('click', (e) => {
         e.preventDefault();
-        let pTag = document.createElement('p');
+        let pTag = document.createElement('h1');
         pTag.textContent = e.target.innerText;
         chosenWord.appendChild(pTag);
         wordDiv.remove()
@@ -65,7 +65,7 @@ fetch('motive.json')
         let pTag = document.createElement('p');
         pTag.classList = `pen ${onePen}`
         pTag.id = onePen.slice(-1);
-        pen.appendChild(pTag);
+        penContainer.appendChild(pTag);
       })
     }
     generatePen()
@@ -97,7 +97,7 @@ function printDuration() {
 function stop() {
   clearInterval(check);
   check = null;
-  // document.getElementById("para").innerHTML = '0';
+  document.getElementById("timer").innerHTML = 'Time out';
 }
 
 
@@ -126,8 +126,18 @@ colors.addEventListener('click', (e) => {
 let objWithCurrentPen = {
   pen: '2'
 }
-pen.addEventListener('click', (e) => {
+penContainer.addEventListener('click', (e) => {
   objWithCurrentPen.pen = e.target.id
+
+  let pTags = penContainer.querySelectorAll('p');
+
+  for (let i = 0; i < pTags.length; i++) {
+    const element = pTags[i];
+    if (element.classList.contains('penBoxFocus')) {
+      element.classList.remove('penBoxFocus')
+    }
+  }
+  e.target.classList.add('penBoxFocus');
 })
 
 // variable current user | nickname
@@ -271,11 +281,11 @@ const log = (message) => console.log(`[CLIENT] ${message}`);
 function init(e) {
   // DONE: Setup Canvas 
   const canvas = document.querySelector("#canvas");
-  canvas.width = 350
-  canvas.height = 350
+  canvas.width = 380
+  canvas.height = 380
   const ctx = canvas.getContext("2d");
   
-  let lineWidth = 2;
+  // let lineWidth = 2;
 
   // DONE: Handle painting
   let isPainting = false;

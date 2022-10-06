@@ -59,7 +59,7 @@ const Canvas = (props) => {
         welcomeRef.current.remove()
     }
 
-    //Atfe filling input and pressing enter, start the game and generate the colors
+    //After filling input and pressing enter, start the game and generate the colors
     const KeyPress = (e) => {
         if (e.key === "Enter") {
             StartPlaying(e);
