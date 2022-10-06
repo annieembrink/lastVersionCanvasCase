@@ -6,6 +6,7 @@ const wordDiv = document.getElementById("wordDiv");
 const chosenWord = document.getElementById("chosenWord");
 const colors = document.getElementById("colors");
 const pen = document.getElementById("pen");
+const clearBtn = document.getElementById("clearBtn");
 
 fetch('motive.json')
   .then((response) => response.json())
@@ -68,16 +69,24 @@ fetch('motive.json')
   .catch(err => console.log(err))
 
   let objWithCurrentColor = {color: 'black'}
+
   colors.addEventListener('click', (e) => {
     objWithCurrentColor.color = e.target.id
+
+    for (let i = 0; i < colors.length; i++) {
+      const element = colors[i];
+
+      if (element.classList.contains("colorBoxFocus")) {
+          element.classList.remove("colorBoxFocus")
+      } 
+  }
+  e.target.classList.add('colorBoxFocus');
   })
 
   let objWithCurrentPen = {pen: '2'}
   pen.addEventListener('click', (e) => {
     objWithCurrentPen.pen = e.target.id
   })
-
-
 
 // variable current user | nickname
 let nickname;
@@ -238,6 +247,10 @@ function init(e) {
   canvas.onmousedown = initPaint
   canvas.onmousemove = paint
   window.onmouseup = finishPaint
+
+  clearBtn.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  })
 }
 
 window.onload = init
