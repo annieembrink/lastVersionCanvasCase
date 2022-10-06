@@ -5,6 +5,7 @@ const chatDiv = document.getElementById("chatDiv");
 const wordDiv = document.getElementById("wordDiv");
 const chosenWord = document.getElementById("chosenWord");
 const colors = document.getElementById("colors");
+const pen = document.getElementById("pen");
 
 fetch('motive.json')
   .then((response) => response.json())
@@ -52,6 +53,17 @@ fetch('motive.json')
     }
     generateColors()
 
+    function generatePen() {
+      data.pen.map(onePen => {
+        let pTag = document.createElement('p');
+          pTag.classList = `pen ${onePen}`
+          pTag.id = onePen.slice(-1);
+          pen.appendChild(pTag);
+      })
+    }
+    generatePen()
+  
+
   })
   .catch(err => console.log(err))
 
@@ -59,6 +71,12 @@ fetch('motive.json')
   colors.addEventListener('click', (e) => {
     objWithCurrentColor.color = e.target.id
   })
+
+  let objWithCurrentPen = {pen: '2'}
+  pen.addEventListener('click', (e) => {
+    objWithCurrentPen.pen = e.target.id
+  })
+
 
 
 // variable current user | nickname
@@ -192,8 +210,8 @@ const log = (message) => console.log(`[CLIENT] ${message}`);
 function init(e) {
   // DONE: Setup Canvas 
   const canvas = document.querySelector("#canvas");
-  canvas.width = 300
-  canvas.height = 300
+  canvas.width = 500
+  canvas.height = 500
   const ctx = canvas.getContext("2d");
 
   // DONE: Handle painting
@@ -210,8 +228,7 @@ function init(e) {
   const paint = (e) => {
     if (!isPainting) return;
     ctx.fillStyle = objWithCurrentColor.color;
-    ctx.globalAlpha = 1
-    ctx.arc(e.clientX, e.clientY, 5, 0, 2 * Math.PI); 
+    ctx.arc(e.clientX, e.clientY, objWithCurrentPen.pen, 0, 2 * Math.PI); 
     ctx.fill() 
     ctx.beginPath()
 

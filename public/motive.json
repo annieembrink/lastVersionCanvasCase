@@ -394,5 +394,10 @@
       "grey",
       "lightgrey"
   
+    ],
+    "pen": [
+      "small-2",
+      "medium-5",
+      "large-9"
     ]
   }

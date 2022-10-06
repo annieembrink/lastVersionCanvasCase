@@ -51,3 +51,19 @@ li p {
     border-radius: 100%;
     border: 1px solid black;
 }
+
+.pen {
+    background-color: black;
+    margin: 5px;
+    width: 30px;
+}
+
+.small-2 {
+    height: 5px;
+}   
+.medium-5 {
+    height: 10px;
+}   
+.large-9 {
+    height: 15px;
+}   
