@@ -57,36 +57,44 @@ fetch('motive.json')
     function generatePen() {
       data.pen.map(onePen => {
         let pTag = document.createElement('p');
-          pTag.classList = `pen ${onePen}`
-          pTag.id = onePen.slice(-1);
-          pen.appendChild(pTag);
+        pTag.classList = `pen ${onePen}`
+        pTag.id = onePen.slice(-1);
+        pen.appendChild(pTag);
       })
     }
     generatePen()
-  
+
 
   })
   .catch(err => console.log(err))
 
-  let objWithCurrentColor = {color: 'black'}
 
-  colors.addEventListener('click', (e) => {
-    objWithCurrentColor.color = e.target.id
+  //Outside fetch
+let objWithCurrentColor = {
+  color: 'black'
+}
 
-    for (let i = 0; i < colors.length; i++) {
-      const element = colors[i];
-
-      if (element.classList.contains("colorBoxFocus")) {
-          element.classList.remove("colorBoxFocus")
-      } 
+colors.addEventListener('click', (e) => {
+  objWithCurrentColor.color = e.target.id;
+ 
+  let test = colors.querySelectorAll('p');
+  
+  for (let i = 0; i < test.length; i++) {
+    const element = test[i];
+    console.log(element.classList)
+    if(element.classList.contains('colorBoxFocus')) {
+      element.classList.remove('colorBoxFocus')
+    }
   }
   e.target.classList.add('colorBoxFocus');
-  })
+})
 
-  let objWithCurrentPen = {pen: '2'}
-  pen.addEventListener('click', (e) => {
-    objWithCurrentPen.pen = e.target.id
-  })
+let objWithCurrentPen = {
+  pen: '2'
+}
+pen.addEventListener('click', (e) => {
+  objWithCurrentPen.pen = e.target.id
+})
 
 // variable current user | nickname
 let nickname;
@@ -237,8 +245,8 @@ function init(e) {
   const paint = (e) => {
     if (!isPainting) return;
     ctx.fillStyle = objWithCurrentColor.color;
-    ctx.arc(e.clientX, e.clientY, objWithCurrentPen.pen, 0, 2 * Math.PI); 
-    ctx.fill() 
+    ctx.arc(e.clientX, e.clientY, objWithCurrentPen.pen, 0, 2 * Math.PI);
+    ctx.fill()
     ctx.beginPath()
 
   };
