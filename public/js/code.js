@@ -56,15 +56,12 @@ fetch('motive.json')
   })
   .catch(err => console.log(err))
 
+  let objWithCurrentColor = {color: 'red'}
+  colors.addEventListener('click', (e) => {
+    objWithCurrentColor.color = e.target.id
+  })
 
- 
-    let color = []
-    let slicedColor = color.slice(-1).pop()
-    console.log(color, slicedColor)
-
-    colors.addEventListener('click', (e) => {
-      color.push(e.target.id)
-    })
+  console.log(objWithCurrentColor.color)
 
 // variable current user | nickname
 let nickname;
@@ -214,10 +211,11 @@ function init(e) {
 
   const paint = (e) => {
     if (!isPainting) return;
-    ctx.arc(e.clientX, e.clientY, 2, 0, 2 * Math.PI); // Draw 10px radius circle
-    ctx.fill() // hmmm... 
+    ctx.fillStyle = objWithCurrentColor.color
+    ctx.arc(e.clientX, e.clientY, 2, 0, 2 * Math.PI); 
+    ctx.fill() 
     ctx.beginPath()
-    // theChosenColor(ctx)
+
   };
 
   // TODO: Connecting events with functions
@@ -225,4 +223,5 @@ function init(e) {
   canvas.onmousemove = paint
   canvas.onmouseup = finishPaint
 }
+
 window.onload = init
