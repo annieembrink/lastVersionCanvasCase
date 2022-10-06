@@ -275,9 +275,7 @@ function init(e) {
   canvas.height = 350
   const ctx = canvas.getContext("2d");
   
-  let lineWidth = 5;
-  let startX;
-  let startY;
+  let lineWidth = 2;
 
   // DONE: Handle painting
   let isPainting = false;
@@ -288,13 +286,15 @@ function init(e) {
 
   const finishPaint = () => {
     isPainting = false;
+    ctx.stroke()
+    ctx.beginPath()
   };
 
   const paint = (e) => {
     if (!isPainting) return;
-    ctx.fillStyle = objWithCurrentColor.color;
-
-    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = objWithCurrentColor.color;
+   
+    ctx.lineWidth = objWithCurrentPen.pen;
     ctx.lineCap = 'round';
 
     ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
