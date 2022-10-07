@@ -13,6 +13,8 @@ const canvas = document.querySelector("#canvas");
 canvas.width = 350
 canvas.height = 350
 const ctx = canvas.getContext("2d");
+let isPainting = false;
+
 
 fetch('motive.json')
   .then((response) => response.json())
@@ -85,27 +87,27 @@ var check = null;
 
 function printDuration() {
   if (check == null) {
-    var cnt = 60;
+    var cnt = 5;
 
     check = setInterval(function () {
       cnt -= 1;
       let timerEl = document.getElementById('timer').innerText = `${cnt} seconds left`;
 
       if (cnt === 0) {
+        canvas.onmousedown = null;
+        isPainting = false;
         stop()
       }
     }, 1000);
-
-    
   }
 }
 
+      
 function stop() {
   clearInterval(check);
   check = null;
   document.getElementById("timer").innerHTML = 'Time out';
 }
-
 
 // ------------------
 
@@ -178,33 +180,6 @@ websocket.addEventListener("message", (event) => {
   // ...
   renderMessage(obj);
 });
-
-// nicknameInput.addEventListener('keydown', (e) => {
-//   if (e.key === "Enter") {
-//     setNickName()
-//   }
-// })
-
-// setNickname.addEventListener("click", () => {
-//   setNickName()
-// });
-
-// variable current user | nickname
-// let nickname;
-
-// function setNickName() {
-//   // get value from input nickname
-//   // document.getElementById("theChosenNickname").textContent = nicknameInput.value;
-
-//   // if set - disable input nickname
-//   // document.getElementById("nickname").setAttribute("disabled", true);
-
-//   // enable input field
-//   // document.getElementById("inputText").removeAttribute("disabled");
-
-//   // focus input field
-//   document.getElementById("inputText").focus();
-// }
 
 inputText.addEventListener("keydown", (event) => {
   // press Enter...make sure at least one char
@@ -285,19 +260,11 @@ const log = (message) => console.log(`[CLIENT] ${message}`);
 
 //DRAW FUNCTION
 function init(e) {
-  // DONE: Setup Canvas 
-  // const canvas = document.querySelector("#canvas");
-  // canvas.width = 350
-  // canvas.height = 350
-  // const ctx = canvas.getContext("2d");
-  
-  // let lineWidth = 2;
 
   // DONE: Handle painting
-  let isPainting = false;
   const initPaint = (e) => {
     isPainting = true;
-    paint(e); // needed to be able to make dots
+    paint(e); 
   };
 
   const finishPaint = () => {
@@ -309,7 +276,7 @@ function init(e) {
   const paint = (e) => {
     if (!isPainting) return;
     ctx.strokeStyle = objWithCurrentColor.color;
-   
+
     ctx.lineWidth = objWithCurrentPen.pen;
     ctx.lineCap = 'round';
 
@@ -328,7 +295,6 @@ function init(e) {
   })
 }
 
-// window.onload = init
 
 //funktionalitet att lägga till ------------------
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
