@@ -79,7 +79,7 @@ var check = null;
 
 function printDuration() {
   if (check == null) {
-    var cnt = 5;
+    var cnt = 60;
 
     check = setInterval(function () {
       cnt -= 1;
@@ -323,3 +323,15 @@ function init(e) {
 }
 
 window.onload = init
+
+//funktionalitet att lägga till ------------------
+//timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
+//poängräknare för deltagarna, den som svarar först får flest poäng
+//kontrollera ord som skrivs i chatten, matchar rätt ord
+//bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
+//en i taget kan rita på canvas, loop för vems tur det är helt enkelt
+//den som ritar får också poäng ju fler som gissar rätt ord
+//en div där deltagarna presenteras med poäng
+//den som ritar ska inte kunna skriva i chatten och får poäng för rätt gissning
+//orden ska bara synas för den som ritar
+//startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt

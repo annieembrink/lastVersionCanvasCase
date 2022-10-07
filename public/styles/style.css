@@ -37,6 +37,11 @@ body {
     grid-area: 5 / 3 /  5 / 5;   
 }
 
+#players {
+    border: 1px solid black;
+    grid-area: 2 / 5 /  6 / 5;   
+}
+
 .inputContainer {
     margin: 10px;
 }
