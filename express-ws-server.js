@@ -28,12 +28,13 @@ const app = express();
 // serve static files - every file in folder named 'public'
 app.use(express.static("public"));
 
-app.get("/startPage", (req, res) => {
-    res.send('get')
-})
-app.post("/", (req, res) => {
-    res.send('post')
-})
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.set('view engine', 'ejs');
+
+app.get('/game', function (req, res) {
+    res.render('game')
+});
 
 /* server(s)
 ------------------------------- */
@@ -104,7 +105,7 @@ wss.on("connection", (ws) => {
         let objBroadcast = {
             type: "text",
             msg: obj.msg,
-            nickname: obj.nickname,
+            nickname: obj.nickname
         };
 
         // broadcast to all but this ws...

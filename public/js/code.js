@@ -9,6 +9,11 @@ const colors = document.getElementById("colors");
 const penContainer = document.getElementById("penContainer");
 const clearBtn = document.getElementById("clearBtn");
 
+const canvas = document.querySelector("#canvas");
+canvas.width = 350
+canvas.height = 350
+const ctx = canvas.getContext("2d");
+
 fetch('motive.json')
   .then((response) => response.json())
   .then((data) => {
@@ -43,6 +48,7 @@ fetch('motive.json')
         wordDiv.remove()
 
         //Start timer
+        init()
         printDuration()
       })
     })
@@ -173,32 +179,32 @@ websocket.addEventListener("message", (event) => {
   renderMessage(obj);
 });
 
-nicknameInput.addEventListener('keydown', (e) => {
-  if (e.key === "Enter") {
-    setNickName()
-  }
-})
+// nicknameInput.addEventListener('keydown', (e) => {
+//   if (e.key === "Enter") {
+//     setNickName()
+//   }
+// })
 
-setNickname.addEventListener("click", () => {
-  setNickName()
-});
+// setNickname.addEventListener("click", () => {
+//   setNickName()
+// });
 
 // variable current user | nickname
 // let nickname;
 
-function setNickName() {
-  // get value from input nickname
-  document.getElementById("theChosenNickname").textContent = nicknameInput.value;
+// function setNickName() {
+//   // get value from input nickname
+//   // document.getElementById("theChosenNickname").textContent = nicknameInput.value;
 
-  // if set - disable input nickname
-  // document.getElementById("nickname").setAttribute("disabled", true);
+//   // if set - disable input nickname
+//   // document.getElementById("nickname").setAttribute("disabled", true);
 
-  // enable input field
-  // document.getElementById("inputText").removeAttribute("disabled");
+//   // enable input field
+//   // document.getElementById("inputText").removeAttribute("disabled");
 
-  // focus input field
-  document.getElementById("inputText").focus();
-}
+//   // focus input field
+//   document.getElementById("inputText").focus();
+// }
 
 inputText.addEventListener("keydown", (event) => {
   // press Enter...make sure at least one char
@@ -206,7 +212,7 @@ inputText.addEventListener("keydown", (event) => {
     // chat message object
     let objMessage = {
       msg: inputText.value,
-      nickname: nickname,
+      // nickname: nickname,
     };
 
     // show new message for this user
@@ -280,10 +286,10 @@ const log = (message) => console.log(`[CLIENT] ${message}`);
 //DRAW FUNCTION
 function init(e) {
   // DONE: Setup Canvas 
-  const canvas = document.querySelector("#canvas");
-  canvas.width = 380
-  canvas.height = 380
-  const ctx = canvas.getContext("2d");
+  // const canvas = document.querySelector("#canvas");
+  // canvas.width = 350
+  // canvas.height = 350
+  // const ctx = canvas.getContext("2d");
   
   // let lineWidth = 2;
 
@@ -322,7 +328,7 @@ function init(e) {
   })
 }
 
-window.onload = init
+// window.onload = init
 
 //funktionalitet att lägga till ------------------
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
