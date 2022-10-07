@@ -1,24 +1,19 @@
 {
-  "name": "wudwebsocketlab",
+  "name": "lastversioncanvascase",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "type": "module",
+  "description": "@andsju",
+  "main": "express-ws-server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andsju/WUDWebSocketLab.git"
+    "url": "git+https://github.com/anniesandberg/lastVersionCanvasCase.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/andsju/WUDWebSocketLab/issues"
+    "url": "https://github.com/anniesandberg/lastVersionCanvasCase/issues"
   },
-  "homepage": "https://github.com/andsju/WUDWebSocketLab#readme",
-  "dependencies": {
-    "express": "^4.18.1",
-    "ws": "^8.8.1"
-  }
+  "homepage": "https://github.com/anniesandberg/lastVersionCanvasCase#readme"
 }

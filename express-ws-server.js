@@ -28,7 +28,12 @@ const app = express();
 // serve static files - every file in folder named 'public'
 app.use(express.static("public"));
 
-
+app.get("/startPage", (req, res) => {
+    res.send('get')
+})
+app.post("/", (req, res) => {
+    res.send('post')
+})
 
 /* server(s)
 ------------------------------- */

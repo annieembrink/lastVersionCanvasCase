@@ -1,7 +1,7 @@
 // DOM elements
 const inputText = document.getElementById("inputText");
 const setNickname = document.querySelector("#setNickname");
-const nicknameInput = document.getElementById("nickname");
+const nicknameInput = document.getElementById("nicknameInput");
 const chatDiv = document.getElementById("chatDiv");
 const wordDiv = document.getElementById("wordDiv");
 const chosenWord = document.getElementById("chosenWord");
@@ -140,9 +140,6 @@ penContainer.addEventListener('click', (e) => {
   e.target.classList.add('penBoxFocus');
 })
 
-// variable current user | nickname
-let nickname;
-
 // use WebSocket >>> make sure server uses same ws port!
 const websocket = new WebSocket("ws://localhost:80");
 
@@ -186,15 +183,18 @@ setNickname.addEventListener("click", () => {
   setNickName()
 });
 
+// variable current user | nickname
+// let nickname;
+
 function setNickName() {
   // get value from input nickname
-  nickname = document.getElementById("nickname").value;
+  document.getElementById("theChosenNickname").textContent = nicknameInput.value;
 
   // if set - disable input nickname
-  document.getElementById("nickname").setAttribute("disabled", true);
+  // document.getElementById("nickname").setAttribute("disabled", true);
 
   // enable input field
-  document.getElementById("inputText").removeAttribute("disabled");
+  // document.getElementById("inputText").removeAttribute("disabled");
 
   // focus input field
   document.getElementById("inputText").focus();

@@ -1,9 +1,20 @@
-body {
+#gameBody {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
     grid-column-gap: 10px;
     grid-row-gap: 10px;
+}
+
+#startBody {
+    width: 100vw;
+    height: 100vh;
+}
+
+.startPageContent {
+    max-width: 40%;
+    margin: auto;
+    
 }
 
 .forWords {
