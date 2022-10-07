@@ -8,6 +8,7 @@ const chosenWord = document.getElementById("chosenWord");
 const colors = document.getElementById("colors");
 const penContainer = document.getElementById("penContainer");
 const clearBtn = document.getElementById("clearBtn");
+const body = document.querySelector('body')
 
 const canvas = document.querySelector("#canvas");
 canvas.width = 350
@@ -102,7 +103,7 @@ function printDuration() {
   }
 }
 
-      
+
 function stop() {
   clearInterval(check);
   check = null;
@@ -134,19 +135,25 @@ colors.addEventListener('click', (e) => {
 let objWithCurrentPen = {
   pen: '2'
 }
-penContainer.addEventListener('click', (e) => {
-  objWithCurrentPen.pen = e.target.id
 
-  let pTags = penContainer.querySelectorAll('p');
+let pTags = penContainer
 
-  for (let i = 0; i < pTags.length; i++) {
-    const element = pTags[i];
-    if (element.classList.contains('penBoxFocus')) {
-      element.classList.remove('penBoxFocus')
-    }
-  }
-  e.target.classList.add('penBoxFocus');
-})
+
+for (let i = 0; i < pTags.length; i++) {
+  const element = pTags[i];
+  console.log(element)
+
+  // element.addEventListener('click', (e) => {
+  //   console.log(e.target)
+  //   // objWithCurrentPen.pen = e.target.id
+
+  //   // if (element.classList.contains('penBoxFocus')) {
+  //   //   element.classList.remove('penBoxFocus')
+  //   // }
+  //   // e.target.classList.add('penBoxFocus');
+  // })
+}
+
 
 // use WebSocket >>> make sure server uses same ws port!
 const websocket = new WebSocket("ws://localhost:80");
@@ -187,14 +194,23 @@ inputText.addEventListener("keydown", (event) => {
     // chat message object
     let objMessage = {
       msg: inputText.value,
-      // nickname: nickname,
+      nickname: body.baseURI.split('=')[1],
     };
-
-    // show new message for this user
-    renderMessage(objMessage);
 
     // send to server
     websocket.send(JSON.stringify(objMessage));
+
+    console.log(objMessage.msg)
+    console.log(chosenWord.textContent)
+
+    if (objMessage.msg === chosenWord.textContent) {
+      console.log('correct')
+      objMessage.msg = 'X guessed the correct word!'
+      inputText.disabled = true;
+    }
+
+    // show new message for this user
+    renderMessage(objMessage);
 
     // reset input field
     inputText.value = "";
@@ -237,7 +253,7 @@ function renderMessage(obj) {
   let newMsg = template.content;
 
   // change content...
-  newMsg.querySelector("span").textContent = obj.nickname;
+  newMsg.querySelector("span").textContent = body.baseURI.split('=')[1]
   newMsg.querySelector("p").textContent = obj.msg;
 
   // new date object
@@ -253,18 +269,28 @@ function renderMessage(obj) {
     .setAttribute("datetime", objDate.toISOString());
 
   // render using prepend method - last message first
-  document.getElementById("conversation").prepend(newMsg);
+  document.getElementById("conversation").append(newMsg);
 }
 
-const log = (message) => console.log(`[CLIENT] ${message}`);
+// const log = (message) => console.log(`[CLIENT] ${message}`);
 
-//DRAW FUNCTION
+
+
+
+
+
+
+
+
+
+
+//DRAW FUNCTION ----------------------------
 function init(e) {
 
   // DONE: Handle painting
   const initPaint = (e) => {
     isPainting = true;
-    paint(e); 
+    paint(e);
   };
 
   const finishPaint = () => {
@@ -297,6 +323,7 @@ function init(e) {
 
 
 //funktionalitet att lägga till ------------------
+
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
 //poängräknare för deltagarna, den som svarar först får flest poäng
 //kontrollera ord som skrivs i chatten, matchar rätt ord
@@ -307,3 +334,4 @@ function init(e) {
 //den som ritar ska inte kunna skriva i chatten och får poäng för rätt gissning
 //orden ska bara synas för den som ritar
 //startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
+//DONE: när tiden är ute, kan man inte rita längre
