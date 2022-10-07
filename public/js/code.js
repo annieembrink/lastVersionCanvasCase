@@ -78,6 +78,38 @@ fetch('motive.json')
       })
     }
     generatePen()
+
+
+
+
+
+
+
+
+    //Not good code, but solved for now
+    let pTags = document.getElementsByClassName('pen')
+
+    for (let i = 0; i < pTags.length; i++) {
+      const element = pTags[i];
+      console.log(element)
+
+      element.addEventListener('click', (e) => {
+        objWithCurrentPen.pen = e.target.id
+
+        for (let i = 0; i < pTags.length; i++) {
+          const element = pTags[i];
+
+          if (element.classList.contains("penBoxFocus")) {
+            element.classList.remove("penBoxFocus")
+          }
+        }
+
+        e.target.classList.add('penBoxFocus');
+
+      })
+    }
+
+
   })
   .catch(err => console.log(err))
 
@@ -136,23 +168,7 @@ let objWithCurrentPen = {
   pen: '2'
 }
 
-let pTags = penContainer
-
-
-for (let i = 0; i < pTags.length; i++) {
-  const element = pTags[i];
-  console.log(element)
-
-  // element.addEventListener('click', (e) => {
-  //   console.log(e.target)
-  //   // objWithCurrentPen.pen = e.target.id
-
-  //   // if (element.classList.contains('penBoxFocus')) {
-  //   //   element.classList.remove('penBoxFocus')
-  //   // }
-  //   // e.target.classList.add('penBoxFocus');
-  // })
-}
+// ---------------------------------
 
 
 // use WebSocket >>> make sure server uses same ws port!
@@ -199,9 +215,6 @@ inputText.addEventListener("keydown", (event) => {
 
     // send to server
     websocket.send(JSON.stringify(objMessage));
-
-    console.log(objMessage.msg)
-    console.log(chosenWord.textContent)
 
     if (objMessage.msg === chosenWord.textContent) {
       console.log('correct')
