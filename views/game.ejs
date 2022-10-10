@@ -13,59 +13,66 @@
 
 <body id="gameBody">
 
-    <div class="forWords">
-        <div id="wordDiv"></div>
-        <div id="chosenWord"></div>
-        <div id="timer"></div>
+    <div id="setNicknameContainer">
+        <input name="nickname" type="text" id="nicknameInput" placeholder="Enter nickname">
+        <button type="submit" id="setNickname">Let's play!</button>
     </div>
+    
+        <div class="forWords">
+            <div id="wordDiv">
+                <h2>Pick a word!</h2>
+            </div>
+            <div id="chosenWord"></div>
+            <div id="timer"></div>
+        </div>
 
-    <canvas id="canvas">
-    </canvas>
+        <canvas id="canvas">
+        </canvas>
 
-    <div id="chatDiv">
-        <!-- server status -->
-        <div id="status"></div>
+        <div id="chatDiv">
+            <!-- server status -->
+            <div id="status"></div>
 
-        <!-- input nickname -->
-        <div class="inputContainer">
-            <p id="theChosenNickname"></p>
-            <!-- <input type="text" id="nickname" placeholder="Enter nickname">
+            <!-- input nickname -->
+            <div class="inputContainer">
+                <p id="theChosenNickname"></p>
+                <!-- <input type="text" id="nickname" placeholder="Enter nickname">
 
             <button id="setNickname">Set nickname</button> -->
 
-            <!-- input chat -->
-            <input type="text" id="inputText" placeholder="Type and press Enter">
+                <!-- input chat -->
+                <input type="text" id="inputText" placeholder="Type and press Enter">
+            </div>
+            <!-- DOM chat -->
+            <ul id="conversation"></ul>
+
+            <!-- use template to set html structure for a message -->
+            <template id="message">
+
+                <li>
+                    <span></span>
+                    <p></p>
+                    <time datetime=""></time>
+                </li>
+            </template>
+
         </div>
-        <!-- DOM chat -->
-        <ul id="conversation"></ul>
-
-        <!-- use template to set html structure for a message -->
-        <template id="message">
-
-            <li>
-                <span></span>
-                <p></p>
-                <time datetime=""></time>
-            </li>
-        </template>
-
-    </div>
 
 
-    <div class="colorPen">
-        <div id="colors"></div>
-        <div id="penContainer"></div>
-    </div>
+        <div class="colorPen">
+            <div id="colors"></div>
+            <div id="penContainer"></div>
+        </div>
 
-    <button id="clearBtn">Clear canvas</button>
+        <button id="clearBtn">Clear canvas</button>
 
-    <div id="players"></div>
+        <div id="players"></div>
 
 
 
     <!-- SCRIPT -->
     <script src="js/code.js"></script>
-    
+
 
 </body>
 

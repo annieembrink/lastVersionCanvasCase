@@ -6,6 +6,10 @@
     grid-row-gap: 10px;
 }
 
+#wordDiv h2 {
+    text-align: center;
+}
+
 #startBody {
     width: 100vw;
     height: 100vh;
@@ -15,6 +19,10 @@
     max-width: 40%;
     margin: auto;
     
+}
+
+#setNicknameContainer {
+    grid-area: 1 / 1 / 1 / 6;
 }
 
 .forWords {

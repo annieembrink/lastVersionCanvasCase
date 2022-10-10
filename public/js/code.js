@@ -12,9 +12,11 @@ const body = document.querySelector('body')
 
 const canvas = document.querySelector("#canvas");
 canvas.width = 350
-canvas.height = 350
+canvas.height = 400
 const ctx = canvas.getContext("2d");
 let isPainting = false;
+
+let nickname;
 
 
 fetch('motive.json')
@@ -91,7 +93,6 @@ fetch('motive.json')
 
     for (let i = 0; i < pTags.length; i++) {
       const element = pTags[i];
-      console.log(element)
 
       element.addEventListener('click', (e) => {
         objWithCurrentPen.pen = e.target.id
@@ -115,12 +116,17 @@ fetch('motive.json')
 
 //Outside fetch
 
+
+
+
+
+
 //TIMER------------------------------
 var check = null;
 
 function printDuration() {
   if (check == null) {
-    var cnt = 5;
+    var cnt = 60;
 
     check = setInterval(function () {
       cnt -= 1;
@@ -143,6 +149,16 @@ function stop() {
 }
 
 // ------------------
+
+
+
+
+
+
+
+
+
+
 
 //Chosen color
 let objWithCurrentColor = {
@@ -171,6 +187,17 @@ let objWithCurrentPen = {
 // ---------------------------------
 
 
+
+
+
+
+
+
+
+
+
+
+// WEBSOCKET STUFF
 // use WebSocket >>> make sure server uses same ws port!
 const websocket = new WebSocket("ws://localhost:80");
 
@@ -204,14 +231,42 @@ websocket.addEventListener("message", (event) => {
   renderMessage(obj);
 });
 
+nicknameInput.addEventListener('keydown', (e) => {
+  if (e.key === "Enter" && nicknameInput.value.length > 0) {
+    startGame()
+  }
+})
+
+setNickname.addEventListener("click", () => {
+  startGame()
+});
+
+function startGame() {
+  // get value from input nickname
+  nickname = document.getElementById("nicknameInput").value;
+
+  // if set - disable input nickname
+  document.getElementById("nicknameInput").setAttribute("disabled", true);
+  document.getElementById("setNickname").setAttribute("disabled", true);
+
+  // enable input field
+  document.getElementById("inputText").removeAttribute("disabled");
+
+  // focus input field
+  document.getElementById("inputText").focus();
+}
+
 inputText.addEventListener("keydown", (event) => {
   // press Enter...make sure at least one char
   if (event.key === "Enter" && inputText.value.length > 0) {
     // chat message object
     let objMessage = {
       msg: inputText.value,
-      nickname: body.baseURI.split('=')[1],
+      nickname: nickname,
     };
+
+    // show new message for this user
+    renderMessage(objMessage);
 
     // send to server
     websocket.send(JSON.stringify(objMessage));
@@ -221,9 +276,6 @@ inputText.addEventListener("keydown", (event) => {
       objMessage.msg = 'X guessed the correct word!'
       inputText.disabled = true;
     }
-
-    // show new message for this user
-    renderMessage(objMessage);
 
     // reset input field
     inputText.value = "";
@@ -266,7 +318,8 @@ function renderMessage(obj) {
   let newMsg = template.content;
 
   // change content...
-  newMsg.querySelector("span").textContent = body.baseURI.split('=')[1]
+  newMsg.querySelector("span").textContent = obj.nickname;
+  // body.baseURI.split('=')[1]
   newMsg.querySelector("p").textContent = obj.msg;
 
   // new date object
@@ -285,7 +338,7 @@ function renderMessage(obj) {
   document.getElementById("conversation").append(newMsg);
 }
 
-// const log = (message) => console.log(`[CLIENT] ${message}`);
+// --------------------------------------------------
 
 
 
