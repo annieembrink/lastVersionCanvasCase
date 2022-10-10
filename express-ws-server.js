@@ -11,6 +11,9 @@ import { WebSocketServer } from "ws";
 // import functions
 import { parseJSON, broadcast, broadcastButExclude } from "./libs/functions.js";
 
+import { v4 as uuidv4 } from "uuid";
+
+
 
 
 /* application variables
@@ -70,6 +73,8 @@ server.on("upgrade", (req, socket, head) => {
 /* listen on new websocket connections
 ------------------------------- */
 wss.on("connection", (ws) => {
+    ws.id = uuidv4();
+
     console.log("New client connection from IP: ", ws._socket.remoteAddress);
     console.log("Number of connected clients: ", wss.clients.size);
 
@@ -87,6 +92,44 @@ wss.on("connection", (ws) => {
     // message event
     ws.on("message", (data) => {
         // console.log('Message received: %s', data);
+        console.log(`${ws.id} sent a message`)
+        console.log('data', JSON.parse(data))
+
+        const message = JSON.parse(data);
+        message.payload.id = ws.id;
+        console.log("Message received: ", message.type);
+        console.log("message id : ", message.payload.id);
+        switch (message.type) {
+            case "init":
+                {
+                  console.log("Attempting to send init data to client");
+                  const { id } = ws.id;
+                //   const color = idToColor(id);
+                  ws.send(
+                    JSON.stringify({ type: "init", payload: { id, state } })
+                  );
+                }
+                break;
+            case "paint": 
+            {
+                console.log("Broadcasting: ", message);
+                wss.clients.forEach((client) => {
+
+                    // console.log('client', client)
+                    client.send(JSON.stringify(message))
+                });
+            }
+            break;
+            default: {
+                console.log("Default");
+            }
+        }
+
+
+
+
+
+
 
         let obj = parseJSON(data);
 

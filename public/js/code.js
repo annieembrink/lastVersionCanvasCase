@@ -53,7 +53,7 @@ fetch('motive.json')
         wordDiv.remove()
 
         //Start timer
-        init()
+        // init()
         printDuration()
       })
     })
@@ -179,6 +179,16 @@ colors.addEventListener('click', (e) => {
   e.target.classList.add('colorBoxFocus');
 })
 
+
+
+
+
+
+
+
+
+
+
 //Chosen pen size
 let objWithCurrentPen = {
   pen: '2'
@@ -199,37 +209,40 @@ let objWithCurrentPen = {
 
 // WEBSOCKET STUFF
 // use WebSocket >>> make sure server uses same ws port!
-const websocket = new WebSocket("ws://localhost:80");
+// const websocket = new WebSocket("ws://localhost:80");
 
 /* event listeners
 ------------------------------- */
 
 // listen on close event (server)
-websocket.addEventListener("close", (event) => {
-  // console.log('Server down...', event);
-  document.getElementById("status").textContent = "Sry....server down";
-});
+// websocket.addEventListener("close", (event) => {
+//   // console.log('Server down...', event);
+//   document.getElementById("status").textContent = "Sry....server down";
+// });
 
 // listen to messages from client | server
-websocket.addEventListener("message", (event) => {
-  // console.log(event.data);
 
-  let obj = parseJSON(event.data);
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// websocket.addEventListener("message", (event) => {
+//   // console.log(event.data);
 
-  // todo
-  // use obj property 'type' to handle message event
-  switch (obj.type) {
-    case "text":
-      break;
-    case "somethingelse":
-      break;
-    default:
-      break;
-  }
+//   let obj = parseJSON(event.data);
 
-  // ...
-  renderMessage(obj);
-});
+//   // todo
+//   // use obj property 'type' to handle message event
+//   switch (obj.type) {
+//     case "text":
+//       break;
+//     case "somethingelse":
+//       break;
+//     default:
+//       break;
+//   }
+
+//   // ...
+//   renderMessage(obj);
+// });
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 nicknameInput.addEventListener('keydown', (e) => {
   if (e.key === "Enter" && nicknameInput.value.length > 0) {
@@ -353,31 +366,93 @@ function renderMessage(obj) {
 //DRAW FUNCTION ----------------------------
 function init(e) {
 
+  // const websocket = new WebSocket('ws://localhost: 80');
+  const websocket = new WebSocket("ws://localhost:80");
+
+
+  // const canvas = document.querySelector("#canvas");
+  // canvas.width = 350
+  // canvas.height = 400
+  // const ctx = canvas.getContext("2d");
+  // let isPainting = false;
+
+
   // DONE: Handle painting
   const initPaint = (e) => {
     isPainting = true;
+    ctx.beginPath()
     paint(e);
   };
 
   const finishPaint = () => {
     isPainting = false;
     ctx.stroke()
-    ctx.beginPath()
+    ctx.closePath()
   };
 
   const paint = (e) => {
     if (!isPainting) return;
-    ctx.strokeStyle = objWithCurrentColor.color;
 
-    ctx.lineWidth = objWithCurrentPen.pen;
-    ctx.lineCap = 'round';
+    const args = {
+      id: window.clientId || null,
+      color: objWithCurrentColor.color || 'black',
+      line: objWithCurrentPen.pen,
+      x: e.clientX - canvas.offsetLeft,
+      y: e.clientY - canvas.offsetTop
+    }
+    websocket.send(JSON.stringify({
+      type: "paint",
+      payload: args
+    }));
 
-    ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-    ctx.stroke();
+    // ctx.strokeStyle = objWithCurrentColor.color;
+
+    // ctx.lineWidth = objWithCurrentPen.pen;
+    // ctx.lineCap = 'round';
+
+    // ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    // ctx.stroke();
 
   };
 
+  const recreateCanvas = (state) => {
+    state.forEach((message) => {
+      if (message.type == "paint") {
+        paintLine(ctx, message.payload);
+      }
+    });
+  };
+
+  const handleSocketOpen = (e) => {
+    console.log('Socket has been opened');
+  }
+
+  const handleSocketMessage = (e) => {
+    const message = JSON.parse(e.data);
+    
+    console.log(`${message.payload.id} is painting`)
+    // console.log(`Message incoming: ${message}`);
+
+    //switch statement
+    switch (message.type) {
+      case "init":
+        const { id, state } = message.payload;
+        window.clientId = id;
+        // window.clientColor = color;
+        recreateCanvas(state);
+        break;
+      case "paint":
+        const args = message.payload;
+        paintLine(ctx, args);
+        break;
+      default:
+        // console.log("default case")
+    }
+  }
+
   // TODO: Connecting events with functions
+  websocket.onopen = handleSocketOpen;
+  websocket.onmessage = handleSocketMessage;
   canvas.onmousedown = initPaint
   canvas.onmousemove = paint
   window.onmouseup = finishPaint
@@ -387,17 +462,30 @@ function init(e) {
   })
 }
 
+function paintLine(ctx, args) {
+  ctx.strokeStyle = args.color;
+
+  ctx.lineWidth = args.line;
+  ctx.lineCap = 'round';
+
+  ctx.lineTo(args.x, args.y);
+  ctx.stroke();
+}
+
+window.onload = init;
+
+
 
 //funktionalitet att lägga till ------------------
 
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
 //poängräknare för deltagarna, den som svarar först får flest poäng
 //kontrollera ord som skrivs i chatten, matchar rätt ord
-//bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
+//DONE: bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
 //en i taget kan rita på canvas, loop för vems tur det är helt enkelt
 //den som ritar får också poäng ju fler som gissar rätt ord
 //en div där deltagarna presenteras med poäng
 //den som ritar ska inte kunna skriva i chatten och får poäng för rätt gissning
 //orden ska bara synas för den som ritar
-//startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
+//DONE: startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
 //DONE: när tiden är ute, kan man inte rita längre
