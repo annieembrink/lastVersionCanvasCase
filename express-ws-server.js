@@ -77,6 +77,7 @@ wss.on("connection", (ws) => {
 
     console.log("New client connection from IP: ", ws._socket.remoteAddress);
     console.log("Number of connected clients: ", wss.clients.size);
+    ws.send(JSON.stringify(ws.id))
 
     // WebSocket events (ws) for single client
 
@@ -91,20 +92,20 @@ wss.on("connection", (ws) => {
 
     // message event
     ws.on("message", (data) => {
-        // console.log('Message received: %s', data);
-        console.log(`${ws.id} sent a message`)
+        // console.log(`${ws.id} sent a message`)
         console.log('data', JSON.parse(data))
 
         const message = JSON.parse(data);
         message.payload.id = ws.id;
+
         console.log("Message received: ", message.type);
         console.log("message id : ", message.payload.id);
+
         switch (message.type) {
             case "init":
                 {
                   console.log("Attempting to send init data to client");
                   const { id } = ws.id;
-                //   const color = idToColor(id);
                   ws.send(
                     JSON.stringify({ type: "init", payload: { id, state } })
                   );
@@ -115,7 +116,6 @@ wss.on("connection", (ws) => {
                 console.log("Broadcasting: ", message);
                 wss.clients.forEach((client) => {
 
-                    // console.log('client', client)
                     client.send(JSON.stringify(message))
                 });
             }
@@ -132,6 +132,7 @@ wss.on("connection", (ws) => {
 
 
         let obj = parseJSON(data);
+        console.log('obj', obj)
 
         // todo
         // use obj property 'type' to handle message event
@@ -148,6 +149,7 @@ wss.on("connection", (ws) => {
         let objBroadcast = {
             type: "text",
             msg: obj.msg,
+            id: ws.id, 
             nickname: obj.nickname
         };
 

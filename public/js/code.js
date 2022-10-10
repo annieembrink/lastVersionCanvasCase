@@ -286,7 +286,7 @@ inputText.addEventListener("keydown", (event) => {
 
     if (objMessage.msg === chosenWord.textContent) {
       console.log('correct')
-      objMessage.msg = 'X guessed the correct word!'
+      objMessage.msg = `${nickname} guessed the right word`
       inputText.disabled = true;
     }
 
@@ -393,8 +393,9 @@ function init(e) {
   const paint = (e) => {
     if (!isPainting) return;
 
+
     const args = {
-      id: window.clientId || null,
+      id: e.target || null,
       color: objWithCurrentColor.color || 'black',
       line: objWithCurrentPen.pen,
       x: e.clientX - canvas.offsetLeft,
@@ -429,15 +430,16 @@ function init(e) {
 
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
+    console.log('message sent from: ', message.payload.id)
     
-    console.log(`${message.payload.id} is painting`)
+    // console.log(`${message.payload.id} is painting`)
     // console.log(`Message incoming: ${message}`);
 
     //switch statement
     switch (message.type) {
       case "init":
         const { id, state } = message.payload;
-        window.clientId = id;
+        // window.clientId = id;
         // window.clientColor = color;
         recreateCanvas(state);
         break;

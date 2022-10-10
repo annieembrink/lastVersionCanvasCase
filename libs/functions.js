@@ -20,14 +20,14 @@ function parseJSON(data) {
     }
 }
 
-function toUpperCases(string) {
+// function toUpperCases(string) {
 
-}
+// }
 
-function randomNumber() {
+// function randomNumber() {
 
-    return 1;
-}
+//     return 1;
+// }
 
 
 /**
@@ -61,4 +61,4 @@ function broadcast(wss, objBroadcast) {
     });
 }
 
-export { parseJSON, toUpperCases, randomNumber, broadcast, broadcastButExclude }
+export { parseJSON, broadcast, broadcastButExclude }
