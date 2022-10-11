@@ -6,12 +6,20 @@ import express from "express";
 import http from "http";
 
 // use websocket server
-import { WebSocketServer } from "ws";
+import {
+    WebSocketServer
+} from "ws";
 
 // import functions
-import { parseJSON, broadcast, broadcastButExclude } from "./libs/functions.js";
+import {
+    parseJSON,
+    broadcast,
+    broadcastButExclude
+} from "./libs/functions.js";
 
-import { v4 as uuidv4 } from "uuid";
+import {
+    v4 as uuidv4
+} from "uuid";
 
 
 
@@ -19,7 +27,7 @@ import { v4 as uuidv4 } from "uuid";
 /* application variables
 ------------------------------- */
 // set port number >>> make sure client javascript uses same WebSocket port!
-const port = 80; 
+const port = 80;
 
 
 
@@ -31,7 +39,9 @@ const app = express();
 // serve static files - every file in folder named 'public'
 app.use(express.static("public"));
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+    extended: true
+}));
 app.use(express.json());
 app.set('view engine', 'ejs');
 
@@ -45,7 +55,9 @@ app.get('/game', function (req, res) {
 const server = http.createServer(app);
 
 // create WebSocket server - use a predefined server
-const wss = new WebSocketServer({ noServer: true });
+const wss = new WebSocketServer({
+    noServer: true
+});
 
 
 
@@ -93,36 +105,57 @@ wss.on("connection", (ws) => {
     // message event
     ws.on("message", (data) => {
         // console.log(`${ws.id} sent a message`)
-        console.log('data', JSON.parse(data))
+        // console.log('data', JSON.parse(data))
 
         const message = JSON.parse(data);
-        message.payload.id = ws.id;
 
-        console.log("Message received: ", message.type);
-        console.log("message id : ", message.payload.id);
+        // message.payload.id = ws.id;
+
+        // console.log("Message received: ", message.type);
+        // console.log("message id : ", message.payload.id);
 
         switch (message.type) {
-            case "init":
-                {
-                  console.log("Attempting to send init data to client");
-                  const { id } = ws.id;
-                  ws.send(
-                    JSON.stringify({ type: "init", payload: { id, state } })
-                  );
-                }
-                break;
-            case "paint": 
-            {
-                console.log("Broadcasting: ", message);
-                wss.clients.forEach((client) => {
-
-                    client.send(JSON.stringify(message))
-                });
+            case "init": {
+                console.log("Attempting to send init data to client");
+                const {
+                    id
+                } = ws.id;
+                ws.send(
+                    JSON.stringify({
+                        type: "init",
+                        payload: {
+                            id,
+                            state
+                        }
+                    })
+                );
             }
             break;
-            default: {
-                console.log("Default");
-            }
+        case "text": {
+            console.log('client trying to write')
+            // message to clients
+            let objBroadcast = {
+                type: "text",
+                msg: message.msg,
+                id: ws.id,
+                nickname: message.nickname
+            };
+
+            // broadcast to all but this ws...
+            broadcastButExclude(wss, ws, objBroadcast);
+        }
+        break;
+        case "paint": {
+            // console.log("Broadcasting: ", message);
+            wss.clients.forEach((client) => {
+
+                client.send(JSON.stringify(message))
+            });
+        }
+        break;
+        default: {
+            console.log("Default");
+        }
         }
 
 
@@ -131,30 +164,21 @@ wss.on("connection", (ws) => {
 
 
 
-        let obj = parseJSON(data);
-        console.log('obj', obj)
+        // let obj = parseJSON(data);
+        // console.log('obj', obj)
 
         // todo
         // use obj property 'type' to handle message event
-        switch (obj.type) {
-            case "text":
-                break;
-            case "somethingelse":
-                break;
-            default:
-                break;
-        }
+        // switch (obj.type) {
+        //     case "text":
+        //         break;
+        //     case "somethingelse":
+        //         break;
+        //     default:
+        //         break;
+        // }
 
-        // message to clients
-        let objBroadcast = {
-            type: "text",
-            msg: obj.msg,
-            id: ws.id, 
-            nickname: obj.nickname
-        };
 
-        // broadcast to all but this ws...
-        broadcastButExclude(wss, ws, objBroadcast);
     });
 });
 

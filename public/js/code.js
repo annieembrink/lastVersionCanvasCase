@@ -9,6 +9,7 @@ const colors = document.getElementById("colors");
 const penContainer = document.getElementById("penContainer");
 const clearBtn = document.getElementById("clearBtn");
 const body = document.querySelector('body')
+const playerDiv = document.getElementById('players')
 
 const canvas = document.querySelector("#canvas");
 canvas.width = 350
@@ -17,6 +18,9 @@ const ctx = canvas.getContext("2d");
 let isPainting = false;
 
 let nickname;
+let id;
+
+const websocket = new WebSocket("ws://localhost:80");
 
 
 fetch('motive.json')
@@ -114,6 +118,12 @@ fetch('motive.json')
   })
   .catch(err => console.log(err))
 
+
+
+
+
+
+
 //Outside fetch
 
 
@@ -141,7 +151,6 @@ function printDuration() {
   }
 }
 
-
 function stop() {
   clearInterval(check);
   check = null;
@@ -155,10 +164,10 @@ function stop() {
 
 
 
-
-
-
-
+//Chosen pen size
+let objWithCurrentPen = {
+  pen: '2'
+}
 
 //Chosen color
 let objWithCurrentColor = {
@@ -178,21 +187,6 @@ colors.addEventListener('click', (e) => {
   }
   e.target.classList.add('colorBoxFocus');
 })
-
-
-
-
-
-
-
-
-
-
-
-//Chosen pen size
-let objWithCurrentPen = {
-  pen: '2'
-}
 
 // ---------------------------------
 
@@ -215,10 +209,10 @@ let objWithCurrentPen = {
 ------------------------------- */
 
 // listen on close event (server)
-// websocket.addEventListener("close", (event) => {
-//   // console.log('Server down...', event);
-//   document.getElementById("status").textContent = "Sry....server down";
-// });
+websocket.addEventListener("close", (event) => {
+  // console.log('Server down...', event);
+  document.getElementById("status").textContent = "Sry....server down";
+});
 
 // listen to messages from client | server
 
@@ -270,11 +264,14 @@ function startGame() {
 }
 
 inputText.addEventListener("keydown", (event) => {
+
   // press Enter...make sure at least one char
   if (event.key === "Enter" && inputText.value.length > 0) {
     // chat message object
     let objMessage = {
+      type: "text",
       msg: inputText.value,
+      id: id,
       nickname: nickname,
     };
 
@@ -367,7 +364,7 @@ function renderMessage(obj) {
 function init(e) {
 
   // const websocket = new WebSocket('ws://localhost: 80');
-  const websocket = new WebSocket("ws://localhost:80");
+  // const websocket = new WebSocket("ws://localhost:80");
 
 
   // const canvas = document.querySelector("#canvas");
@@ -380,14 +377,14 @@ function init(e) {
   // DONE: Handle painting
   const initPaint = (e) => {
     isPainting = true;
-    ctx.beginPath()
+    // ctx.beginPath()
     paint(e);
   };
 
   const finishPaint = () => {
     isPainting = false;
-    ctx.stroke()
-    ctx.closePath()
+    // ctx.stroke()
+    // ctx.closePath()
   };
 
   const paint = (e) => {
@@ -395,11 +392,14 @@ function init(e) {
 
 
     const args = {
-      id: e.target || null,
+      id: null,
       color: objWithCurrentColor.color || 'black',
-      line: objWithCurrentPen.pen,
+      // line: objWithCurrentPen.pen,
       x: e.clientX - canvas.offsetLeft,
-      y: e.clientY - canvas.offsetTop
+      y: e.clientY - canvas.offsetTop,
+      radius: objWithCurrentPen.pen,
+      startAngle: 0,
+      endAngle: 2 * Math.PI,
     }
     websocket.send(JSON.stringify({
       type: "paint",
@@ -426,25 +426,42 @@ function init(e) {
 
   const handleSocketOpen = (e) => {
     console.log('Socket has been opened');
+    // const message = JSON.parse(e);
+    // console.log(message)
+
+    // const playerEl = document.createElement('p')
+    // playerEl.innerText = message.payload.id
+    // playerDiv.appendChild(playerEl)
+
   }
 
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
-    console.log('message sent from: ', message.payload.id)
-    
+
+    console.log('message sent from: ', message.payload, 'message', message)
+    // renderMessage(message)
+
     // console.log(`${message.payload.id} is painting`)
     // console.log(`Message incoming: ${message}`);
 
     //switch statement
     switch (message.type) {
       case "init":
-        const { id, state } = message.payload;
+        const {
+          id, state
+        } = message.payload;
         // window.clientId = id;
         // window.clientColor = color;
         recreateCanvas(state);
         break;
+      case "text":
+        // const msg = message.payload;
+        renderMessage(message)
+        console.log('test')
+        break;
       case "paint":
         const args = message.payload;
+        console.log('pppppainting')
         paintLine(ctx, args);
         break;
       default:
@@ -465,13 +482,27 @@ function init(e) {
 }
 
 function paintLine(ctx, args) {
-  ctx.strokeStyle = args.color;
 
-  ctx.lineWidth = args.line;
-  ctx.lineCap = 'round';
+  ctx.fillStyle = args.color;
+  ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
+  ctx.fill();
+  ctx.beginPath();
 
-  ctx.lineTo(args.x, args.y);
-  ctx.stroke();
+
+
+
+
+
+
+
+
+  // ctx.strokeStyle = args.color;
+
+  // ctx.lineWidth = args.line;
+  // ctx.lineCap = 'round';
+
+  // ctx.lineTo(args.x, args.y);
+  // ctx.stroke();
 }
 
 window.onload = init;
