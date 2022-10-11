@@ -82,6 +82,7 @@ server.on("upgrade", (req, socket, head) => {
 
 const state = [];
 const history = [];
+const nicknameHistory = [];
 
 /* listen on new websocket connections
 ------------------------------- */
@@ -121,6 +122,8 @@ wss.on("connection", (ws) => {
         switch (message.type) {
             case "init": {
                 console.log("Attempting to send init data to client");
+                console.log(message)
+
                 const id = ws.id;
                 history.push(id)
                 wss.clients.forEach((client) => {
@@ -131,7 +134,8 @@ wss.on("connection", (ws) => {
                             payload: {
                                 id,
                                 state,
-                                history
+                                history,
+                                // nicknameHistory
                             }
                         })
                     );
@@ -140,16 +144,29 @@ wss.on("connection", (ws) => {
             break;
         case "text": {
             console.log('client trying to write')
+            console.log(message)
+
             // message to clients
             let objBroadcast = {
                 type: "text",
                 msg: message.msg,
                 id: ws.id,
-                nickname: message.nickname
+                nickname: nicknameHistory
             };
 
             // broadcast to all but this ws...
             broadcastButExclude(wss, ws, objBroadcast);
+        }
+        break;
+        case "start": {
+            console.log(message.nickname)
+            nicknameHistory.push(message.nickname)
+            console.log(nicknameHistory)
+
+            wss.clients.forEach((client) => {
+
+                client.send(JSON.stringify({type: 'start', nickname: nicknameHistory}))
+            });
         }
         break;
         case "paint": {

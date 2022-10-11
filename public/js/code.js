@@ -140,7 +140,7 @@ function printDuration() {
 
     check = setInterval(function () {
       cnt -= 1;
-      let timerEl = document.getElementById('timer').innerText = `${cnt} seconds left`;
+      document.getElementById('timer').innerText = `${cnt} seconds left`;
 
       if (cnt === 0) {
         canvas.onmousedown = null;
@@ -191,16 +191,6 @@ colors.addEventListener('click', (e) => {
 // ---------------------------------
 
 
-
-nicknameInput.addEventListener('keydown', (e) => {
-  if (e.key === "Enter" && nicknameInput.value.length > 0) {
-    startGame()
-  }
-})
-
-setNickname.addEventListener("click", () => {
-  startGame()
-});
 
 function startGame() {
   // get value from input nickname
@@ -297,6 +287,14 @@ function createPlayersEl(obj) {
   ]
 
   playerDiv.innerHTML = '';
+  console.log(obj.length)
+
+  function getRandomColor() {
+    var r = 255*Math.random()+128|0,
+    g = 255*Math.random()+128|0,
+    b = 255*Math.random()+128|0;
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
 
   let i=0
   obj.forEach(player => {
@@ -304,8 +302,8 @@ function createPlayersEl(obj) {
     if (i === 12) {
       i = 0
     }
-    onePlayerDiv.style.backgroundColor = colors[i++]
-    // onePlayerDiv.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+    // onePlayerDiv.style.backgroundColor = colors[i++]
+    onePlayerDiv.style.backgroundColor = getRandomColor();
     playerDiv.appendChild(onePlayerDiv)
 
     const playerEl = document.createElement('p')
@@ -328,8 +326,23 @@ function createPlayersEl(obj) {
 //DRAW FUNCTION ----------------------------
 function init(e) {
 
-  // const websocket = new WebSocket('ws://localhost: 80');
   const websocket = new WebSocket("ws://localhost:80");
+
+  function nickNameOnEnter(e) {
+    if (e.key === "Enter" && nicknameInput.value.length > 0) {
+      document.getElementById('theGameContainer').style.display = 'grid';
+      websocket.send(JSON.stringify({type: 'start', nickname: nicknameInput.value}));
+      startGame()
+    }
+  }
+  
+  function nickNameOnButton() {
+    if(nicknameInput.value.length > 0) {
+      document.getElementById('theGameContainer').style.display = 'grid';
+      websocket.send(JSON.stringify({type: 'start', nickname: nicknameInput.value}));
+      startGame()
+    }
+  }
 
   //TEXT MESSAGE FUNCTIONS
   function newTextMessage(e) {
@@ -436,17 +449,26 @@ function init(e) {
         const id = message.payload.id
         const state = message.payload.state;
         const history = message.payload.history
+        // const nickname = message.payload.nicknameHistory
+        // console.log(nickname)
 
-        console.log(message)
-        createPlayersEl(history)
+        console.log(message.type)
+        // createPlayersEl(nickname)
         // recreatePlayersList(history)
         recreateCanvas(state);
         break;
       case "text":
+        console.log(message.type)
+        // createPlayersEl(nickname)
         renderMessage(message)
         console.log('test')
         break;
+      case "start":
+        console.log(message)
+        createPlayersEl(message.nickname)
+        break;
       case "paint":
+        console.log(message.type)
         const args = message.payload;
         paintLine(ctx, args);
         break;
@@ -461,6 +483,8 @@ function init(e) {
   });
 
   // TODO: Connecting events with functions
+  nicknameInput.onkeydown = nickNameOnEnter;
+  setNickname.onclick = nickNameOnButton;
   inputText.onkeydown = newTextMessage;
   websocket.onopen = handleSocketOpen;
   websocket.onmessage = handleSocketMessage;
