@@ -354,6 +354,12 @@ function renderMessage(obj) {
 }
 
 // --------------------------------------------------
+function createPlayersEl(obj) {
+  const playerEl = document.createElement('p')
+  playerEl.innerText = obj
+  playerDiv.appendChild(playerEl)
+  console.log(obj)
+} 
 
 
 
@@ -380,7 +386,7 @@ function init(e) {
 
 
   //TEXT MESSAGE FUNCTIONS
-  function newMessage(e) {
+  function newTextMessage(e) {
     // press Enter...make sure at least one char
     if (e.key === "Enter" && inputText.value.length > 0) {
       // chat message object
@@ -427,7 +433,6 @@ function init(e) {
   const paint = (e) => {
     if (!isPainting) return;
 
-
     const args = {
       id: null,
       color: objWithCurrentColor.color || 'black',
@@ -462,31 +467,27 @@ function init(e) {
   };
 
   const handleSocketOpen = (e) => {
+    // const message = JSON.parse(e.data);
     console.log('Socket has been opened');
     websocket.send(JSON.stringify({ type: "init" }));
-
-    // const message = JSON.parse(e);
-    // console.log(message)
-
-    // const playerEl = document.createElement('p')
-    // playerEl.innerText = message.payload.id
-    // playerDiv.appendChild(playerEl)
-
   }
+
+
 
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
 
     console.log('message', message);
 
+
     //switch statement
     switch (message.type) {
       case "init":
-        const {
-          id, state
-        } = message.payload;
+        const id = message.payload.id
+        const state = message.payload.state;
         // window.clientId = id;
         // window.clientColor = color;
+        createPlayersEl(message.payload.id)
         recreateCanvas(state);
         break;
       case "text":
@@ -508,7 +509,7 @@ function init(e) {
   });
 
   // TODO: Connecting events with functions
-  inputText.onkeydown = newMessage;
+  inputText.onkeydown = newTextMessage;
   websocket.onopen = handleSocketOpen;
   websocket.onmessage = handleSocketMessage;
   canvas.onmousedown = initPaint

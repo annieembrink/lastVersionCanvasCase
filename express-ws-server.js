@@ -85,11 +85,12 @@ const state = [];
 /* listen on new websocket connections
 ------------------------------- */
 wss.on("connection", (ws) => {
-    ws.id = uuidv4();
 
     console.log("New client connection from IP: ", ws._socket.remoteAddress);
     console.log("Number of connected clients: ", wss.clients.size);
-    ws.send(JSON.stringify(ws.id))
+
+    // ws.id = uuidv4();
+    // ws.send(JSON.stringify(ws.id))
 
     // WebSocket events (ws) for single client
 
@@ -108,6 +109,8 @@ wss.on("connection", (ws) => {
         // console.log('data', JSON.parse(data))
 
         const message = JSON.parse(data);
+        ws.id = uuidv4();
+        ws.send(JSON.stringify(ws.id))
 
         // message.payload.id = ws.id;
 
@@ -117,9 +120,7 @@ wss.on("connection", (ws) => {
         switch (message.type) {
             case "init": {
                 console.log("Attempting to send init data to client");
-                const {
-                    id
-                } = ws.id;
+                const id = ws.id;
                 ws.send(
                     JSON.stringify({
                         type: "init",
@@ -159,12 +160,6 @@ wss.on("connection", (ws) => {
         }
         }
 
-
-
-
-
-
-
         // let obj = parseJSON(data);
         // console.log('obj', obj)
 
@@ -178,7 +173,6 @@ wss.on("connection", (ws) => {
         //     default:
         //         break;
         // }
-
 
     });
 });
