@@ -61,6 +61,11 @@
     grid-area: 2 / 5 /  6 / 5;   
 }
 
+#players p {
+    margin: 0;
+    padding: 10px;
+}
+
 .inputContainer {
     margin: 10px;
 }

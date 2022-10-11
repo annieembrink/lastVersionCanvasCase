@@ -81,6 +81,7 @@ server.on("upgrade", (req, socket, head) => {
 });
 
 const state = [];
+const history = [];
 
 /* listen on new websocket connections
 ------------------------------- */
@@ -121,15 +122,20 @@ wss.on("connection", (ws) => {
             case "init": {
                 console.log("Attempting to send init data to client");
                 const id = ws.id;
-                ws.send(
-                    JSON.stringify({
-                        type: "init",
-                        payload: {
-                            id,
-                            state
-                        }
-                    })
-                );
+                history.push(id)
+                wss.clients.forEach((client) => {
+
+                    client.send(JSON.stringify(
+                        {
+                            type: "init",
+                            payload: {
+                                id,
+                                state,
+                                history
+                            }
+                        })
+                    );
+                });
             }
             break;
         case "text": {

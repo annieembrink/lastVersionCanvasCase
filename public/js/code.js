@@ -192,52 +192,6 @@ colors.addEventListener('click', (e) => {
 
 
 
-
-
-
-
-
-
-
-
-
-// WEBSOCKET STUFF
-// use WebSocket >>> make sure server uses same ws port!
-// const websocket = new WebSocket("ws://localhost:80");
-
-/* event listeners
-------------------------------- */
-
-// // listen on close event (server)
-// websocket.addEventListener("close", (event) => {
-//   // console.log('Server down...', event);
-//   document.getElementById("status").textContent = "Sry....server down";
-// });
-
-// listen to messages from client | server
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// websocket.addEventListener("message", (event) => {
-//   // console.log(event.data);
-
-//   let obj = parseJSON(event.data);
-
-//   // todo
-//   // use obj property 'type' to handle message event
-//   switch (obj.type) {
-//     case "text":
-//       break;
-//     case "somethingelse":
-//       break;
-//     default:
-//       break;
-//   }
-
-//   // ...
-//   renderMessage(obj);
-// });
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 nicknameInput.addEventListener('keydown', (e) => {
   if (e.key === "Enter" && nicknameInput.value.length > 0) {
     startGame()
@@ -263,39 +217,6 @@ function startGame() {
   document.getElementById("inputText").focus();
 }
 
-
-
-// function newMessage(e) {
-//   // press Enter...make sure at least one char
-//   if (e.key === "Enter" && inputText.value.length > 0) {
-//     // chat message object
-//     let objMessage = {
-//       type: "text",
-//       msg: inputText.value,
-//       id: id,
-//       nickname: nickname,
-//     };
-
-//     // show new message for this user
-//     renderMessage(objMessage);
-
-//     // send to server
-//     websocket.send(JSON.stringify(objMessage));
-
-//     if (objMessage.msg === chosenWord.textContent) {
-//       console.log('correct')
-//       objMessage.msg = `${nickname} guessed the right word`
-//       inputText.disabled = true;
-//     }
-
-//     // reset input field
-//     inputText.value = "";
-//   }
-// }
-
-
-//   inputText.addEventListener("keydown", (event) => {
-// });
 
 /* functions...
 ------------------------------- */
@@ -354,12 +275,45 @@ function renderMessage(obj) {
 }
 
 // --------------------------------------------------
+
+
+
+
 function createPlayersEl(obj) {
-  const playerEl = document.createElement('p')
-  playerEl.innerText = obj
-  playerDiv.appendChild(playerEl)
-  console.log(obj)
-} 
+
+  const colors = [
+    "red",
+    "blue",
+    "lightblue",
+    "yellow",
+    "green",
+    "brown",
+    "orange",
+    "pink",
+    "purple",
+    "gold",
+    "grey",
+    "lightgrey"
+  ]
+
+  playerDiv.innerHTML = '';
+
+  let i=0
+  obj.forEach(player => {
+    const onePlayerDiv = document.createElement('div');
+    if (i === 12) {
+      i = 0
+    }
+    onePlayerDiv.style.backgroundColor = colors[i++]
+    // onePlayerDiv.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+    playerDiv.appendChild(onePlayerDiv)
+
+    const playerEl = document.createElement('p')
+    playerEl.innerText = player
+    onePlayerDiv.appendChild(playerEl)
+  })
+
+}
 
 
 
@@ -376,14 +330,6 @@ function init(e) {
 
   // const websocket = new WebSocket('ws://localhost: 80');
   const websocket = new WebSocket("ws://localhost:80");
-
-
-  // const canvas = document.querySelector("#canvas");
-  // canvas.width = 350
-  // canvas.height = 400
-  // const ctx = canvas.getContext("2d");
-  // let isPainting = false;
-
 
   //TEXT MESSAGE FUNCTIONS
   function newTextMessage(e) {
@@ -414,7 +360,7 @@ function init(e) {
     }
   }
 
- 
+
 
 
   // PAINT MESSAGE FUNCTIONS
@@ -436,7 +382,6 @@ function init(e) {
     const args = {
       id: null,
       color: objWithCurrentColor.color || 'black',
-      // line: objWithCurrentPen.pen,
       x: e.clientX - canvas.offsetLeft,
       y: e.clientY - canvas.offsetTop,
       radius: objWithCurrentPen.pen,
@@ -466,10 +411,16 @@ function init(e) {
     });
   };
 
+  // const recreatePlayersList = (history) => {
+  //   console.log(history)
+  // }
+
   const handleSocketOpen = (e) => {
     // const message = JSON.parse(e.data);
     console.log('Socket has been opened');
-    websocket.send(JSON.stringify({ type: "init" }));
+    websocket.send(JSON.stringify({
+      type: "init"
+    }));
   }
 
 
@@ -477,17 +428,18 @@ function init(e) {
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
 
-    console.log('message', message);
-
+    // console.log('message', message);
 
     //switch statement
     switch (message.type) {
       case "init":
         const id = message.payload.id
         const state = message.payload.state;
-        // window.clientId = id;
-        // window.clientColor = color;
-        createPlayersEl(message.payload.id)
+        const history = message.payload.history
+
+        console.log(message)
+        createPlayersEl(history)
+        // recreatePlayersList(history)
         recreateCanvas(state);
         break;
       case "text":
@@ -503,8 +455,8 @@ function init(e) {
     }
   }
 
-   // listen on close event (server)
-   websocket.addEventListener("close", (event) => {
+  // listen on close event (server)
+  websocket.addEventListener("close", (event) => {
     document.getElementById("status").textContent = "Sry....server down";
   });
 
