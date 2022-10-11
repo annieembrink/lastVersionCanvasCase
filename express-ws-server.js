@@ -135,7 +135,7 @@ wss.on("connection", (ws) => {
                                 id,
                                 state,
                                 history,
-                                // nicknameHistory
+                                nicknameHistory
                             }
                         })
                     );
@@ -159,13 +159,29 @@ wss.on("connection", (ws) => {
         }
         break;
         case "start": {
-            console.log(message.nickname)
-            nicknameHistory.push(message.nickname)
+            console.log(message)
             console.log(nicknameHistory)
+            const id = ws.id
+            const nickname = message.nickname
+
+            let obj = {
+                nickname: nickname,
+                id: id,
+            }
+            nicknameHistory.push(obj)
 
             wss.clients.forEach((client) => {
 
-                client.send(JSON.stringify({type: 'start', nickname: nicknameHistory}))
+                client.send(JSON.stringify(
+                    {
+                        type: "start",
+                        data: {
+                            id,
+                            nickname,
+                            nicknameHistory
+                        }
+                    })
+                );
             });
         }
         break;

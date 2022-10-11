@@ -307,7 +307,7 @@ function createPlayersEl(obj) {
     playerDiv.appendChild(onePlayerDiv)
 
     const playerEl = document.createElement('p')
-    playerEl.innerText = player
+    playerEl.innerText = player.nickname
     onePlayerDiv.appendChild(playerEl)
   })
 
@@ -453,6 +453,7 @@ function init(e) {
         // console.log(nickname)
 
         console.log(message.type)
+        // console.log(message.payload.nicknameHistory)
         // createPlayersEl(nickname)
         // recreatePlayersList(history)
         recreateCanvas(state);
@@ -464,11 +465,12 @@ function init(e) {
         console.log('test')
         break;
       case "start":
-        console.log(message)
-        createPlayersEl(message.nickname)
+        console.log(message.type)
+        createPlayersEl(message.data.nicknameHistory)
         break;
       case "paint":
         console.log(message.type)
+        console.log(message.payload)
         const args = message.payload;
         paintLine(ctx, args);
         break;
