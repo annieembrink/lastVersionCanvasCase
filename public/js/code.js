@@ -20,7 +20,7 @@ let isPainting = false;
 let nickname;
 let id;
 
-const websocket = new WebSocket("ws://localhost:80");
+// const websocket = new WebSocket("ws://localhost:80");
 
 
 fetch('motive.json')
@@ -208,11 +208,11 @@ colors.addEventListener('click', (e) => {
 /* event listeners
 ------------------------------- */
 
-// listen on close event (server)
-websocket.addEventListener("close", (event) => {
-  // console.log('Server down...', event);
-  document.getElementById("status").textContent = "Sry....server down";
-});
+// // listen on close event (server)
+// websocket.addEventListener("close", (event) => {
+//   // console.log('Server down...', event);
+//   document.getElementById("status").textContent = "Sry....server down";
+// });
 
 // listen to messages from client | server
 
@@ -263,34 +263,39 @@ function startGame() {
   document.getElementById("inputText").focus();
 }
 
-inputText.addEventListener("keydown", (event) => {
 
-  // press Enter...make sure at least one char
-  if (event.key === "Enter" && inputText.value.length > 0) {
-    // chat message object
-    let objMessage = {
-      type: "text",
-      msg: inputText.value,
-      id: id,
-      nickname: nickname,
-    };
 
-    // show new message for this user
-    renderMessage(objMessage);
+// function newMessage(e) {
+//   // press Enter...make sure at least one char
+//   if (e.key === "Enter" && inputText.value.length > 0) {
+//     // chat message object
+//     let objMessage = {
+//       type: "text",
+//       msg: inputText.value,
+//       id: id,
+//       nickname: nickname,
+//     };
 
-    // send to server
-    websocket.send(JSON.stringify(objMessage));
+//     // show new message for this user
+//     renderMessage(objMessage);
 
-    if (objMessage.msg === chosenWord.textContent) {
-      console.log('correct')
-      objMessage.msg = `${nickname} guessed the right word`
-      inputText.disabled = true;
-    }
+//     // send to server
+//     websocket.send(JSON.stringify(objMessage));
 
-    // reset input field
-    inputText.value = "";
-  }
-});
+//     if (objMessage.msg === chosenWord.textContent) {
+//       console.log('correct')
+//       objMessage.msg = `${nickname} guessed the right word`
+//       inputText.disabled = true;
+//     }
+
+//     // reset input field
+//     inputText.value = "";
+//   }
+// }
+
+
+//   inputText.addEventListener("keydown", (event) => {
+// });
 
 /* functions...
 ------------------------------- */
@@ -364,7 +369,7 @@ function renderMessage(obj) {
 function init(e) {
 
   // const websocket = new WebSocket('ws://localhost: 80');
-  // const websocket = new WebSocket("ws://localhost:80");
+  const websocket = new WebSocket("ws://localhost:80");
 
 
   // const canvas = document.querySelector("#canvas");
@@ -372,6 +377,40 @@ function init(e) {
   // canvas.height = 400
   // const ctx = canvas.getContext("2d");
   // let isPainting = false;
+
+  function newMessage(e) {
+    // press Enter...make sure at least one char
+    if (e.key === "Enter" && inputText.value.length > 0) {
+      // chat message object
+      let objMessage = {
+        type: "text",
+        msg: inputText.value,
+        id: id,
+        nickname: nickname,
+      };
+
+      // show new message for this user
+      renderMessage(objMessage);
+
+      // send to server
+      websocket.send(JSON.stringify(objMessage));
+
+      if (objMessage.msg === chosenWord.textContent) {
+        console.log('correct')
+        objMessage.msg = `${nickname} guessed the right word`
+        inputText.disabled = true;
+      }
+
+      // reset input field
+      inputText.value = "";
+    }
+  }
+
+  // listen on close event (server)
+  websocket.addEventListener("close", (event) => {
+    // console.log('Server down...', event);
+    document.getElementById("status").textContent = "Sry....server down";
+  });
 
 
   // DONE: Handle painting
@@ -470,6 +509,7 @@ function init(e) {
   }
 
   // TODO: Connecting events with functions
+  inputText.onkeydown = newMessage;
   websocket.onopen = handleSocketOpen;
   websocket.onmessage = handleSocketMessage;
   canvas.onmousedown = initPaint
