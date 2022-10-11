@@ -80,7 +80,7 @@ server.on("upgrade", (req, socket, head) => {
     });
 });
 
-
+const state = [];
 
 /* listen on new websocket connections
 ------------------------------- */
@@ -147,6 +147,7 @@ wss.on("connection", (ws) => {
         break;
         case "paint": {
             // console.log("Broadcasting: ", message);
+            state.push(message)
             wss.clients.forEach((client) => {
 
                 client.send(JSON.stringify(message))

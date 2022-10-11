@@ -378,6 +378,8 @@ function init(e) {
   // const ctx = canvas.getContext("2d");
   // let isPainting = false;
 
+
+  //TEXT MESSAGE FUNCTIONS
   function newMessage(e) {
     // press Enter...make sure at least one char
     if (e.key === "Enter" && inputText.value.length > 0) {
@@ -406,14 +408,10 @@ function init(e) {
     }
   }
 
-  // listen on close event (server)
-  websocket.addEventListener("close", (event) => {
-    // console.log('Server down...', event);
-    document.getElementById("status").textContent = "Sry....server down";
-  });
+ 
 
 
-  // DONE: Handle painting
+  // PAINT MESSAGE FUNCTIONS
   const initPaint = (e) => {
     isPainting = true;
     // ctx.beginPath()
@@ -465,6 +463,8 @@ function init(e) {
 
   const handleSocketOpen = (e) => {
     console.log('Socket has been opened');
+    websocket.send(JSON.stringify({ type: "init" }));
+
     // const message = JSON.parse(e);
     // console.log(message)
 
@@ -477,11 +477,7 @@ function init(e) {
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
 
-    console.log('message sent from: ', message.payload, 'message', message)
-    // renderMessage(message)
-
-    // console.log(`${message.payload.id} is painting`)
-    // console.log(`Message incoming: ${message}`);
+    console.log('message', message);
 
     //switch statement
     switch (message.type) {
@@ -494,19 +490,22 @@ function init(e) {
         recreateCanvas(state);
         break;
       case "text":
-        // const msg = message.payload;
         renderMessage(message)
         console.log('test')
         break;
       case "paint":
         const args = message.payload;
-        console.log('pppppainting')
         paintLine(ctx, args);
         break;
       default:
         // console.log("default case")
     }
   }
+
+   // listen on close event (server)
+   websocket.addEventListener("close", (event) => {
+    document.getElementById("status").textContent = "Sry....server down";
+  });
 
   // TODO: Connecting events with functions
   inputText.onkeydown = newMessage;
