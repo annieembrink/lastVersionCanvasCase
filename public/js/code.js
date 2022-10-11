@@ -346,6 +346,7 @@ function init(e) {
 
   //TEXT MESSAGE FUNCTIONS
   function newTextMessage(e) {
+    console.log('func newtextmsg')
     // press Enter...make sure at least one char
     if (e.key === "Enter" && inputText.value.length > 0) {
       // chat message object
@@ -460,9 +461,10 @@ function init(e) {
         break;
       case "text":
         console.log(message.type)
+        console.log(message)
         // createPlayersEl(nickname)
         renderMessage(message)
-        console.log('test')
+        // newTextMessage(message)
         break;
       case "start":
         console.log(message.type)
@@ -480,8 +482,9 @@ function init(e) {
   }
 
   // listen on close event (server)
-  websocket.addEventListener("close", (event) => {
+  websocket.addEventListener("close", (e) => {
     document.getElementById("status").textContent = "Sry....server down";
+    // websocket.send(JSON.stringify({nickname: nicknameInput.value}))
   });
 
   // TODO: Connecting events with functions

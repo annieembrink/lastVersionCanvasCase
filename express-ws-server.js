@@ -98,6 +98,7 @@ wss.on("connection", (ws) => {
 
     // close event
     ws.on("close", () => {
+        
         console.log("Client disconnected");
         console.log(
             "Number of remaining connected clients: ",
@@ -144,14 +145,14 @@ wss.on("connection", (ws) => {
             break;
         case "text": {
             console.log('client trying to write')
-            console.log(message)
+            console.log('message', message)
 
             // message to clients
             let objBroadcast = {
                 type: "text",
                 msg: message.msg,
                 id: ws.id,
-                nickname: nicknameHistory
+                nickname: message.nickname
             };
 
             // broadcast to all but this ws...
@@ -160,7 +161,6 @@ wss.on("connection", (ws) => {
         break;
         case "start": {
             console.log(message)
-            console.log(nicknameHistory)
             const id = ws.id
             const nickname = message.nickname
 
@@ -169,6 +169,7 @@ wss.on("connection", (ws) => {
                 id: id,
             }
             nicknameHistory.push(obj)
+            console.log(nicknameHistory)
 
             wss.clients.forEach((client) => {
 
