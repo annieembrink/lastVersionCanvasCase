@@ -314,15 +314,6 @@ function createPlayersEl(obj) {
 }
 
 
-
-
-
-
-
-
-
-
-
 //FUNCTION ----------------------------
 function init(e) {
 
@@ -424,12 +415,7 @@ function init(e) {
     });
   };
 
-  // const recreatePlayersList = (history) => {
-  //   console.log(history)
-  // }
-
   const handleSocketOpen = (e) => {
-    // const message = JSON.parse(e.data);
     console.log('Socket has been opened');
     websocket.send(JSON.stringify({
       type: "init"
@@ -439,38 +425,32 @@ function init(e) {
 
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
-    console.log('message', message)
 
     //switch statement
     switch (message.type) {
       case "init":
         const state = message.payload.state;
-        console.log(message.type)
-        // console.log('new arr INIT', message.payload.newArr)
-        // createPlayersEl(message.payload.newArr)
-        console.log(message.payload.howManyClients)
+        console.log(message.type);
         recreateCanvas(state);
         break;
       case "text":
         console.log(message.type)
         console.log(message.arrayOfPlayersLeft)
         console.log('players left', message.nr)
-        // createPlayersEl(message.arrayOfPlayersLeft)
         renderMessage(message)
         break;
       case "start":
         console.log(message.type)
-        // console.log('new arr START', message.data.newArr)
         createPlayersEl(message.data.nicknameHistory)
         break;
       case "paint":
         console.log(message.type)
-        // console.log(message.payload)
         const args = message.payload;
         paintLine(ctx, args);
         break;
       case "disconnect":
-        console.log(message.data)
+        console.log(message.active)
+        createPlayersEl(message.active)
         break;
       default:
         // console.log("default case")
