@@ -93,6 +93,8 @@ wss.getUniqueID = function () {
 /* listen on new websocket connections
 ------------------------------- */
 wss.on("connection", (ws) => {
+    
+    let howManyClients = wss.clients.size;
 
     ws.id = wss.getUniqueID();
 
@@ -109,7 +111,8 @@ wss.on("connection", (ws) => {
     ws.on("message", (data) => {
 
         const message = JSON.parse(data);
-        ws.send(JSON.stringify(ws.id))
+        // ws.send(JSON.stringify(ws.id))
+        // ws.send(JSON.stringify(howManyClients))
 
         switch (message.type) {
             case "init": {
@@ -126,7 +129,8 @@ wss.on("connection", (ws) => {
                             state,
                             history,
                             nicknameHistory,
-                            newArr
+                            newArr,
+                            howManyClients
                         }
                     }));
                 });
@@ -141,7 +145,8 @@ wss.on("connection", (ws) => {
                 msg: message.msg,
                 id: ws.id,
                 nickname: message.nickname, 
-                arrayOfPlayersLeft: newArr
+                arrayOfPlayersLeft: newArr,
+                nr: howManyClients
             };
 
             // broadcast to all but this ws...
@@ -193,7 +198,11 @@ wss.on("connection", (ws) => {
 
             let playerLeft = nicknameHistory.find(player => player.id === client.id)
             newArr.push(playerLeft)
+            console.log('newarr', newArr)
+            client.send(JSON.stringify({type: 'disconnect', data: newArr}))
+          
         });
+        console.log('history', nicknameHistory)
         
         console.log("Client disconnected");
         console.log(

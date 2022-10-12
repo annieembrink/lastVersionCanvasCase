@@ -439,19 +439,23 @@ function init(e) {
 
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
+    console.log('message', message)
 
     //switch statement
     switch (message.type) {
       case "init":
         const state = message.payload.state;
         console.log(message.type)
-        console.log('new arr INIT', message.payload.newArr)
+        // console.log('new arr INIT', message.payload.newArr)
+        // createPlayersEl(message.payload.newArr)
+        console.log(message.payload.howManyClients)
         recreateCanvas(state);
         break;
       case "text":
         console.log(message.type)
         console.log(message.arrayOfPlayersLeft)
-        createPlayersEl(message.arrayOfPlayersLeft)
+        console.log('players left', message.nr)
+        // createPlayersEl(message.arrayOfPlayersLeft)
         renderMessage(message)
         break;
       case "start":
@@ -465,6 +469,9 @@ function init(e) {
         const args = message.payload;
         paintLine(ctx, args);
         break;
+      case "disconnect":
+        console.log(message.data)
+        break;
       default:
         // console.log("default case")
     }
@@ -472,6 +479,9 @@ function init(e) {
 
   // listen on close event (server)
   websocket.addEventListener("close", (e) => {
+    // const data = JSON.parse(e.data)
+    // console.log('data', data)
+
     document.getElementById("status").textContent = "Sry....server down";
   });
 
