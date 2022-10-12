@@ -84,20 +84,49 @@ const state = [];
 const history = [];
 const nicknameHistory = [];
 
+wss.getUniqueID = function () {
+        let id = uuidv4();
+    return id;
+};
+
+
 /* listen on new websocket connections
 ------------------------------- */
 wss.on("connection", (ws) => {
 
+
+    ws.id = wss.getUniqueID();
+
+    wss.clients.forEach(function each(client) {
+        console.log('Client.ID: ' + client.id);
+    });
+
+
+
+
+
+
+
+
     console.log("New client connection from IP: ", ws._socket.remoteAddress);
     console.log("Number of connected clients: ", wss.clients.size);
-
-    // ws.id = uuidv4();
-    // ws.send(JSON.stringify(ws.id))
 
     // WebSocket events (ws) for single client
 
     // close event
     ws.on("close", () => {
+
+
+
+        wss.clients.forEach(function each(client) {
+            console.log('Client.ID: ' + client.id);
+        });
+
+
+
+
+
+
         
         console.log("Client disconnected");
         console.log(
@@ -112,7 +141,7 @@ wss.on("connection", (ws) => {
         // console.log('data', JSON.parse(data))
 
         const message = JSON.parse(data);
-        ws.id = uuidv4();
+        // ws.id = uuidv4();
         ws.send(JSON.stringify(ws.id))
 
         // message.payload.id = ws.id;
@@ -123,7 +152,7 @@ wss.on("connection", (ws) => {
         switch (message.type) {
             case "init": {
                 console.log("Attempting to send init data to client");
-                console.log(message)
+                // console.log(message)
 
                 const id = ws.id;
                 history.push(id)
@@ -145,7 +174,7 @@ wss.on("connection", (ws) => {
             break;
         case "text": {
             console.log('client trying to write')
-            console.log('message', message)
+            // console.log('message', message)
 
             // message to clients
             let objBroadcast = {
@@ -160,7 +189,7 @@ wss.on("connection", (ws) => {
         }
         break;
         case "start": {
-            console.log(message)
+            // console.log(message)
             const id = ws.id
             const nickname = message.nickname
 
@@ -169,7 +198,7 @@ wss.on("connection", (ws) => {
                 id: id,
             }
             nicknameHistory.push(obj)
-            console.log(nicknameHistory)
+            // console.log(nicknameHistory)
 
             wss.clients.forEach((client) => {
 

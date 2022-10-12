@@ -323,7 +323,7 @@ function createPlayersEl(obj) {
 
 
 
-//DRAW FUNCTION ----------------------------
+//FUNCTION ----------------------------
 function init(e) {
 
   const websocket = new WebSocket("ws://localhost:80");
@@ -346,7 +346,6 @@ function init(e) {
 
   //TEXT MESSAGE FUNCTIONS
   function newTextMessage(e) {
-    console.log('func newtextmsg')
     // press Enter...make sure at least one char
     if (e.key === "Enter" && inputText.value.length > 0) {
       // chat message object
@@ -447,24 +446,17 @@ function init(e) {
     //switch statement
     switch (message.type) {
       case "init":
-        const id = message.payload.id
+        // const id = message.payload.id
         const state = message.payload.state;
-        const history = message.payload.history
+        // const history = message.payload.history
         // const nickname = message.payload.nicknameHistory
-        // console.log(nickname)
 
         console.log(message.type)
-        // console.log(message.payload.nicknameHistory)
-        // createPlayersEl(nickname)
-        // recreatePlayersList(history)
         recreateCanvas(state);
         break;
       case "text":
         console.log(message.type)
-        console.log(message)
-        // createPlayersEl(nickname)
         renderMessage(message)
-        // newTextMessage(message)
         break;
       case "start":
         console.log(message.type)
@@ -472,7 +464,7 @@ function init(e) {
         break;
       case "paint":
         console.log(message.type)
-        console.log(message.payload)
+        // console.log(message.payload)
         const args = message.payload;
         paintLine(ctx, args);
         break;
@@ -500,6 +492,7 @@ function init(e) {
   clearBtn.addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
   })
+
 }
 
 function paintLine(ctx, args) {
@@ -527,7 +520,7 @@ function paintLine(ctx, args) {
 }
 
 window.onload = init;
-
+console.log(window)
 
 
 //funktionalitet att lägga till ------------------
