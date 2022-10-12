@@ -82,106 +82,66 @@ server.on("upgrade", (req, socket, head) => {
 
 const state = [];
 const history = [];
-const nicknameHistory = [];
+let nicknameHistory = [];
+let newArr = []
 
 wss.getUniqueID = function () {
-        let id = uuidv4();
+    let id = uuidv4();
     return id;
 };
-
 
 /* listen on new websocket connections
 ------------------------------- */
 wss.on("connection", (ws) => {
 
-
     ws.id = wss.getUniqueID();
 
-    wss.clients.forEach(function each(client) {
+    wss.clients.forEach(client => {
         console.log('Client.ID: ' + client.id);
     });
-
-
-
-
-
-
-
 
     console.log("New client connection from IP: ", ws._socket.remoteAddress);
     console.log("Number of connected clients: ", wss.clients.size);
 
     // WebSocket events (ws) for single client
 
-    // close event
-    ws.on("close", () => {
-
-
-
-        wss.clients.forEach(function each(client) {
-            console.log('Client.ID: ' + client.id);
-        });
-
-
-
-
-
-
-        
-        console.log("Client disconnected");
-        console.log(
-            "Number of remaining connected clients: ",
-            wss.clients.size
-        );
-    });
-
     // message event
     ws.on("message", (data) => {
-        // console.log(`${ws.id} sent a message`)
-        // console.log('data', JSON.parse(data))
 
         const message = JSON.parse(data);
-        // ws.id = uuidv4();
         ws.send(JSON.stringify(ws.id))
-
-        // message.payload.id = ws.id;
-
-        // console.log("Message received: ", message.type);
-        // console.log("message id : ", message.payload.id);
 
         switch (message.type) {
             case "init": {
                 console.log("Attempting to send init data to client");
-                // console.log(message)
 
                 const id = ws.id;
                 history.push(id)
                 wss.clients.forEach((client) => {
 
-                    client.send(JSON.stringify(
-                        {
-                            type: "init",
-                            payload: {
-                                id,
-                                state,
-                                history,
-                                nicknameHistory
-                            }
-                        })
-                    );
+                    client.send(JSON.stringify({
+                        type: "init",
+                        payload: {
+                            id,
+                            state,
+                            history,
+                            nicknameHistory,
+                            newArr
+                        }
+                    }));
                 });
             }
             break;
         case "text": {
             console.log('client trying to write')
-            // console.log('message', message)
 
             // message to clients
             let objBroadcast = {
                 type: "text",
                 msg: message.msg,
                 id: ws.id,
-                nickname: message.nickname
+                nickname: message.nickname, 
+                arrayOfPlayersLeft: newArr
             };
 
             // broadcast to all but this ws...
@@ -189,7 +149,6 @@ wss.on("connection", (ws) => {
         }
         break;
         case "start": {
-            // console.log(message)
             const id = ws.id
             const nickname = message.nickname
 
@@ -198,25 +157,22 @@ wss.on("connection", (ws) => {
                 id: id,
             }
             nicknameHistory.push(obj)
-            // console.log(nicknameHistory)
 
             wss.clients.forEach((client) => {
 
-                client.send(JSON.stringify(
-                    {
-                        type: "start",
-                        data: {
-                            id,
-                            nickname,
-                            nicknameHistory
-                        }
-                    })
-                );
+                client.send(JSON.stringify({
+                    type: "start",
+                    data: {
+                        id,
+                        nickname,
+                        nicknameHistory,
+                        newArr
+                    }
+                }));
             });
         }
         break;
         case "paint": {
-            // console.log("Broadcasting: ", message);
             state.push(message)
             wss.clients.forEach((client) => {
 
@@ -229,23 +185,23 @@ wss.on("connection", (ws) => {
         }
         }
 
-        // let obj = parseJSON(data);
-        // console.log('obj', obj)
+    });
 
-        // todo
-        // use obj property 'type' to handle message event
-        // switch (obj.type) {
-        //     case "text":
-        //         break;
-        //     case "somethingelse":
-        //         break;
-        //     default:
-        //         break;
-        // }
+    // close event
+    ws.on("close", () => {
+        wss.clients.forEach(client => {
 
+            let playerLeft = nicknameHistory.find(player => player.id === client.id)
+            newArr.push(playerLeft)
+        });
+        
+        console.log("Client disconnected");
+        console.log(
+            "Number of remaining connected clients: ",
+            wss.clients.size
+        );
     });
 });
-
 
 
 /* listen on initial connection

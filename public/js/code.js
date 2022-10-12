@@ -287,7 +287,7 @@ function createPlayersEl(obj) {
   ]
 
   playerDiv.innerHTML = '';
-  console.log(obj.length)
+  // console.log(obj.length)
 
   function getRandomColor() {
     var r = 255*Math.random()+128|0,
@@ -437,29 +437,26 @@ function init(e) {
   }
 
 
-
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
-
-    // console.log('message', message);
 
     //switch statement
     switch (message.type) {
       case "init":
-        // const id = message.payload.id
         const state = message.payload.state;
-        // const history = message.payload.history
-        // const nickname = message.payload.nicknameHistory
-
         console.log(message.type)
+        console.log('new arr INIT', message.payload.newArr)
         recreateCanvas(state);
         break;
       case "text":
         console.log(message.type)
+        console.log(message.arrayOfPlayersLeft)
+        createPlayersEl(message.arrayOfPlayersLeft)
         renderMessage(message)
         break;
       case "start":
         console.log(message.type)
+        // console.log('new arr START', message.data.newArr)
         createPlayersEl(message.data.nicknameHistory)
         break;
       case "paint":
@@ -476,7 +473,6 @@ function init(e) {
   // listen on close event (server)
   websocket.addEventListener("close", (e) => {
     document.getElementById("status").textContent = "Sry....server down";
-    // websocket.send(JSON.stringify({nickname: nicknameInput.value}))
   });
 
   // TODO: Connecting events with functions
@@ -502,14 +498,6 @@ function paintLine(ctx, args) {
   ctx.fill();
   ctx.beginPath();
 
-
-
-
-
-
-
-
-
   // ctx.strokeStyle = args.color;
 
   // ctx.lineWidth = args.line;
@@ -520,8 +508,6 @@ function paintLine(ctx, args) {
 }
 
 window.onload = init;
-console.log(window)
-
 
 //funktionalitet att lägga till ------------------
 
