@@ -21,6 +21,8 @@ import {
     v4 as uuidv4
 } from "uuid";
 
+import fs from 'fs';
+
 
 
 
@@ -59,6 +61,19 @@ const wss = new WebSocketServer({
     noServer: true
 });
 
+const state = [];
+const history = [];
+let nicknameHistory = [];
+let newArr = []
+let jsonData = [];
+
+
+fs.readFile('motive.json', 'utf8', function(err, data){
+      
+    // Display the file content
+    // console.log(data);
+    jsonData.push(data)
+});
 
 
 /* allow websockets - listener
@@ -80,10 +95,7 @@ server.on("upgrade", (req, socket, head) => {
     });
 });
 
-const state = [];
-const history = [];
-let nicknameHistory = [];
-let newArr = []
+
 
 wss.getUniqueID = function () {
     let id = uuidv4();
@@ -93,6 +105,8 @@ wss.getUniqueID = function () {
 /* listen on new websocket connections
 ------------------------------- */
 wss.on("connection", (ws) => {
+
+    console.log('this is json data', JSON.parse(jsonData))
 
     ws.id = wss.getUniqueID();
 
@@ -128,6 +142,10 @@ wss.on("connection", (ws) => {
                         }
                     }));
                 });
+            }
+            break;
+            case "generateWords": {
+                console.log('the words', message.data)
             }
             break;
         case "text": {
@@ -188,16 +206,16 @@ wss.on("connection", (ws) => {
     ws.on("close", () => {
 
 
-        console.log('nicknameshistory before slice', nicknameHistory)
+        // console.log('nicknameshistory before slice', nicknameHistory)
 
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
-        console.log('clientDisconnected', clientDisconnected)
+        // console.log('clientDisconnected', clientDisconnected)
 
         let getIndex = nicknameHistory.indexOf(clientDisconnected)
-        console.log('getIndex', getIndex)
+        // console.log('getIndex', getIndex)
 
         nicknameHistory.splice(getIndex, 1)
-        console.log('nicknameistory after splice', nicknameHistory)
+        // console.log('nicknameistory after splice', nicknameHistory)
 
         wss.clients.forEach(client => {
 

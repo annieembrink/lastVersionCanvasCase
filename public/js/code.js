@@ -20,9 +20,6 @@ let isPainting = false;
 let nickname;
 let id;
 
-// const websocket = new WebSocket("ws://localhost:80");
-
-
 fetch('motive.json')
   .then((response) => response.json())
   .then((data) => {
@@ -33,6 +30,13 @@ fetch('motive.json')
       for (let i = 0; i < 3; i++) {
         test[i] = data.words[Math.floor(Math.random() * data.words.length)]
       }
+
+
+      websocket.send(JSON.stringify({
+        type: 'generateWords',
+        data: test
+      }));
+
       createRandomWordElement(test);
     }
     GenerateRandomWords()
@@ -84,13 +88,6 @@ fetch('motive.json')
       })
     }
     generatePen()
-
-
-
-
-
-
-
 
     //Not good code, but solved for now
     let pTags = document.getElementsByClassName('pen')
@@ -302,8 +299,8 @@ function createPlayersEl(obj) {
     if (i === 12) {
       i = 0
     }
-    // onePlayerDiv.style.backgroundColor = colors[i++]
-    onePlayerDiv.style.backgroundColor = getRandomColor();
+    onePlayerDiv.style.backgroundColor = colors[i++]
+    // onePlayerDiv.style.backgroundColor = getRandomColor();
     playerDiv.appendChild(onePlayerDiv)
 
     const playerEl = document.createElement('p')
@@ -445,8 +442,6 @@ function init(e) {
         break;
       case "start":
         console.log(message.type)
-        // console.log('nicknamehistory (in start)', message.data.nicknameHistory)
-        // console.log('newArr (in start)', message.data.newArr)
         createPlayersEl(message.data.nicknameHistory)
         break;
       case "paint":
@@ -465,9 +460,6 @@ function init(e) {
 
   // listen on close event (server)
   websocket.addEventListener("close", (e) => {
-    // const data = JSON.parse(e.data)
-    // console.log('data', data)
-
     document.getElementById("status").textContent = "Sry....server down";
   });
 
@@ -509,12 +501,15 @@ window.onload = init;
 
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
 //poängräknare för deltagarna, den som svarar först får flest poäng
-//kontrollera ord som skrivs i chatten, matchar rätt ord
-//DONE: bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
 //en i taget kan rita på canvas, loop för vems tur det är helt enkelt
 //den som ritar får också poäng ju fler som gissar rätt ord
-//en div där deltagarna presenteras med poäng
 //den som ritar ska inte kunna skriva i chatten och får poäng för rätt gissning
 //orden ska bara synas för den som ritar
+
 //DONE: startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
 //DONE: när tiden är ute, kan man inte rita längre
+//DONE: bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
+//DONE: en div där deltagarna presenteras
+//DONE: kontrollera ord som skrivs i chatten, matchar rätt ord
+
+
