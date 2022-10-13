@@ -357,7 +357,7 @@ function init(e) {
 
   function printDuration() {
     if (check == null) {
-      var cnt = 60;
+      var cnt = 5;
 
       check = setInterval(function () {
 
@@ -376,6 +376,10 @@ function init(e) {
           isPainting = false;
           stop()
 
+          websocket.send(JSON.stringify({
+            type: 'timerStarted',
+            data: false
+          }));
 
         }
       }, 1000);
@@ -559,6 +563,7 @@ function init(e) {
         break;
       case "timerStarted":
         console.log(message.data)
+        // document.getElementById('whosTurn').textContent = `${message.data.randomPlayerState[0].nickname}s turn`
         break;
       case "getRandomWords":
         // console.log(message.type, message.data)
@@ -566,6 +571,7 @@ function init(e) {
         break;
       case "getRandomPlayer":
         console.log(message.data[0].nickname)
+        document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         // document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         break;
       case "text":

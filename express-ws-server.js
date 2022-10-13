@@ -81,8 +81,6 @@ const GenerateRandomWords = () => {
         arrOfWords[i] = words[Math.floor(Math.random() * words.length)]
     }
 
-
-
     wss.clients.forEach(client => {
 
         if (randomPlayerState[0].id === client.id) {
@@ -250,10 +248,19 @@ wss.on("connection", (ws) => {
         break;
         case "timerStarted": {
 
-            wss.clients.forEach((client) => {
+            console.log('timermsg', message)
 
-                client.send(JSON.stringify(message))
-            });
+            if(!message.data) {
+                randomPlayerState.splice(0)
+                GenerateRandomPlayer()
+                GenerateRandomWords()
+            }
+            
+
+            // wss.clients.forEach((client) => {
+
+            //     client.send(JSON.stringify(message))
+            // });
         }
         break;
         case "enoughPlayers": {
