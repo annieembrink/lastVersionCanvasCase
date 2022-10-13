@@ -23,15 +23,10 @@ import {
 
 import fs from 'fs';
 
-
-
-
 /* application variables
 ------------------------------- */
 // set port number >>> make sure client javascript uses same WebSocket port!
 const port = 80;
-
-
 
 /* express
 ------------------------------- */
@@ -62,25 +57,64 @@ const wss = new WebSocketServer({
 });
 
 const state = [];
-const history = [];
+// const history = [];
 let nicknameHistory = [];
-let newArr = []
+// let newArr = []
 let jsonData = [];
+// let arrOfWords = [];
 
-
-fs.readFile('motive.json', 'utf8', function(err, data){
-      
-    // Display the file content
-    // console.log(data);
+fs.readFile('motive.json', 'utf8', function (err, data) {
     jsonData.push(data)
 });
+
+//Generating three random words
+const GenerateRandomWords = () => {
+    let data = JSON.parse(jsonData);
+    let words = data.words;
+
+    let arrOfWords = []
+    for (let i = 0; i < 3; i++) {
+        arrOfWords[i] = words[Math.floor(Math.random() * words.length)]
+    }
+
+    wss.clients.forEach(client => {
+
+        client.send(JSON.stringify({
+            type: 'getRandomWords',
+            data: arrOfWords
+        }))
+    });
+}
+
+const GenerateRandomPlayer = () => {
+    let randomPlayer = nicknameHistory[Math.floor(Math.random() * nicknameHistory.length)]
+    console.log('random player', randomPlayer)
+
+    wss.clients.forEach(client => {
+
+        client.send(JSON.stringify({
+            type: 'getRandomPlayer',
+            data: randomPlayer
+        }))
+    });
+}
+
+// //Filling the wordDiv with three random wordTags
+// function createRandomWordElement(data) {
+//     data.map((tag) => {
+//         let pTag = document.createElement('p');
+//         pTag.classList = "randomWordTag"
+//         pTag.innerText = tag;
+//         wordDiv.appendChild(pTag)
+//     })
+// }
 
 
 /* allow websockets - listener
 ------------------------------- */
 // upgrade event - websocket communication
 server.on("upgrade", (req, socket, head) => {
-    console.log("Upgrade event client: ", req.headers);
+    // console.log("Upgrade event client: ", req.headers);
 
     // use authentication - only logged in users allowed ?
     // socket.write('HTTP/1.1 401 Unauthorized\r\nWWW-Authenticate: Basic\r\n\r\n');
@@ -95,8 +129,6 @@ server.on("upgrade", (req, socket, head) => {
     });
 });
 
-
-
 wss.getUniqueID = function () {
     let id = uuidv4();
     return id;
@@ -106,13 +138,17 @@ wss.getUniqueID = function () {
 ------------------------------- */
 wss.on("connection", (ws) => {
 
-    console.log('this is json data', JSON.parse(jsonData))
+    // console.log('this is json data', JSON.parse(jsonData))
+
+    //shouldnt do this on each connection
+    GenerateRandomWords()
+    GenerateRandomPlayer()
 
     ws.id = wss.getUniqueID();
 
-    wss.clients.forEach(client => {
-        console.log('Client.ID: ' + client.id);
-    });
+    // wss.clients.forEach(client => {
+    //     console.log('Client.ID: ' + client.id);
+    // });
 
     console.log("New client connection from IP: ", ws._socket.remoteAddress);
     console.log("Number of connected clients: ", wss.clients.size);
@@ -136,16 +172,12 @@ wss.on("connection", (ws) => {
                         type: "init",
                         payload: {
                             id,
-                            state
+                            state,
                             // history,
                             // nicknameHistory
                         }
                     }));
                 });
-            }
-            break;
-            case "generateWords": {
-                console.log('the words', message.data)
             }
             break;
         case "text": {
@@ -181,7 +213,7 @@ wss.on("connection", (ws) => {
                         id,
                         nickname,
                         nicknameHistory,
-                        newArr
+                        // newArr
                     }
                 }));
             });
@@ -204,7 +236,6 @@ wss.on("connection", (ws) => {
 
     // close event
     ws.on("close", () => {
-
 
         // console.log('nicknameshistory before slice', nicknameHistory)
 

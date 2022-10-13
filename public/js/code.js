@@ -25,31 +25,25 @@ fetch('motive.json')
   .then((data) => {
 
     //Generating three random words
-    const GenerateRandomWords = () => {
-      let test = []
-      for (let i = 0; i < 3; i++) {
-        test[i] = data.words[Math.floor(Math.random() * data.words.length)]
-      }
+    // const GenerateRandomWords = () => {
+    //   let test = []
+    //   for (let i = 0; i < 3; i++) {
+    //     test[i] = data.words[Math.floor(Math.random() * data.words.length)]
+    //   }
 
-
-      websocket.send(JSON.stringify({
-        type: 'generateWords',
-        data: test
-      }));
-
-      createRandomWordElement(test);
-    }
-    GenerateRandomWords()
+    //   createRandomWordElement(test);
+    // }
+    // GenerateRandomWords()
 
     //Filling the wordDiv with three random wordTags
-    function createRandomWordElement(data) {
-      data.map((tag) => {
-        let pTag = document.createElement('p');
-        pTag.classList = "randomWordTag"
-        pTag.innerText = tag;
-        wordDiv.appendChild(pTag)
-      })
-    }
+    // function createRandomWordElement(data) {
+    //   data.map((tag) => {
+    //     let pTag = document.createElement('p');
+    //     pTag.classList = "randomWordTag"
+    //     pTag.innerText = tag;
+    //     wordDiv.appendChild(pTag)
+    //   })
+    // }
 
     //For each word withing word Div, add listener to each tag, create element for the chosen word, remove the div with the words to choose from, and start timer
     wordDiv.querySelectorAll('p').forEach(tag => {
@@ -310,6 +304,15 @@ function createPlayersEl(obj) {
 
 }
 
+function createRandomWordElement(data) {
+  data.map((tag) => {
+    let pTag = document.createElement('p');
+    pTag.classList = "randomWordTag"
+    pTag.innerText = tag;
+    wordDiv.appendChild(pTag)
+  })
+}
+
 
 //FUNCTION ----------------------------
 function init(e) {
@@ -435,6 +438,12 @@ function init(e) {
         const state = message.payload.state;
         console.log(message.type);
         recreateCanvas(state);
+        break;
+      case "getRandomWords":
+      console.log(message.type, message.data)
+        break;
+      case "getRandomPlayer":
+      console.log(message.type, message.data)
         break;
       case "text":
         console.log(message.type)
