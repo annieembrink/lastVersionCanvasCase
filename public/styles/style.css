@@ -1,3 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,600;1,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#gameBody {
+    background-color: black;
+    font-family: 'Poppins', sans-serif;
+}
+
 #theGameContainer {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -26,11 +39,42 @@
 
 #setNicknameContainer {
     grid-area: 1 / 1 / 1 / 6;
+    margin: 20px;
+}
+
+#setNicknameContainer button {
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+#setNicknameContainer button:disabled {
+   display: none;
+}
+
+#setNicknameContainer input {
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+#setNicknameContainer input:disabled {
+    background-color: black;
+    color: #fffefb;
 }
 
 #whosTurn {
-    grid-area: 1 / 4 / 1 / 6;
+    grid-area: 1 / 1 / 1 / 6;
+    margin: 20px;
+    color: #fffefb;
+}
 
+#waiting {
+    color: #fffefb;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .forWords {
@@ -40,11 +84,18 @@
 
 .forWords p {
     cursor: pointer;
+
+    background-color: #fffefb;
+    border-radius: 10px;
+    margin: 10px;
 }
 
 #canvas {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     grid-area: 2 / 1 / 5 / 3;
+    background-color: #fffefb;
+    border-radius: 10px;
+    margin: 10px;
 }
 
 .colorPen {
@@ -53,11 +104,19 @@
 
     display: flex;
     justify-content: space-between;
+
+    background-color: #fffefb;
+    border-radius: 10px;
+    margin: 10px;
 }
 
 #chatDiv {
     border: 1px solid black;
     grid-area: 2 / 3 / 5 / 5;
+
+    background-color: #fffefb;
+    border-radius: 10px;
+    margin: 10px;
 }
 
 #clearBtn {
@@ -66,7 +125,11 @@
 
 #players {
     border: 1px solid black;
-    grid-area: 2 / 5 /  6 / 5;   
+    grid-area: 2 / 5 /  6 / 5;  
+    
+    background-color: #fffefb;
+    border-radius: 10px;
+    margin: 10px;
 }
 
 #players p {

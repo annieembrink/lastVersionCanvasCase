@@ -213,12 +213,15 @@ wss.on("connection", (ws) => {
             }
             nicknameHistory.push(obj)
 
-            if (randomPlayerState.length === 0) {
-                GenerateRandomPlayer()
-                GenerateRandomWords()
-            }
+            
 
             if (nicknameHistory.length > 2) {
+
+                if (randomPlayerState.length === 0) {
+                    GenerateRandomPlayer()
+                    GenerateRandomWords()
+                }
+                
                 console.log('ready to play')
 
                 wss.clients.forEach((client) => {
@@ -277,7 +280,7 @@ wss.on("connection", (ws) => {
     // close event
     ws.on("close", () => {
 
-        // console.log('nicknameshistory before slice', nicknameHistory)
+        console.log('nicknameshistory before slice', nicknameHistory)
 
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
         // console.log('clientDisconnected', clientDisconnected)
@@ -285,8 +288,8 @@ wss.on("connection", (ws) => {
         let getIndex = nicknameHistory.indexOf(clientDisconnected)
         // console.log('getIndex', getIndex)
 
-        nicknameHistory.splice(getIndex, 1)
-        // console.log('nicknameistory after splice', nicknameHistory)
+        nicknameHistory.slice(getIndex, 1)
+        console.log('nicknameistory after splice', nicknameHistory)
 
         if (nicknameHistory.length < 3) {
             toFewPlayers = true;
@@ -296,10 +299,11 @@ wss.on("connection", (ws) => {
 
         if (randomPlayerState[0].id === ws.id) {
             console.log('random player left')
-            randomPlayerState.splice(0)
+            randomPlayerState.slice(0)
             GenerateRandomPlayer()
             GenerateRandomWords()
         }
+        console.log('randomplayerstate', randomPlayerState)
 
 
         wss.clients.forEach(client => {
