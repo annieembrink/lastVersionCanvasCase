@@ -10,6 +10,7 @@ const penContainer = document.getElementById("penContainer");
 const clearBtn = document.getElementById("clearBtn");
 const body = document.querySelector('body')
 const playerDiv = document.getElementById('players')
+const gameBody = document.getElementById('gameBody')
 
 const canvas = document.querySelector("#canvas");
 canvas.width = 350
@@ -321,24 +322,37 @@ function init(e) {
 
   function nickNameOnEnter(e) {
     if (e.key === "Enter" && nicknameInput.value.length > 0) {
-      document.getElementById('theGameContainer').style.display = 'grid';
       websocket.send(JSON.stringify({
         type: 'start',
         nickname: nicknameInput.value
       }));
+
+      let pTag = document.createElement('h2');
+      pTag.textContent = 'Waiting for more players...';
+      gameBody.appendChild(pTag);
+
+      theDiv()
       startGame()
     }
   }
 
   function nickNameOnButton() {
     if (nicknameInput.value.length > 0) {
-      document.getElementById('theGameContainer').style.display = 'grid';
+      // document.getElementById('theGameContainer').style.display = 'grid';
       websocket.send(JSON.stringify({
         type: 'start',
         nickname: nicknameInput.value
       }));
+      theDiv()
       startGame()
     }
+  }
+
+  function theDiv() {
+    if (playerDiv.children.length >= 2) {
+      document.getElementById('theGameContainer').style.display = 'grid';
+      console.log('time to play')
+    }  
   }
 
   //TEXT MESSAGE FUNCTIONS

@@ -99,6 +99,8 @@ const GenerateRandomPlayer = () => {
     });
 }
 
+
+
 // //Filling the wordDiv with three random wordTags
 // function createRandomWordElement(data) {
 //     data.map((tag) => {
@@ -141,8 +143,10 @@ wss.on("connection", (ws) => {
     // console.log('this is json data', JSON.parse(jsonData))
 
     //shouldnt do this on each connection
+
     GenerateRandomWords()
-    GenerateRandomPlayer()
+
+  
 
     ws.id = wss.getUniqueID();
 
@@ -196,6 +200,11 @@ wss.on("connection", (ws) => {
         }
         break;
         case "start": {
+
+            if (nicknameHistory.length >= 2) {
+                GenerateRandomPlayer()
+            }
+
             const id = ws.id
             const nickname = message.nickname
 
