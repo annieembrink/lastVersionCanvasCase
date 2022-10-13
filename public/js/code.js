@@ -451,6 +451,7 @@ function init(e) {
         type: 'start',
         nickname: nicknameInput.value
       }));
+      createWaitEl()
       startGame()
     }
   }
@@ -563,16 +564,13 @@ function init(e) {
         break;
       case "timerStarted":
         console.log(message.data)
-        // document.getElementById('whosTurn').textContent = `${message.data.randomPlayerState[0].nickname}s turn`
         break;
       case "getRandomWords":
-        // console.log(message.type, message.data)
         createRandomWordElement(message.data)
         break;
       case "getRandomPlayer":
         console.log(message.data[0].nickname)
         document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
-        // document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         break;
       case "text":
         console.log(message.type)
@@ -584,7 +582,7 @@ function init(e) {
         createPlayersEl(message.data.nicknameHistory)
         document.getElementById('whosTurn').textContent = `${message.data.randomPlayerState[0].nickname}s turn`
 
-        // console.log(message.data.randomPlayerState[0].nickname)
+        console.log(message.data.randomPlayerState[0].nickname)
         // document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         break;
       case "paint":

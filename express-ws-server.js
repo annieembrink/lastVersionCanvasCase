@@ -250,12 +250,12 @@ wss.on("connection", (ws) => {
 
             console.log('timermsg', message)
 
-            if(!message.data) {
+            if (!message.data) {
                 randomPlayerState.splice(0)
                 GenerateRandomPlayer()
                 GenerateRandomWords()
             }
-            
+
 
             // wss.clients.forEach((client) => {
 
@@ -292,12 +292,23 @@ wss.on("connection", (ws) => {
             toFewPlayers = true;
         }
 
+
+
+        if (randomPlayerState[0].id === ws.id) {
+            console.log('random player left')
+            randomPlayerState.splice(0)
+            GenerateRandomPlayer()
+            GenerateRandomWords()
+        }
+
+
         wss.clients.forEach(client => {
 
             client.send(JSON.stringify({
                 type: 'disconnect',
                 active: nicknameHistory,
-                toFewPlayers: toFewPlayers
+                toFewPlayers: toFewPlayers,
+                // randomPlayerState: randomPlayerState
             }))
         });
 
