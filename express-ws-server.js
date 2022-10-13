@@ -61,6 +61,7 @@ const state = [];
 let nicknameHistory = [];
 // let newArr = []
 let jsonData = [];
+let toFewPlayers = false; 
 // let arrOfWords = [];
 
 fs.readFile('motive.json', 'utf8', function (err, data) {
@@ -144,10 +145,6 @@ wss.on("connection", (ws) => {
 
     //shouldnt do this on each connection
 
-    GenerateRandomWords()
-
-  
-
     ws.id = wss.getUniqueID();
 
     // wss.clients.forEach(client => {
@@ -201,10 +198,6 @@ wss.on("connection", (ws) => {
         break;
         case "start": {
 
-            if (nicknameHistory.length >= 2) {
-                GenerateRandomPlayer()
-            }
-
             const id = ws.id
             const nickname = message.nickname
 
@@ -214,18 +207,25 @@ wss.on("connection", (ws) => {
             }
             nicknameHistory.push(obj)
 
-            wss.clients.forEach((client) => {
+            if (nicknameHistory.length > 2) {
+                console.log('ready to play')
 
-                client.send(JSON.stringify({
-                    type: "start",
-                    data: {
-                        id,
-                        nickname,
-                        nicknameHistory,
-                        // newArr
-                    }
-                }));
-            });
+                GenerateRandomPlayer()
+                GenerateRandomWords()
+
+                wss.clients.forEach((client) => {
+
+                    client.send(JSON.stringify({
+                        type: "start",
+                        data: {
+                            id,
+                            nickname,
+                            nicknameHistory,
+                            // newArr
+                        }
+                    }));
+                });
+            }
         }
         break;
         case "paint": {
@@ -234,6 +234,10 @@ wss.on("connection", (ws) => {
 
                 client.send(JSON.stringify(message))
             });
+        }
+        break;
+        case "enoughPlayers": {
+       
         }
         break;
         default: {
@@ -257,11 +261,16 @@ wss.on("connection", (ws) => {
         nicknameHistory.splice(getIndex, 1)
         // console.log('nicknameistory after splice', nicknameHistory)
 
+        if (nicknameHistory.length < 3) {
+            toFewPlayers = true; 
+        }
+
         wss.clients.forEach(client => {
 
             client.send(JSON.stringify({
                 type: 'disconnect',
-                active: nicknameHistory
+                active: nicknameHistory,
+                toFewPlayers: toFewPlayers
             }))
         });
 

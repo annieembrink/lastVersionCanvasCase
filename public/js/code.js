@@ -138,6 +138,11 @@ function printDuration() {
         canvas.onmousedown = null;
         isPainting = false;
         stop()
+
+        websocket.send(JSON.stringify({
+          type: 'enoughPlayers',
+          data: true
+        }));
       }
     }, 1000);
   }
@@ -314,11 +319,23 @@ function createRandomWordElement(data) {
   })
 }
 
+function toFewPlayers(bool) {
+  if (bool) {
+    document.getElementById('theGameContainer').style.display = 'none';
+  }
+}
 
 //FUNCTION ----------------------------
 function init(e) {
 
   const websocket = new WebSocket("ws://localhost:80");
+
+  function createWaitEl() {
+    let pTag = document.createElement('h2');
+      pTag.id = 'waiting'
+      pTag.textContent = 'Waiting for more players...';
+      gameBody.appendChild(pTag);
+  }
 
   function nickNameOnEnter(e) {
     if (e.key === "Enter" && nicknameInput.value.length > 0) {
@@ -327,11 +344,7 @@ function init(e) {
         nickname: nicknameInput.value
       }));
 
-      let pTag = document.createElement('h2');
-      pTag.textContent = 'Waiting for more players...';
-      gameBody.appendChild(pTag);
-
-      theDiv()
+      createWaitEl()
       startGame()
     }
   }
@@ -343,16 +356,14 @@ function init(e) {
         type: 'start',
         nickname: nicknameInput.value
       }));
-      theDiv()
       startGame()
     }
   }
 
   function theDiv() {
-    if (playerDiv.children.length >= 2) {
+      document.getElementById('waiting').innerHTML = '';
       document.getElementById('theGameContainer').style.display = 'grid';
       console.log('time to play')
-    }  
   }
 
   //TEXT MESSAGE FUNCTIONS
@@ -453,8 +464,11 @@ function init(e) {
         console.log(message.type);
         recreateCanvas(state);
         break;
+      case "enoughPlayers":
+        break;
       case "getRandomWords":
-      console.log(message.type, message.data)
+      // console.log(message.type, message.data)
+      // createRandomWordElement(message.data)
         break;
       case "getRandomPlayer":
       console.log(message.type, message.data)
@@ -465,6 +479,7 @@ function init(e) {
         break;
       case "start":
         console.log(message.type)
+        theDiv()
         createPlayersEl(message.data.nicknameHistory)
         break;
       case "paint":
@@ -474,6 +489,9 @@ function init(e) {
         break;
       case "disconnect":
         console.log('active clients (in disconnect)', message.active)
+        console.log(message.toFewPlayers)
+        createWaitEl()
+        toFewPlayers(message.toFewPlayers)
         createPlayersEl(message.active)
         break;
       default:
