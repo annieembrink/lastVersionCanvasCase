@@ -290,13 +290,13 @@ function createPlayersEl(obj) {
   // console.log(obj.length)
 
   function getRandomColor() {
-    var r = 255*Math.random()+128|0,
-    g = 255*Math.random()+128|0,
-    b = 255*Math.random()+128|0;
+    var r = 255 * Math.random() + 128 | 0,
+      g = 255 * Math.random() + 128 | 0,
+      b = 255 * Math.random() + 128 | 0;
     return 'rgb(' + r + ',' + g + ',' + b + ')';
-    }
+  }
 
-  let i=0
+  let i = 0
   obj.forEach(player => {
     const onePlayerDiv = document.createElement('div');
     if (i === 12) {
@@ -322,15 +322,21 @@ function init(e) {
   function nickNameOnEnter(e) {
     if (e.key === "Enter" && nicknameInput.value.length > 0) {
       document.getElementById('theGameContainer').style.display = 'grid';
-      websocket.send(JSON.stringify({type: 'start', nickname: nicknameInput.value}));
+      websocket.send(JSON.stringify({
+        type: 'start',
+        nickname: nicknameInput.value
+      }));
       startGame()
     }
   }
-  
+
   function nickNameOnButton() {
-    if(nicknameInput.value.length > 0) {
+    if (nicknameInput.value.length > 0) {
       document.getElementById('theGameContainer').style.display = 'grid';
-      websocket.send(JSON.stringify({type: 'start', nickname: nicknameInput.value}));
+      websocket.send(JSON.stringify({
+        type: 'start',
+        nickname: nicknameInput.value
+      }));
       startGame()
     }
   }
@@ -435,12 +441,12 @@ function init(e) {
         break;
       case "text":
         console.log(message.type)
-        console.log(message.arrayOfPlayersLeft)
-        console.log('players left', message.nr)
         renderMessage(message)
         break;
       case "start":
         console.log(message.type)
+        // console.log('nicknamehistory (in start)', message.data.nicknameHistory)
+        // console.log('newArr (in start)', message.data.newArr)
         createPlayersEl(message.data.nicknameHistory)
         break;
       case "paint":
@@ -449,7 +455,7 @@ function init(e) {
         paintLine(ctx, args);
         break;
       case "disconnect":
-        console.log(message.active)
+        console.log('active clients (in disconnect)', message.active)
         createPlayersEl(message.active)
         break;
       default:

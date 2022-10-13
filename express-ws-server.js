@@ -93,7 +93,7 @@ wss.getUniqueID = function () {
 /* listen on new websocket connections
 ------------------------------- */
 wss.on("connection", (ws) => {
-    
+
     ws.id = wss.getUniqueID();
 
     wss.clients.forEach(client => {
@@ -115,16 +115,16 @@ wss.on("connection", (ws) => {
                 console.log("Attempting to send init data to client");
 
                 const id = ws.id;
-                history.push(id)
+                // history.push(id)
                 wss.clients.forEach((client) => {
 
                     client.send(JSON.stringify({
                         type: "init",
                         payload: {
                             id,
-                            state,
-                            history,
-                            nicknameHistory
+                            state
+                            // history,
+                            // nicknameHistory
                         }
                     }));
                 });
@@ -138,8 +138,7 @@ wss.on("connection", (ws) => {
                 type: "text",
                 msg: message.msg,
                 id: ws.id,
-                nickname: message.nickname, 
-                
+                nickname: message.nickname,
             };
 
             // broadcast to all but this ws...
@@ -163,7 +162,8 @@ wss.on("connection", (ws) => {
                     data: {
                         id,
                         nickname,
-                        nicknameHistory
+                        nicknameHistory,
+                        newArr
                     }
                 }));
             });
@@ -187,14 +187,26 @@ wss.on("connection", (ws) => {
     // close event
     ws.on("close", () => {
 
-        console.log('ws.id', ws.id)
-        let activePlayer = nicknameHistory.filter(player => player.id !== ws.id);
+
+        console.log('nicknameshistory before slice', nicknameHistory)
+
+        let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
+        console.log('clientDisconnected', clientDisconnected)
+
+        let getIndex = nicknameHistory.indexOf(clientDisconnected)
+        console.log('getIndex', getIndex)
+
+        nicknameHistory.splice(getIndex, 1)
+        console.log('nicknameistory after splice', nicknameHistory)
 
         wss.clients.forEach(client => {
 
-            client.send(JSON.stringify({type: 'disconnect', active: activePlayer}))
+            client.send(JSON.stringify({
+                type: 'disconnect',
+                active: nicknameHistory
+            }))
         });
-        
+
         console.log("Client disconnected");
         console.log(
             "Number of remaining connected clients: ",
