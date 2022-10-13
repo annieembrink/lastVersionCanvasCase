@@ -74,17 +74,23 @@ const GenerateRandomWords = () => {
     let data = JSON.parse(jsonData);
     let words = data.words;
 
+    console.log('randomplayerstate', randomPlayerState[0].id)
+
     let arrOfWords = []
     for (let i = 0; i < 3; i++) {
         arrOfWords[i] = words[Math.floor(Math.random() * words.length)]
     }
 
+
+
     wss.clients.forEach(client => {
 
-        client.send(JSON.stringify({
-            type: 'getRandomWords',
-            data: arrOfWords
-        }))
+        if (randomPlayerState[0].id === client.id) {
+            client.send(JSON.stringify({
+                type: 'getRandomWords',
+                data: arrOfWords
+            }))
+        }
     });
 }
 
@@ -216,8 +222,6 @@ wss.on("connection", (ws) => {
 
             if (nicknameHistory.length > 2) {
                 console.log('ready to play')
-
-                
 
                 wss.clients.forEach((client) => {
 
