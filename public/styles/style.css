@@ -28,6 +28,11 @@
     grid-area: 1 / 1 / 1 / 6;
 }
 
+#whosTurn {
+    grid-area: 1 / 4 / 1 / 6;
+
+}
+
 .forWords {
     grid-area: 1 / 1 / 1 / 6;
     margin: auto;

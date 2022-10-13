@@ -47,19 +47,20 @@ fetch('motive.json')
     // }
 
     //For each word withing word Div, add listener to each tag, create element for the chosen word, remove the div with the words to choose from, and start timer
-    wordDiv.querySelectorAll('p').forEach(tag => {
-      tag.addEventListener('click', (e) => {
-        e.preventDefault();
-        let pTag = document.createElement('h1');
-        pTag.textContent = e.target.innerText;
-        chosenWord.appendChild(pTag);
-        wordDiv.remove()
+    // function addlistenerForWords() {
+    //   wordDiv.querySelectorAll('p').forEach(tag => {
+    //     tag.addEventListener('click', (e) => {
+    //       e.preventDefault();
+    //       let pTag = document.createElement('h1');
+    //       pTag.textContent = e.target.innerText;
+    //       chosenWord.appendChild(pTag);
+    //       wordDiv.remove()
 
-        //Start timer
-        // init()
-        printDuration()
-      })
-    })
+    //       printDuration()
+    //     })
+    //   })
+    // }
+
 
     //Generat colors
     function generateColors() {
@@ -123,38 +124,57 @@ fetch('motive.json')
 
 
 
-//TIMER------------------------------
-var check = null;
+// //TIMER------------------------------
+// var check = null;
 
-function printDuration() {
-  if (check == null) {
-    var cnt = 60;
+// function printDuration() {
+//   if (check == null) {
+//     var cnt = 60;
 
-    check = setInterval(function () {
-      cnt -= 1;
-      document.getElementById('timer').innerText = `${cnt} seconds left`;
+//     check = setInterval(function () {
 
-      if (cnt === 0) {
-        canvas.onmousedown = null;
-        isPainting = false;
-        stop()
 
-        websocket.send(JSON.stringify({
-          type: 'enoughPlayers',
-          data: true
-        }));
-      }
-    }, 1000);
-  }
-}
+//       websocket.send(JSON.stringify({
+//         type: 'timerStarted',
+//         data: true
+//       }));
 
-function stop() {
-  clearInterval(check);
-  check = null;
-  document.getElementById("timer").innerHTML = 'Time out';
-}
+
+//       cnt -= 1;
+//       document.getElementById('timer').innerText = `${cnt} seconds left`;
+
+//       if (cnt === 0) {
+//         canvas.onmousedown = null;
+//         isPainting = false;
+//         stop()
+
+
+//       }
+//     }, 1000);
+//   }
+// }
+
+// function stop() {
+//   clearInterval(check);
+//   check = null;
+//   document.getElementById("timer").innerHTML = 'Time out';
+// }
 
 // ------------------
+
+// function addlistenerForWords() {
+//   wordDiv.querySelectorAll('p').forEach(tag => {
+//     tag.addEventListener('click', (e) => {
+//       e.preventDefault();
+//       let pTag = document.createElement('h1');
+//       pTag.textContent = e.target.innerText;
+//       chosenWord.appendChild(pTag);
+//       wordDiv.remove()
+
+//       printDuration()
+//     })
+//   })
+// }
 
 
 
@@ -310,14 +330,15 @@ function createPlayersEl(obj) {
 
 }
 
-function createRandomWordElement(data) {
-  data.map((tag) => {
-    let pTag = document.createElement('p');
-    pTag.classList = "randomWordTag"
-    pTag.innerText = tag;
-    wordDiv.appendChild(pTag)
-  })
-}
+// function createRandomWordElement(data) {
+//   data.map((tag) => {
+//     let pTag = document.createElement('p');
+//     pTag.classList = "randomWordTag"
+//     pTag.innerText = tag;
+//     wordDiv.appendChild(pTag)
+//   })
+//   addlistenerForWords()
+// }
 
 function toFewPlayers(bool) {
   if (bool) {
@@ -330,11 +351,81 @@ function init(e) {
 
   const websocket = new WebSocket("ws://localhost:80");
 
+
+  //TIMER------------------------------
+  var check = null;
+
+  function printDuration() {
+    if (check == null) {
+      var cnt = 60;
+
+      check = setInterval(function () {
+
+
+        websocket.send(JSON.stringify({
+          type: 'timerStarted',
+          data: true
+        }));
+
+
+        cnt -= 1;
+        document.getElementById('timer').innerText = `${cnt} seconds left`;
+
+        if (cnt === 0) {
+          canvas.onmousedown = null;
+          isPainting = false;
+          stop()
+
+
+        }
+      }, 1000);
+    }
+  }
+
+  function stop() {
+    clearInterval(check);
+    check = null;
+    document.getElementById("timer").innerHTML = 'Time out';
+  }
+
+  function addlistenerForWords() {
+    wordDiv.querySelectorAll('p').forEach(tag => {
+      tag.addEventListener('click', (e) => {
+        e.preventDefault();
+        let pTag = document.createElement('h1');
+        pTag.textContent = e.target.innerText;
+        chosenWord.appendChild(pTag);
+        wordDiv.remove()
+
+        printDuration()
+      })
+    })
+  }
+
+  function createRandomWordElement(data) {
+    data.map((tag) => {
+      let pTag = document.createElement('p');
+      pTag.classList = "randomWordTag"
+      pTag.innerText = tag;
+      wordDiv.appendChild(pTag)
+    })
+    addlistenerForWords()
+  }
+
+
+
+
+
+
+
+
+  //Not working perfect
   function createWaitEl() {
     let pTag = document.createElement('h2');
-      pTag.id = 'waiting'
-      pTag.textContent = 'Waiting for more players...';
-      gameBody.appendChild(pTag);
+    pTag.id = 'waiting'
+    pTag.textContent = '';
+    pTag.textContent = 'Waiting for more players...';
+    gameBody.appendChild(pTag);
   }
 
   function nickNameOnEnter(e) {
@@ -361,9 +452,9 @@ function init(e) {
   }
 
   function theDiv() {
-      document.getElementById('waiting').innerHTML = '';
-      document.getElementById('theGameContainer').style.display = 'grid';
-      console.log('time to play')
+    document.getElementById('waiting').innerHTML = '';
+    document.getElementById('theGameContainer').style.display = 'grid';
+    console.log('time to play')
   }
 
   //TEXT MESSAGE FUNCTIONS
@@ -466,12 +557,16 @@ function init(e) {
         break;
       case "enoughPlayers":
         break;
+      case "timerStarted":
+        console.log(message.data)
+        break;
       case "getRandomWords":
-      // console.log(message.type, message.data)
-      // createRandomWordElement(message.data)
+        // console.log(message.type, message.data)
+        createRandomWordElement(message.data)
         break;
       case "getRandomPlayer":
-      console.log(message.type, message.data)
+        console.log(message.data[0].nickname)
+        // document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         break;
       case "text":
         console.log(message.type)
@@ -481,6 +576,10 @@ function init(e) {
         console.log(message.type)
         theDiv()
         createPlayersEl(message.data.nicknameHistory)
+        document.getElementById('whosTurn').textContent = `${message.data.randomPlayerState[0].nickname}s turn`
+
+        // console.log(message.data.randomPlayerState[0].nickname)
+        // document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         break;
       case "paint":
         console.log(message.type)
@@ -490,7 +589,7 @@ function init(e) {
       case "disconnect":
         console.log('active clients (in disconnect)', message.active)
         console.log(message.toFewPlayers)
-        createWaitEl()
+        // createWaitEl()
         toFewPlayers(message.toFewPlayers)
         createPlayersEl(message.active)
         break;
@@ -552,5 +651,3 @@ window.onload = init;
 //DONE: bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
 //DONE: en div där deltagarna presenteras
 //DONE: kontrollera ord som skrivs i chatten, matchar rätt ord
-
-
