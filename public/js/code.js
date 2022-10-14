@@ -361,15 +361,15 @@ function init(e) {
 
       check = setInterval(function () {
 
-
         websocket.send(JSON.stringify({
           type: 'timerStarted',
-          data: true
+          data: true,
+          time: cnt
         }));
 
 
         cnt -= 1;
-        document.getElementById('timer').innerText = `${cnt} seconds left`;
+        // document.getElementById('timer').innerText = `${cnt} seconds left`;
 
         if (cnt === 0) {
           canvas.onmousedown = null;
@@ -389,17 +389,18 @@ function init(e) {
   function stop() {
     clearInterval(check);
     check = null;
-    document.getElementById("timer").innerHTML = 'Time out';
+    // document.getElementById("timer").innerHTML = 'Time out';
   }
 
   function addlistenerForWords() {
+
     wordDiv.querySelectorAll('p').forEach(tag => {
       tag.addEventListener('click', (e) => {
         e.preventDefault();
         let pTag = document.createElement('h1');
         pTag.textContent = e.target.innerText;
         chosenWord.appendChild(pTag);
-        wordDiv.remove()
+        wordDiv.style.display = 'none'; 
 
         printDuration()
       })
@@ -407,6 +408,10 @@ function init(e) {
   }
 
   function createRandomWordElement(data) {
+    wordDiv.style.display = 'block';
+    wordDiv.textContent = '';
+    chosenWord.textContent = '';
+    
     data.map((tag) => {
       let pTag = document.createElement('p');
       pTag.classList = "randomWordTag"
@@ -560,12 +565,20 @@ function init(e) {
         console.log(message.type);
         recreateCanvas(state);
         break;
-      case "enoughPlayers":
-        break;
+      // case "enoughPlayers":
+      //   break;
       case "timerStarted":
-        console.log(message.data)
+        console.log(message.time)
+        document.getElementById('timer').innerText = `${message.time-1} seconds left`;
+        if (message.time === undefined) {
+          document.getElementById("timer").innerHTML = 'Time out';
+        }
+        // if (wordDiv.textContent = '') {
+        //   document.getElementById("timer").innerHTML = '';
+        // }
         break;
       case "getRandomWords":
+        console.log(message.data)
         createRandomWordElement(message.data)
         break;
       case "getRandomPlayer":

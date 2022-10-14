@@ -251,7 +251,7 @@ wss.on("connection", (ws) => {
         break;
         case "timerStarted": {
 
-            console.log('timermsg', message)
+            console.log('timermsg', message.time)
 
             if (!message.data) {
                 randomPlayerState.splice(0)
@@ -260,16 +260,16 @@ wss.on("connection", (ws) => {
             }
 
 
-            // wss.clients.forEach((client) => {
+            wss.clients.forEach((client) => {
 
-            //     client.send(JSON.stringify(message))
-            // });
+                client.send(JSON.stringify(message))
+            });
         }
         break;
-        case "enoughPlayers": {
+        // case "enoughPlayers": {
 
-        }
-        break;
+        // }
+        // break;
         default: {
             console.log("Default");
         }
