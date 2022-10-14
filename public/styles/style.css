@@ -7,7 +7,7 @@
 }
 
 #gameBody {
-    background-color: black;
+    background-color: lightgray;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -34,7 +34,7 @@
 .startPageContent {
     max-width: 40%;
     margin: auto;
-    
+
 }
 
 #setNicknameContainer {
@@ -47,13 +47,14 @@
     padding: 10px;
     border: none;
     font-family: 'Poppins', sans-serif;
+    color: darkgray;
 }
 
 #setNicknameContainer button:disabled {
-   display: none;
+    display: none;
 }
 
-#setNicknameContainer input {
+#setNicknameContainer input, #inputText {
     border-radius: 10px;
     padding: 10px;
     border: none;
@@ -61,14 +62,18 @@
 }
 
 #setNicknameContainer input:disabled {
-    background-color: black;
+    background-color: lightgray;
     color: #fffefb;
+}
+
+#setNicknameContainer input:focus, #inputText:focus {
+    outline: none;
 }
 
 #whosTurn {
     grid-area: 1 / 1 / 1 / 6;
-    margin: 20px;
     color: #fffefb;
+    margin: 20px;
 }
 
 #waiting {
@@ -99,7 +104,6 @@
 }
 
 .colorPen {
-    border: 1px solid black;
     grid-area: 5 / 1 / 5/ 3;
 
     display: flex;
@@ -111,7 +115,6 @@
 }
 
 #chatDiv {
-    border: 1px solid black;
     grid-area: 2 / 3 / 5 / 5;
 
     background-color: #fffefb;
@@ -119,14 +122,22 @@
     margin: 10px;
 }
 
+#conversation li {
+    margin: 10px;
+}
+
+#conversation li span{
+    margin-right: 30px;
+}
+
 #clearBtn {
-    grid-area: 5 / 3 /  5 / 5;   
+    grid-area: 5 / 3 / 5 / 5;
+    border: none;
 }
 
 #players {
-    border: 1px solid black;
-    grid-area: 2 / 5 /  6 / 5;  
-    
+    grid-area: 2 / 5 / 6 / 5;
+
     background-color: #fffefb;
     border-radius: 10px;
     margin: 10px;
@@ -157,7 +168,6 @@ li p {
 }
 
 .randomWordTag {
-    border: 1px solid black;
     display: inline-block;
     margin: 10px;
     padding: 10px;

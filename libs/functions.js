@@ -52,7 +52,7 @@ function broadcast(wss, objBroadcast) {
  * @param {obj} objBroadcast
  */
  function broadcastButExclude(wss, wsExclude, objBroadcast) {
-    console.log('broadcastbutexclude was called')
+    // console.log('broadcastbutexclude was called')
 
     // broadcast to all clients
     wss.clients.forEach((client) => {

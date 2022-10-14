@@ -63,6 +63,7 @@ let randomPlayerState = [];
 // let newArr = []
 let jsonData = [];
 let toFewPlayers = false;
+let chosenWordArr = [];
 // let arrOfWords = [];
 
 fs.readFile('motive.json', 'utf8', function (err, data) {
@@ -189,6 +190,11 @@ wss.on("connection", (ws) => {
             break;
         case "text": {
             console.log('client trying to write')
+            // console.log(message.data)
+            if (message.data !== undefined) {
+                chosenWordArr.push(message.data)
+            }
+            console.log('chosenWordArr', chosenWordArr)
 
             // message to clients
             let objBroadcast = {
@@ -196,10 +202,21 @@ wss.on("connection", (ws) => {
                 msg: message.msg,
                 id: ws.id,
                 nickname: message.nickname,
+                chosenWordArr: chosenWordArr
             };
 
+            wss.clients.forEach((client) => {
+
+                client.send(JSON.stringify(objBroadcast));
+            });
+
+            // if (message.msg === chosenWordArr[0]) {
+            //     console.log(`${message.nickname} guessed the right word!`)
+            //     // console.log('right word')
+            // }
+
             // broadcast to all but this ws...
-            broadcastButExclude(wss, ws, objBroadcast);
+            // broadcastButExclude(wss, ws, objBroadcast);
         }
         break;
         case "start": {
@@ -212,8 +229,6 @@ wss.on("connection", (ws) => {
                 id: id,
             }
             nicknameHistory.push(obj)
-
-            
 
             if (nicknameHistory.length > 2) {
 
@@ -255,10 +270,10 @@ wss.on("connection", (ws) => {
 
             if (!message.data) {
                 randomPlayerState.splice(0)
+                chosenWordArr.splice(0)
                 GenerateRandomPlayer()
                 GenerateRandomWords()
             }
-
 
             wss.clients.forEach((client) => {
 

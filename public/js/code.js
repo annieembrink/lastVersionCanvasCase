@@ -260,22 +260,39 @@ function renderMessage(obj) {
   // access content
   let newMsg = template.content;
 
+  if (obj.msg === obj.chosenWordArr[0]) {
+    console.log(`${obj.nickname} guessed the right word!`)
+    obj.msg = `guessed the right word`
+
+    //not everyones field should be disabled
+    // inputText.disabled = true;
+  }
+
   // change content...
   newMsg.querySelector("span").textContent = obj.nickname;
   // body.baseURI.split('=')[1]
   newMsg.querySelector("p").textContent = obj.msg;
 
+  console.log(obj)
+
+  // if (obj.msg === obj.chosenWordArr[0]) {
+  //   console.log('correct')
+  //   console.log(obj.nickname)
+  //   obj.msg = `${obj.nickname} guessed the right word`
+  //   inputText.disabled = true;
+  // }
+
   // new date object
-  let objDate = new Date();
+  // let objDate = new Date();
 
   // visual: 10:41 .. 9:5 ... leading zero....
-  newMsg.querySelector("time").textContent =
-    objDate.getHours() + ":" + objDate.getMinutes();
+  // newMsg.querySelector("time").textContent =
+  //   objDate.getHours() + ":" + objDate.getMinutes();
 
   // set datetime attribute - see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time
-  newMsg
-    .querySelector("time")
-    .setAttribute("datetime", objDate.toISOString());
+  // newMsg
+  //   .querySelector("time")
+  //   .setAttribute("datetime", objDate.toISOString());
 
   // render using prepend method - last message first
   document.getElementById("conversation").append(newMsg);
@@ -357,7 +374,7 @@ function init(e) {
 
   function printDuration() {
     if (check == null) {
-      var cnt = 5;
+      var cnt = 60;
 
       check = setInterval(function () {
 
@@ -400,7 +417,12 @@ function init(e) {
         let pTag = document.createElement('h1');
         pTag.textContent = e.target.innerText;
         chosenWord.appendChild(pTag);
-        wordDiv.style.display = 'none'; 
+        wordDiv.style.display = 'none';
+
+        websocket.send(JSON.stringify({
+          type: 'text',
+          data: e.target.innerText
+        }));
 
         printDuration()
       })
@@ -411,7 +433,7 @@ function init(e) {
     wordDiv.style.display = 'block';
     wordDiv.textContent = '';
     chosenWord.textContent = '';
-    
+
     data.map((tag) => {
       let pTag = document.createElement('p');
       pTag.classList = "randomWordTag"
@@ -476,20 +498,22 @@ function init(e) {
         type: "text",
         msg: inputText.value,
         id: id,
-        nickname: nickname,
+        nickname: nickname
       };
 
       // show new message for this user
-      renderMessage(objMessage);
+      // renderMessage(objMessage);
 
       // send to server
       websocket.send(JSON.stringify(objMessage));
+      console.log(objMessage.msg, chosenWord.textContent)
 
-      if (objMessage.msg === chosenWord.textContent) {
-        console.log('correct')
-        objMessage.msg = `${nickname} guessed the right word`
-        inputText.disabled = true;
-      }
+      // if (objMessage.msg === objMessage.chosenWordArr[0]) {
+      //   console.log('correct')
+      //   console.log(objMessage.nickname)
+      //   objMessage.msg = `${objMessage.nickname} guessed the right word`
+      //   inputText.disabled = true;
+      // }
 
       // reset input field
       inputText.value = "";
@@ -565,8 +589,8 @@ function init(e) {
         console.log(message.type);
         recreateCanvas(state);
         break;
-      // case "enoughPlayers":
-      //   break;
+        // case "enoughPlayers":
+        //   break;
       case "timerStarted":
         console.log(message.time)
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
@@ -660,9 +684,14 @@ window.onload = init;
 //poängräknare för deltagarna, den som svarar först får flest poäng
 //en i taget kan rita på canvas, loop för vems tur det är helt enkelt
 //den som ritar får också poäng ju fler som gissar rätt ord
-//den som ritar ska inte kunna skriva i chatten och får poäng för rätt gissning
-//orden ska bara synas för den som ritar
+//den som ritar ska inte kunna skriva i chatten och får poäng för rätt gissning. Poäng lika mkt som cnt
+//Timern ska nollas om randomplayer sticker mitt i 
+//time out bort när orden syns 
+// chat input field blir grå när ranodmplayer skriver men inte annars
+//player guessed right word should be displayed for everyone
+//chosenArr should not be visible for everyone
 
+//DONE: orden ska bara synas för den som ritar
 //DONE: startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
 //DONE: när tiden är ute, kan man inte rita längre
 //DONE: bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
