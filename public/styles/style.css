@@ -13,7 +13,7 @@
 
 #theGameContainer {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(5, 1fr);
     grid-column-gap: 10px;
     grid-row-gap: 10px;
@@ -104,18 +104,17 @@
 }
 
 .colorPen {
-    grid-area: 5 / 1 / 5/ 3;
+    grid-area: 5 / 1 / 5/ 2;
 
     display: flex;
     justify-content: space-between;
 
-    background-color: #fffefb;
     border-radius: 10px;
     margin: 10px;
 }
 
 #chatDiv {
-    grid-area: 2 / 4 / 5 / 5;
+    grid-area: 2 / 4 / 5 / 6;
 
     background-color: #fffefb;
     border-radius: 10px;
@@ -124,13 +123,15 @@
     position: relative;
 }
 
-#chatDiv input {
+#chatDiv #inputText {
+    width: 90%;
     position: absolute;
     bottom: 0;
-    left: 10px;
+    /* left: 0; */
 }
 
 #conversation li {
+    font-size: 0.8rem;
     margin: 5px;
 }
 
@@ -145,11 +146,18 @@
 }
 
 #players {
-    grid-area: 2 / 5 / 6 / 5;
+    grid-area: 2 / 6 / 5/ 8;
 
     background-color: #fffefb;
     border-radius: 10px;
     margin: 10px;
+}
+
+#players div:first-child {
+    border-radius: 10px 10px 0 0 ;
+}
+#players div {
+    width: auto;
 }
 
 #players p {
@@ -202,14 +210,16 @@ li p {
     height: 20px;
     margin: 5px;
     border-radius: 100%;
+    border: 0.5px solid black;
 
-    border-radius: 150px;
+    /* border-radius: 150px;
     box-shadow: 2px 2px 5px #bebebe,
-        -2px -2px 5px #ffffff;
+        -2px -2px 5px #ffffff; */
 }
 
 #penContainer {
     margin: 5px;
+    margin-top: 10px;
 }
 
 .pen {
@@ -218,8 +228,8 @@ li p {
     width: 30px;
     margin: 5px;
 
-    box-shadow: 2px 2px 5px #bebebe,
-        -2px -2px 5px #ffffff;
+    /* box-shadow: 2px 2px 5px #bebebe,
+        -2px -2px 5px #ffffff; */
 
     display: flex;
     flex-direction: row;

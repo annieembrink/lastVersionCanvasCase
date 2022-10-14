@@ -13,7 +13,7 @@ const playerDiv = document.getElementById('players')
 const gameBody = document.getElementById('gameBody')
 
 const canvas = document.querySelector("#canvas");
-canvas.width = 600
+canvas.width = 550
 canvas.height = 400
 const ctx = canvas.getContext("2d");
 let isPainting = false;
