@@ -115,19 +115,28 @@
 }
 
 #chatDiv {
-    grid-area: 2 / 3 / 5 / 5;
+    grid-area: 2 / 4 / 5 / 5;
 
     background-color: #fffefb;
     border-radius: 10px;
     margin: 10px;
+
+    position: relative;
+}
+
+#chatDiv input {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
 }
 
 #conversation li {
-    margin: 10px;
+    margin: 5px;
 }
 
 #conversation li span{
     margin-right: 30px;
+    margin-left: 10px;
 }
 
 #clearBtn {
@@ -148,9 +157,9 @@
     padding: 10px;
 }
 
-.inputContainer {
+/* .inputContainer {
     margin: 10px;
-}
+} */
 
 ul {
     margin: 2rem 0;

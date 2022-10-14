@@ -64,6 +64,7 @@ let randomPlayerState = [];
 let jsonData = [];
 let toFewPlayers = false;
 let chosenWordArr = [];
+let allowedToPaint = false;
 // let arrOfWords = [];
 
 fs.readFile('motive.json', 'utf8', function (err, data) {
@@ -71,11 +72,12 @@ fs.readFile('motive.json', 'utf8', function (err, data) {
 });
 
 //Generating three random words
-const GenerateRandomWords = () => {
+const GenerateRandomWords = (test) => {
     let data = JSON.parse(jsonData);
     let words = data.words;
+    console.log('test', test)
 
-    console.log('randomplayerstate', randomPlayerState[0].id)
+    // console.log('randomplayerstate', randomPlayerState[0].id)
 
     let arrOfWords = []
     for (let i = 0; i < 3; i++) {
@@ -87,7 +89,8 @@ const GenerateRandomWords = () => {
         if (randomPlayerState[0].id === client.id) {
             client.send(JSON.stringify({
                 type: 'getRandomWords',
-                data: arrOfWords
+                data: arrOfWords,
+                allowedToPaint: true
             }))
         }
     });
@@ -95,7 +98,7 @@ const GenerateRandomWords = () => {
 
 const GenerateRandomPlayer = () => {
     let randomPlayer = nicknameHistory[Math.floor(Math.random() * nicknameHistory.length)]
-    console.log('random player', randomPlayer)
+    // console.log('random player', randomPlayer)
     randomPlayerState.push(randomPlayer);
 
     wss.clients.forEach(client => {
@@ -108,28 +111,10 @@ const GenerateRandomPlayer = () => {
 }
 
 
-
-// //Filling the wordDiv with three random wordTags
-// function createRandomWordElement(data) {
-//     data.map((tag) => {
-//         let pTag = document.createElement('p');
-//         pTag.classList = "randomWordTag"
-//         pTag.innerText = tag;
-//         wordDiv.appendChild(pTag)
-//     })
-// }
-
-
 /* allow websockets - listener
 ------------------------------- */
 // upgrade event - websocket communication
 server.on("upgrade", (req, socket, head) => {
-    // console.log("Upgrade event client: ", req.headers);
-
-    // use authentication - only logged in users allowed ?
-    // socket.write('HTTP/1.1 401 Unauthorized\r\nWWW-Authenticate: Basic\r\n\r\n');
-    // socket.destroy();
-    // return;
 
     // start websocket
     wss.handleUpgrade(req, socket, head, (ws) => {
@@ -148,15 +133,7 @@ wss.getUniqueID = function () {
 ------------------------------- */
 wss.on("connection", (ws) => {
 
-    // console.log('this is json data', JSON.parse(jsonData))
-
-    //shouldnt do this on each connection
-
     ws.id = wss.getUniqueID();
-
-    // wss.clients.forEach(client => {
-    //     console.log('Client.ID: ' + client.id);
-    // });
 
     console.log("New client connection from IP: ", ws._socket.remoteAddress);
     console.log("Number of connected clients: ", wss.clients.size);
@@ -173,16 +150,13 @@ wss.on("connection", (ws) => {
                 console.log("Attempting to send init data to client");
 
                 const id = ws.id;
-                // history.push(id)
                 wss.clients.forEach((client) => {
 
                     client.send(JSON.stringify({
                         type: "init",
                         payload: {
                             id,
-                            state,
-                            // history,
-                            // nicknameHistory
+                            state
                         }
                     }));
                 });
@@ -209,14 +183,6 @@ wss.on("connection", (ws) => {
 
                 client.send(JSON.stringify(objBroadcast));
             });
-
-            // if (message.msg === chosenWordArr[0]) {
-            //     console.log(`${message.nickname} guessed the right word!`)
-            //     // console.log('right word')
-            // }
-
-            // broadcast to all but this ws...
-            // broadcastButExclude(wss, ws, objBroadcast);
         }
         break;
         case "start": {
@@ -234,7 +200,7 @@ wss.on("connection", (ws) => {
 
                 if (randomPlayerState.length === 0) {
                     GenerateRandomPlayer()
-                    GenerateRandomWords()
+                    GenerateRandomWords(message.time)
                 }
 
                 console.log('ready to play')
@@ -248,7 +214,6 @@ wss.on("connection", (ws) => {
                             nickname,
                             nicknameHistory,
                             randomPlayerState
-                            // newArr
                         }
                     }));
                 });
@@ -266,7 +231,7 @@ wss.on("connection", (ws) => {
         break;
         case "timerStarted": {
 
-            console.log('timermsg', message.time)
+            // console.log('timermsg', message.time, randomPlayerState)
 
             if (!message.data) {
                 randomPlayerState.splice(0)
@@ -277,7 +242,17 @@ wss.on("connection", (ws) => {
 
             wss.clients.forEach((client) => {
 
-                client.send(JSON.stringify(message))
+                client.send(JSON.stringify({
+                    type: 'timerStarted',
+                    time: message.time,
+                    id: ws.id,
+                    message: message,
+                    timerOn: message.data,
+                    allowedToPaint: allowedToPaint
+                }))
+
+                // client.send(JSON.stringify({type: 'timerStarted', time: message.time, id: ws.id, message: message}))
+
             });
         }
         break;

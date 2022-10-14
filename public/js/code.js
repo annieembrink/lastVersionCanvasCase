@@ -13,7 +13,7 @@ const playerDiv = document.getElementById('players')
 const gameBody = document.getElementById('gameBody')
 
 const canvas = document.querySelector("#canvas");
-canvas.width = 350
+canvas.width = 600
 canvas.height = 400
 const ctx = canvas.getContext("2d");
 let isPainting = false;
@@ -24,43 +24,6 @@ let id;
 fetch('motive.json')
   .then((response) => response.json())
   .then((data) => {
-
-    //Generating three random words
-    // const GenerateRandomWords = () => {
-    //   let test = []
-    //   for (let i = 0; i < 3; i++) {
-    //     test[i] = data.words[Math.floor(Math.random() * data.words.length)]
-    //   }
-
-    //   createRandomWordElement(test);
-    // }
-    // GenerateRandomWords()
-
-    //Filling the wordDiv with three random wordTags
-    // function createRandomWordElement(data) {
-    //   data.map((tag) => {
-    //     let pTag = document.createElement('p');
-    //     pTag.classList = "randomWordTag"
-    //     pTag.innerText = tag;
-    //     wordDiv.appendChild(pTag)
-    //   })
-    // }
-
-    //For each word withing word Div, add listener to each tag, create element for the chosen word, remove the div with the words to choose from, and start timer
-    // function addlistenerForWords() {
-    //   wordDiv.querySelectorAll('p').forEach(tag => {
-    //     tag.addEventListener('click', (e) => {
-    //       e.preventDefault();
-    //       let pTag = document.createElement('h1');
-    //       pTag.textContent = e.target.innerText;
-    //       chosenWord.appendChild(pTag);
-    //       wordDiv.remove()
-
-    //       printDuration()
-    //     })
-    //   })
-    // }
-
 
     //Generat colors
     function generateColors() {
@@ -111,75 +74,7 @@ fetch('motive.json')
   })
   .catch(err => console.log(err))
 
-
-
-
-
-
-
 //Outside fetch
-
-
-
-
-
-
-// //TIMER------------------------------
-// var check = null;
-
-// function printDuration() {
-//   if (check == null) {
-//     var cnt = 60;
-
-//     check = setInterval(function () {
-
-
-//       websocket.send(JSON.stringify({
-//         type: 'timerStarted',
-//         data: true
-//       }));
-
-
-//       cnt -= 1;
-//       document.getElementById('timer').innerText = `${cnt} seconds left`;
-
-//       if (cnt === 0) {
-//         canvas.onmousedown = null;
-//         isPainting = false;
-//         stop()
-
-
-//       }
-//     }, 1000);
-//   }
-// }
-
-// function stop() {
-//   clearInterval(check);
-//   check = null;
-//   document.getElementById("timer").innerHTML = 'Time out';
-// }
-
-// ------------------
-
-// function addlistenerForWords() {
-//   wordDiv.querySelectorAll('p').forEach(tag => {
-//     tag.addEventListener('click', (e) => {
-//       e.preventDefault();
-//       let pTag = document.createElement('h1');
-//       pTag.textContent = e.target.innerText;
-//       chosenWord.appendChild(pTag);
-//       wordDiv.remove()
-
-//       printDuration()
-//     })
-//   })
-// }
-
-
-
-
-
 
 //Chosen pen size
 let objWithCurrentPen = {
@@ -206,8 +101,6 @@ colors.addEventListener('click', (e) => {
 })
 
 // ---------------------------------
-
-
 
 function startGame() {
   // get value from input nickname
@@ -273,27 +166,6 @@ function renderMessage(obj) {
   // body.baseURI.split('=')[1]
   newMsg.querySelector("p").textContent = obj.msg;
 
-  console.log(obj)
-
-  // if (obj.msg === obj.chosenWordArr[0]) {
-  //   console.log('correct')
-  //   console.log(obj.nickname)
-  //   obj.msg = `${obj.nickname} guessed the right word`
-  //   inputText.disabled = true;
-  // }
-
-  // new date object
-  // let objDate = new Date();
-
-  // visual: 10:41 .. 9:5 ... leading zero....
-  // newMsg.querySelector("time").textContent =
-  //   objDate.getHours() + ":" + objDate.getMinutes();
-
-  // set datetime attribute - see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time
-  // newMsg
-  //   .querySelector("time")
-  //   .setAttribute("datetime", objDate.toISOString());
-
   // render using prepend method - last message first
   document.getElementById("conversation").append(newMsg);
 }
@@ -301,43 +173,33 @@ function renderMessage(obj) {
 // --------------------------------------------------
 
 
-
-
 function createPlayersEl(obj) {
 
-  const colors = [
-    "red",
-    "blue",
-    "lightblue",
-    "yellow",
-    "green",
-    "brown",
-    "orange",
-    "pink",
-    "purple",
-    "gold",
-    "grey",
-    "lightgrey"
-  ]
+  // const colors = [
+  //   "lightgray",
+  //   "lightblue",
+  //   "pink",
+  //   "lightbrown"
+  // ]
 
   playerDiv.innerHTML = '';
   // console.log(obj.length)
 
   function getRandomColor() {
-    var r = 255 * Math.random() + 128 | 0,
-      g = 255 * Math.random() + 128 | 0,
-      b = 255 * Math.random() + 128 | 0;
+    var r = 255 * Math.random() + 110 | 0,
+      g = 255 * Math.random() + 110 | 0,
+      b = 255 * Math.random() + 110 | 0;
     return 'rgb(' + r + ',' + g + ',' + b + ')';
   }
 
   let i = 0
   obj.forEach(player => {
     const onePlayerDiv = document.createElement('div');
-    if (i === 12) {
-      i = 0
-    }
-    onePlayerDiv.style.backgroundColor = colors[i++]
-    // onePlayerDiv.style.backgroundColor = getRandomColor();
+    // if (i === 4) {
+    //   i = 0
+    // }
+    // onePlayerDiv.style.backgroundColor = colors[i++]
+    onePlayerDiv.style.backgroundColor = getRandomColor();
     playerDiv.appendChild(onePlayerDiv)
 
     const playerEl = document.createElement('p')
@@ -347,15 +209,6 @@ function createPlayersEl(obj) {
 
 }
 
-// function createRandomWordElement(data) {
-//   data.map((tag) => {
-//     let pTag = document.createElement('p');
-//     pTag.classList = "randomWordTag"
-//     pTag.innerText = tag;
-//     wordDiv.appendChild(pTag)
-//   })
-//   addlistenerForWords()
-// }
 
 function toFewPlayers(bool) {
   if (bool) {
@@ -378,15 +231,15 @@ function init(e) {
 
       check = setInterval(function () {
 
+        canvas.onmousedown = initPaint
+
         websocket.send(JSON.stringify({
           type: 'timerStarted',
           data: true,
           time: cnt
         }));
 
-
         cnt -= 1;
-        // document.getElementById('timer').innerText = `${cnt} seconds left`;
 
         if (cnt === 0) {
           canvas.onmousedown = null;
@@ -406,7 +259,6 @@ function init(e) {
   function stop() {
     clearInterval(check);
     check = null;
-    // document.getElementById("timer").innerHTML = 'Time out';
   }
 
   function addlistenerForWords() {
@@ -442,13 +294,6 @@ function init(e) {
     })
     addlistenerForWords()
   }
-
-
-
-
-
-
-
 
   //Not working perfect
   function createWaitEl() {
@@ -501,21 +346,9 @@ function init(e) {
         nickname: nickname
       };
 
-      // show new message for this user
-      // renderMessage(objMessage);
-
       // send to server
       websocket.send(JSON.stringify(objMessage));
       console.log(objMessage.msg, chosenWord.textContent)
-
-      // if (objMessage.msg === objMessage.chosenWordArr[0]) {
-      //   console.log('correct')
-      //   console.log(objMessage.nickname)
-      //   objMessage.msg = `${objMessage.nickname} guessed the right word`
-      //   inputText.disabled = true;
-      // }
-
-      // reset input field
       inputText.value = "";
     }
   }
@@ -592,17 +425,16 @@ function init(e) {
         // case "enoughPlayers":
         //   break;
       case "timerStarted":
-        console.log(message.time)
+        console.log(message.timerOn)
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
+
         if (message.time === undefined) {
           document.getElementById("timer").innerHTML = 'Time out';
         }
-        // if (wordDiv.textContent = '') {
-        //   document.getElementById("timer").innerHTML = '';
-        // }
         break;
       case "getRandomWords":
         console.log(message.data)
+        console.log('allowedtopaint', message.allowedToPaint)
         createRandomWordElement(message.data)
         break;
       case "getRandomPlayer":
@@ -623,7 +455,7 @@ function init(e) {
         // document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         break;
       case "paint":
-        console.log(message.type)
+        // console.log(message.type)
         const args = message.payload;
         paintLine(ctx, args);
         break;
@@ -650,7 +482,7 @@ function init(e) {
   inputText.onkeydown = newTextMessage;
   websocket.onopen = handleSocketOpen;
   websocket.onmessage = handleSocketMessage;
-  canvas.onmousedown = initPaint
+  // canvas.onmousedown = initPaint
   canvas.onmousemove = paint
   window.onmouseup = finishPaint
 
@@ -690,10 +522,11 @@ window.onload = init;
 // chat input field blir grå när ranodmplayer skriver men inte annars
 //player guessed right word should be displayed for everyone
 //chosenArr should not be visible for everyone
+//om f5 när bara två spelar så crashar spelet? innan nickname är satt
+//rita linjer ist för prickar
 
 //DONE: orden ska bara synas för den som ritar
 //DONE: startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
 //DONE: när tiden är ute, kan man inte rita längre
 //DONE: bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
 //DONE: en div där deltagarna presenteras
-//DONE: kontrollera ord som skrivs i chatten, matchar rätt ord
