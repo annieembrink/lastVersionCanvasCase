@@ -177,7 +177,7 @@ function createPlayersEl(obj) {
     playerDiv.appendChild(onePlayerDiv)
 
     const playerEl = document.createElement('p')
-    playerEl.innerText = `${player.nickname}, ${player.points} points`
+    playerEl.innerText = `${player.nickname}: ${player.points} points`
     onePlayerDiv.appendChild(playerEl)
   })
 
@@ -197,43 +197,43 @@ function init(e) {
 
 
   /**
- * render new message
- *
- * @param {obj}
- */
-function renderMessage(obj) {
-  // use template - cloneNode to get a document fragment
-  let template = document.getElementById("message").cloneNode(true);
+   * render new message
+   *
+   * @param {obj}
+   */
+  function renderMessage(obj) {
+    // use template - cloneNode to get a document fragment
+    let template = document.getElementById("message").cloneNode(true);
 
-  // access content
-  let newMsg = template.content;
+    // access content
+    let newMsg = template.content;
 
-  if (obj.msg === obj.chosenWordArr[0]) {
-    console.log(`${obj.nickname} guessed the right word!`)
-    obj.msg = `guessed the right word`
+    if (obj.msg === obj.chosenWordArr[0]) {
+      console.log(`${obj.nickname} guessed the right word!`)
+      obj.msg = `guessed the right word`
 
-    console.log(document.getElementById('timer').innerHTML)
+      console.log(document.getElementById('timer').innerHTML)
 
-    websocket.send(JSON.stringify({
-      type: 'rightWord',
-      sec: document.getElementById('timer').innerHTML.slice(0, 2),
-      id: obj.id
-    }));
+      websocket.send(JSON.stringify({
+        type: 'rightWord',
+        sec: document.getElementById('timer').innerHTML.slice(0, 2),
+        id: obj.id
+      }));
 
-    // inputText.disabled = true; 
-    
-    //not everyones field should be disabled
-    // inputText.disabled = true;
+      // inputText.disabled = true; 
+
+      //not everyones field should be disabled
+      // inputText.disabled = true;
+    }
+
+    // change content...
+    newMsg.querySelector("span").textContent = obj.nickname;
+    // body.baseURI.split('=')[1]
+    newMsg.querySelector("p").textContent = obj.msg;
+
+    // render using prepend method - last message first
+    document.getElementById("conversation").append(newMsg);
   }
-
-  // change content...
-  newMsg.querySelector("span").textContent = obj.nickname;
-  // body.baseURI.split('=')[1]
-  newMsg.querySelector("p").textContent = obj.msg;
-
-  // render using prepend method - last message first
-  document.getElementById("conversation").append(newMsg);
-}
 
 
 
@@ -467,8 +467,6 @@ function renderMessage(obj) {
           document.getElementById("timer").innerHTML = 'Time out';
         }
 
-        console.log(message.message)
-
         if (!message.data) {
           createPlayersEl(message.nicknameHistory)
         }
@@ -487,8 +485,11 @@ function renderMessage(obj) {
         console.log('allowedToGuess', message.nicknameHistory)
 
         if (!message.allowedToGuess) {
-          inputText.disabled = true; 
+          inputText.disabled = true;
+        } else {
+          inputText.disabled = false;
         }
+
         break;
       case "text":
         console.log(message.type)

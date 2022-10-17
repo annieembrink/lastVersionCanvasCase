@@ -233,9 +233,6 @@ wss.on("connection", (ws) => {
         }
         break;
         case "rightWord": {
-            // console.log(message.sec)
-            // console.log(message.name)
-            // console.log(ws.id)
 
             let playerWhoGuessed = nicknameHistory.find(player => player.id === message.id);
             let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
@@ -243,8 +240,6 @@ wss.on("connection", (ws) => {
             console.log('playerwhoguessed', playerWhoGuessed)
 
             nicknameHistory[getIndex].points = parseInt(message.sec)
-            // console.log(nicknameHistory)
-
 
             wss.clients.forEach((client) => {
                 if (client.id === message.id) {
@@ -253,6 +248,13 @@ wss.on("connection", (ws) => {
                         sec: message.sec,
                         nicknameHistory: nicknameHistory,
                         allowedToGuess: false
+                    }))
+                } else if (client.id !== message.id) {
+                    client.send(JSON.stringify({
+                        type: 'rightWord',
+                        sec: message.sec,
+                        nicknameHistory: nicknameHistory,
+                        allowedToGuess: true
                     }))
                 }
             });
