@@ -19,10 +19,6 @@ canvas.height = window.innerHeight/2;
 const ctx = canvas.getContext("2d");
 let isPainting = false;
 
-
-chatDiv.width = window.innerWidth/4
-playerDiv.width = window.innerWidth/4
-
 let nickname;
 let id;
 
@@ -233,7 +229,7 @@ function init(e) {
 
   function printDuration() {
     if (check == null) {
-      var cnt = 60;
+      var cnt = 30;
 
       check = setInterval(function () {
 
@@ -371,8 +367,8 @@ function init(e) {
 
   const finishPaint = () => {
     isPainting = false;
-    // ctx.stroke()
-    ctx.closePath()
+    ctx.stroke()
+    // ctx.closePath()
   };
 
   const paint = (e) => {
@@ -383,7 +379,7 @@ function init(e) {
       color: objWithCurrentColor.color || 'black',
       x: e.clientX - canvas.offsetLeft,
       y: e.clientY - canvas.offsetTop,
-      lineWidth: objWithCurrentPen.pen,
+      line: objWithCurrentPen.pen
       // radius: objWithCurrentPen.pen,
       // startAngle: 0,
       // endAngle: 2 * Math.PI,
@@ -394,8 +390,8 @@ function init(e) {
     }));
 
     ctx.strokeStyle = objWithCurrentColor.color;
-
     ctx.lineWidth = objWithCurrentPen.pen;
+
     ctx.lineCap = 'round';
 
     ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
@@ -415,8 +411,10 @@ function init(e) {
     ctx.lineWidth = args.line;
     ctx.lineCap = 'round';
   
+    ctx.beginPath()
     ctx.lineTo(args.x, args.y);
     ctx.stroke();
+
   }
 
   const recreateCanvas = (state) => {
