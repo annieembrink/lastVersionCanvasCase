@@ -257,10 +257,22 @@ wss.on("connection", (ws) => {
             });
         }
         break;
-        // case "enoughPlayers": {
+        case "clearCanvas": {
+            console.log(ws.id)
+            console.log(randomPlayerState[0].id)
+            
+            if (ws.id === randomPlayerState[0].id) {
+                wss.clients.forEach((client) => {
 
-        // }
-        // break;
+                    client.send(JSON.stringify({
+                        type: 'clearCanvas',
+                        data: message.data
+                    }))
+                });
+            }
+           
+        }
+        break;
         default: {
             console.log("Default");
         }

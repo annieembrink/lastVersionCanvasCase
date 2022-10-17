@@ -14,8 +14,8 @@ const gameBody = document.getElementById('gameBody')
 const colorPen = document.getElementsByClassName('colorPen')
 
 const canvas = document.querySelector("#canvas");
-canvas.width = window.innerWidth/3
-canvas.height = window.innerHeight/2;
+canvas.width = window.innerWidth / 3
+canvas.height = window.innerHeight / 2;
 const ctx = canvas.getContext("2d");
 let isPainting = false;
 
@@ -405,12 +405,12 @@ function init(e) {
     // ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
     // ctx.fill();
     // ctx.beginPath();
-  
+
     ctx.strokeStyle = args.color;
-  
+
     ctx.lineWidth = args.line;
     ctx.lineCap = 'round';
-  
+
     ctx.beginPath()
     ctx.lineTo(args.x, args.y);
     ctx.stroke();
@@ -446,7 +446,7 @@ function init(e) {
         // case "enoughPlayers":
         //   break;
       case "timerStarted":
-        console.log(message.timerOn)
+        // console.log(message.timerOn)
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
 
         if (message.time === undefined) {
@@ -487,6 +487,12 @@ function init(e) {
         toFewPlayers(message.toFewPlayers)
         createPlayersEl(message.active)
         break;
+      case "clearCanvas":
+        console.log(message.data)
+        if (message.data) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+        }
+        break;
       default:
         // console.log("default case")
     }
@@ -508,7 +514,11 @@ function init(e) {
   window.onmouseup = finishPaint
 
   clearBtn.addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // ctx.clearRect(0, 0, canvas.width, canvas.height)
+    websocket.send(JSON.stringify({
+      type: 'clearCanvas',
+      data: true
+    }));
   })
 
 }
@@ -539,4 +549,3 @@ window.onload = init;
 //DONE: en div där deltagarna presenteras
 //DONE: en i taget kan rita på canvas, loop för vems tur det är helt enkelt
 //DONE: player guessed right word should be displayed for everyone
-
