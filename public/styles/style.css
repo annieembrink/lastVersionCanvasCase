@@ -7,18 +7,26 @@
 }
 
 #gameBody {
-    background-color: lightgray;
+
+    display: flex;
+    flex-direction: column;
+
+
+    background-color: lightgrey;
     font-family: 'Poppins', sans-serif;
+
+    height: 700px;
+
 }
 
 #theGameContainer {
+
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 0.2fr 1fr 1fr 1fr 1fr 1fr;
 
     display: none;
+
 
 }
 
@@ -26,7 +34,7 @@
     text-align: center;
 }
 
-#startBody {
+/* #startBody {
     width: 100vw;
     height: 100vh;
 }
@@ -35,11 +43,11 @@
     max-width: 40%;
     margin: auto;
 
-}
+} */
 
 #setNicknameContainer {
-    grid-area: 1 / 1 / 1 / 6;
-    margin: 20px;
+    /* grid-area: 1 / 1 / 1 / 6; */
+    margin: 20px 0 0 20px;
 }
 
 #setNicknameContainer button {
@@ -62,8 +70,10 @@
 }
 
 #setNicknameContainer input:disabled {
-    background-color: lightgray;
+    background-color: lightgrey;
+    font-size: 2rem;
     color: #fffefb;
+    padding: 0;
 }
 
 #setNicknameContainer input:focus, #inputText:focus {
@@ -71,9 +81,11 @@
 }
 
 #whosTurn {
-    grid-area: 1 / 1 / 1 / 6;
+    grid-area: 1 / 6 / 1 / 8;
     color: #fffefb;
-    margin: 20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 }
 
 #waiting {
@@ -83,7 +95,7 @@
 }
 
 .forWords {
-    grid-area: 1 / 1 / 1 / 6;
+    grid-area: 1 / 3 / 1 / 6;
     margin: auto;
 }
 
@@ -100,21 +112,42 @@
     grid-area: 2 / 1 / 5 / 3;
     background-color: #fffefb;
     border-radius: 10px;
+    /* margin: 10px; */
     margin: 10px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: left;
+
+    position: relative;
 }
 
 .colorPen {
-    grid-area: 5 / 1 / 5/ 2;
+    height: 70px;
+    min-width: 33.3vw;
+
+    grid-area: 5 / 1 / 5/ 3;
 
     display: flex;
     justify-content: space-between;
 
     border-radius: 10px;
     margin: 10px;
+
 }
 
+#clearBtn {
+    grid-area: 5 / 3 / 5 / 5;
+    border: none;
+    /* min-width: 100px;
+    min-height: 50px; */
+    border-radius: 10px;
+    padding: 5px;
+}
+
+
 #chatDiv {
-    grid-area: 2 / 4 / 5 / 6;
+    grid-area: 2 / 4 / 6 / 6;
 
     background-color: #fffefb;
     border-radius: 10px;
@@ -140,13 +173,9 @@
     margin-left: 10px;
 }
 
-#clearBtn {
-    grid-area: 5 / 3 / 5 / 5;
-    border: none;
-}
 
 #players {
-    grid-area: 2 / 6 / 5/ 8;
+    grid-area: 2 / 6 / 6 / 8;
 
     background-color: #fffefb;
     border-radius: 10px;
@@ -206,11 +235,11 @@ li p {
 
 .theColorTags {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     margin: 5px;
     border-radius: 100%;
-    border: 0.5px solid black;
+    /* border: 0.5px solid black; */
 
     /* border-radius: 150px;
     box-shadow: 2px 2px 5px #bebebe,

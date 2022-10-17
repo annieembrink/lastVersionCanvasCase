@@ -72,12 +72,11 @@ fs.readFile('motive.json', 'utf8', function (err, data) {
 });
 
 //Generating three random words
-const GenerateRandomWords = (test) => {
+const GenerateRandomWords = () => {
     let data = JSON.parse(jsonData);
     let words = data.words;
-    console.log('test', test)
 
-    // console.log('randomplayerstate', randomPlayerState[0].id)
+    console.log('randomplayerstate', randomPlayerState.length)
 
     let arrOfWords = []
     for (let i = 0; i < 3; i++) {
@@ -86,12 +85,14 @@ const GenerateRandomWords = (test) => {
 
     wss.clients.forEach(client => {
 
-        if (randomPlayerState[0].id === client.id) {
-            client.send(JSON.stringify({
-                type: 'getRandomWords',
-                data: arrOfWords,
-                allowedToPaint: true
-            }))
+        if (randomPlayerState[0].id !== undefined) {
+            if (randomPlayerState[0].id === client.id) {
+                client.send(JSON.stringify({
+                    type: 'getRandomWords',
+                    data: arrOfWords,
+                    allowedToPaint: true
+                }))
+            }
         }
     });
 }
@@ -163,12 +164,12 @@ wss.on("connection", (ws) => {
             }
             break;
         case "text": {
-            console.log('client trying to write')
+            // console.log('client trying to write')
             // console.log(message.data)
             if (message.data !== undefined) {
                 chosenWordArr.push(message.data)
             }
-            console.log('chosenWordArr', chosenWordArr)
+            // console.log('chosenWordArr', chosenWordArr)
 
             // message to clients
             let objBroadcast = {
@@ -200,7 +201,7 @@ wss.on("connection", (ws) => {
 
                 if (randomPlayerState.length === 0) {
                     GenerateRandomPlayer()
-                    GenerateRandomWords(message.time)
+                    GenerateRandomWords()
                 }
 
                 console.log('ready to play')

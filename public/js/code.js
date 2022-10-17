@@ -11,12 +11,17 @@ const clearBtn = document.getElementById("clearBtn");
 const body = document.querySelector('body')
 const playerDiv = document.getElementById('players')
 const gameBody = document.getElementById('gameBody')
+const colorPen = document.getElementsByClassName('colorPen')
 
 const canvas = document.querySelector("#canvas");
-canvas.width = 550
-canvas.height = 400
+canvas.width = window.innerWidth/3
+canvas.height = window.innerHeight/2;
 const ctx = canvas.getContext("2d");
 let isPainting = false;
+
+
+chatDiv.width = window.innerWidth/4
+playerDiv.width = window.innerWidth/4
 
 let nickname;
 let id;
@@ -175,12 +180,13 @@ function renderMessage(obj) {
 
 function createPlayersEl(obj) {
 
-  // const colors = [
-  //   "lightgray",
-  //   "lightblue",
-  //   "pink",
-  //   "lightbrown"
-  // ]
+  const colors = [
+    "#CCC7B9",
+    "#EAF9D9",
+    "#E2D4BA",
+    "#AF7A6D",
+    "#653239"
+  ]
 
   playerDiv.innerHTML = '';
   // console.log(obj.length)
@@ -195,11 +201,11 @@ function createPlayersEl(obj) {
   let i = 0
   obj.forEach(player => {
     const onePlayerDiv = document.createElement('div');
-    // if (i === 4) {
-    //   i = 0
-    // }
-    // onePlayerDiv.style.backgroundColor = colors[i++]
-    onePlayerDiv.style.backgroundColor = getRandomColor();
+    if (i === 5) {
+      i = 0
+    }
+    onePlayerDiv.style.backgroundColor = colors[i++]
+    // onePlayerDiv.style.backgroundColor = getRandomColor();
     playerDiv.appendChild(onePlayerDiv)
 
     const playerEl = document.createElement('p')
@@ -359,14 +365,14 @@ function init(e) {
   // PAINT MESSAGE FUNCTIONS
   const initPaint = (e) => {
     isPainting = true;
-    // ctx.beginPath()
+    ctx.beginPath()
     paint(e);
   };
 
   const finishPaint = () => {
     isPainting = false;
     // ctx.stroke()
-    // ctx.closePath()
+    ctx.closePath()
   };
 
   const paint = (e) => {
@@ -377,24 +383,41 @@ function init(e) {
       color: objWithCurrentColor.color || 'black',
       x: e.clientX - canvas.offsetLeft,
       y: e.clientY - canvas.offsetTop,
-      radius: objWithCurrentPen.pen,
-      startAngle: 0,
-      endAngle: 2 * Math.PI,
+      lineWidth: objWithCurrentPen.pen,
+      // radius: objWithCurrentPen.pen,
+      // startAngle: 0,
+      // endAngle: 2 * Math.PI,
     }
     websocket.send(JSON.stringify({
       type: "paint",
       payload: args
     }));
 
-    // ctx.strokeStyle = objWithCurrentColor.color;
+    ctx.strokeStyle = objWithCurrentColor.color;
 
-    // ctx.lineWidth = objWithCurrentPen.pen;
-    // ctx.lineCap = 'round';
+    ctx.lineWidth = objWithCurrentPen.pen;
+    ctx.lineCap = 'round';
 
-    // ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-    // ctx.stroke();
+    ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    ctx.stroke();
 
   };
+
+  function paintLine(ctx, args) {
+
+    // ctx.fillStyle = args.color;
+    // ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
+    // ctx.fill();
+    // ctx.beginPath();
+  
+    ctx.strokeStyle = args.color;
+  
+    ctx.lineWidth = args.line;
+    ctx.lineCap = 'round';
+  
+    ctx.lineTo(args.x, args.y);
+    ctx.stroke();
+  }
 
   const recreateCanvas = (state) => {
     state.forEach((message) => {
@@ -492,21 +515,7 @@ function init(e) {
 
 }
 
-function paintLine(ctx, args) {
 
-  ctx.fillStyle = args.color;
-  ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
-  ctx.fill();
-  ctx.beginPath();
-
-  // ctx.strokeStyle = args.color;
-
-  // ctx.lineWidth = args.line;
-  // ctx.lineCap = 'round';
-
-  // ctx.lineTo(args.x, args.y);
-  // ctx.stroke();
-}
 
 window.onload = init;
 
@@ -514,19 +523,22 @@ window.onload = init;
 
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
 //poängräknare för deltagarna, den som svarar först får flest poäng
-//en i taget kan rita på canvas, loop för vems tur det är helt enkelt
 //den som ritar får också poäng ju fler som gissar rätt ord
 //den som ritar ska inte kunna skriva i chatten och får poäng för rätt gissning. Poäng lika mkt som cnt
 //Timern ska nollas om randomplayer sticker mitt i 
 //time out bort när orden syns 
-// chat input field blir grå när ranodmplayer skriver men inte annars
-//player guessed right word should be displayed for everyone
+// chat input field blir grå när ranodmplayer skriver men inte annars????
 //chosenArr should not be visible for everyone
 //om f5 när bara två spelar så crashar spelet? innan nickname är satt
 //rita linjer ist för prickar
+//Bara möjligt att gissa rätt ord en gång
+//rita med linjer inte prickar
 
 //DONE: orden ska bara synas för den som ritar
 //DONE: startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
 //DONE: när tiden är ute, kan man inte rita längre
 //DONE: bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
 //DONE: en div där deltagarna presenteras
+//DONE: en i taget kan rita på canvas, loop för vems tur det är helt enkelt
+//DONE: player guessed right word should be displayed for everyone
+
