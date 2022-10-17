@@ -105,10 +105,19 @@ const GenerateRandomPlayer = () => {
 
     wss.clients.forEach(client => {
 
-        client.send(JSON.stringify({
-            type: 'getRandomPlayer',
-            data: randomPlayerState
-        }))
+        if (randomPlayerState[0].id === client.id) {
+            client.send(JSON.stringify({
+                type: 'getRandomPlayer',
+                data: randomPlayerState,
+                allowedToGuess: false
+            }))
+        } else if (randomPlayerState[0].id !== client.id) {
+            client.send(JSON.stringify({
+                type: 'getRandomPlayer',
+                data: randomPlayerState,
+                allowedToGuess: true
+            }))
+        } 
     });
 }
 

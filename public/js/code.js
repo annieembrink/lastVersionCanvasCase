@@ -479,6 +479,13 @@ function init(e) {
       case "getRandomPlayer":
         console.log(message.data[0].nickname)
         document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
+
+        if (!message.allowedToGuess) {
+          inputText.disabled = true;
+        } else {
+          inputText.disabled = false;
+        }
+        
         break;
       case "rightWord":
         // console.log('rightWord', message.sec, message.nicknameHistory)
