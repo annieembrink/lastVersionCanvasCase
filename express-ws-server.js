@@ -65,6 +65,7 @@ let jsonData = [];
 let toFewPlayers = false;
 let chosenWordArr = [];
 let allowedToPaint = false;
+let allowedToGuess = true;
 // let arrOfWords = [];
 
 fs.readFile('motive.json', 'utf8', function (err, data) {
@@ -76,7 +77,7 @@ const GenerateRandomWords = () => {
     let data = JSON.parse(jsonData);
     let words = data.words;
 
-    console.log('randomplayerstate', randomPlayerState.length)
+    // console.log('randomplayerstate', randomPlayerState.length)
 
     let arrOfWords = []
     for (let i = 0; i < 3; i++) {
@@ -194,6 +195,7 @@ wss.on("connection", (ws) => {
             let obj = {
                 nickname: nickname,
                 id: id,
+                points: 0
             }
             nicknameHistory.push(obj)
 
@@ -230,10 +232,34 @@ wss.on("connection", (ws) => {
             });
         }
         break;
+        case "rightWord": {
+            // console.log(message.sec)
+            // console.log(message.name)
+            // console.log(ws.id)
+
+            let playerWhoGuessed = nicknameHistory.find(player => player.id === message.id);
+            let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
+
+            console.log('playerwhoguessed', playerWhoGuessed)
+
+            nicknameHistory[getIndex].points = parseInt(message.sec)
+            // console.log(nicknameHistory)
+
+
+            wss.clients.forEach((client) => {
+                if (client.id === message.id) {
+                    client.send(JSON.stringify({
+                        type: 'rightWord',
+                        sec: message.sec,
+                        nicknameHistory: nicknameHistory,
+                        allowedToGuess: false
+                    }))
+                }
+            });
+
+        }
+        break;
         case "timerStarted": {
-
-            // console.log('timermsg', message.time, randomPlayerState)
-
             if (!message.data) {
                 randomPlayerState.splice(0)
                 chosenWordArr.splice(0)
@@ -249,18 +275,17 @@ wss.on("connection", (ws) => {
                     id: ws.id,
                     message: message,
                     timerOn: message.data,
-                    allowedToPaint: allowedToPaint
+                    allowedToPaint: allowedToPaint,
+                    nicknameHistory: nicknameHistory
                 }))
-
-                // client.send(JSON.stringify({type: 'timerStarted', time: message.time, id: ws.id, message: message}))
 
             });
         }
         break;
         case "clearCanvas": {
-            console.log(ws.id)
-            console.log(randomPlayerState[0].id)
-            
+            // console.log(ws.id)
+            // console.log(randomPlayerState[0].id)
+
             if (ws.id === randomPlayerState[0].id) {
                 wss.clients.forEach((client) => {
 
@@ -270,7 +295,7 @@ wss.on("connection", (ws) => {
                     }))
                 });
             }
-           
+
         }
         break;
         default: {
@@ -283,7 +308,7 @@ wss.on("connection", (ws) => {
     // close event
     ws.on("close", () => {
 
-        console.log('nicknameshistory before slice', nicknameHistory)
+        // console.log('nicknameshistory before slice', nicknameHistory)
 
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
         // console.log('clientDisconnected', clientDisconnected)
@@ -292,14 +317,14 @@ wss.on("connection", (ws) => {
         // console.log('getIndex', getIndex)
 
         nicknameHistory.splice(getIndex, 1)
-        console.log('nicknameistory after splice', nicknameHistory)
+        // console.log('nicknameistory after splice', nicknameHistory)
 
         if (nicknameHistory.length < 3) {
             toFewPlayers = true;
         }
 
         if ((randomPlayerState.length > 0) && (randomPlayerState[0].id === ws.id)) {
-            console.log('random player left')
+            // console.log('random player left')
             randomPlayerState.splice(0)
             GenerateRandomPlayer()
             GenerateRandomWords()
@@ -312,7 +337,7 @@ wss.on("connection", (ws) => {
         //     GenerateRandomWords()
         // }
 
-        console.log('randomplayerstate', randomPlayerState)
+        // console.log('randomplayerstate', randomPlayerState)
 
 
         wss.clients.forEach(client => {

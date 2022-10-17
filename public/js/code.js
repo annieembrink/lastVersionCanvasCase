@@ -142,34 +142,6 @@ function parseJSON(data) {
   }
 }
 
-/**
- * render new message
- *
- * @param {obj}
- */
-function renderMessage(obj) {
-  // use template - cloneNode to get a document fragment
-  let template = document.getElementById("message").cloneNode(true);
-
-  // access content
-  let newMsg = template.content;
-
-  if (obj.msg === obj.chosenWordArr[0]) {
-    console.log(`${obj.nickname} guessed the right word!`)
-    obj.msg = `guessed the right word`
-
-    //not everyones field should be disabled
-    // inputText.disabled = true;
-  }
-
-  // change content...
-  newMsg.querySelector("span").textContent = obj.nickname;
-  // body.baseURI.split('=')[1]
-  newMsg.querySelector("p").textContent = obj.msg;
-
-  // render using prepend method - last message first
-  document.getElementById("conversation").append(newMsg);
-}
 
 // --------------------------------------------------
 
@@ -205,7 +177,7 @@ function createPlayersEl(obj) {
     playerDiv.appendChild(onePlayerDiv)
 
     const playerEl = document.createElement('p')
-    playerEl.innerText = player.nickname
+    playerEl.innerText = `${player.nickname}, ${player.points} points`
     onePlayerDiv.appendChild(playerEl)
   })
 
@@ -222,6 +194,47 @@ function toFewPlayers(bool) {
 function init(e) {
 
   const websocket = new WebSocket("ws://localhost:80");
+
+
+  /**
+ * render new message
+ *
+ * @param {obj}
+ */
+function renderMessage(obj) {
+  // use template - cloneNode to get a document fragment
+  let template = document.getElementById("message").cloneNode(true);
+
+  // access content
+  let newMsg = template.content;
+
+  if (obj.msg === obj.chosenWordArr[0]) {
+    console.log(`${obj.nickname} guessed the right word!`)
+    obj.msg = `guessed the right word`
+
+    console.log(document.getElementById('timer').innerHTML)
+
+    websocket.send(JSON.stringify({
+      type: 'rightWord',
+      sec: document.getElementById('timer').innerHTML.slice(0, 2),
+      id: obj.id
+    }));
+
+    // inputText.disabled = true; 
+    
+    //not everyones field should be disabled
+    // inputText.disabled = true;
+  }
+
+  // change content...
+  newMsg.querySelector("span").textContent = obj.nickname;
+  // body.baseURI.split('=')[1]
+  newMsg.querySelector("p").textContent = obj.msg;
+
+  // render using prepend method - last message first
+  document.getElementById("conversation").append(newMsg);
+}
+
 
 
   //TIMER------------------------------
@@ -394,6 +407,7 @@ function init(e) {
 
     ctx.lineCap = 'round';
 
+    // ctx.beginPath()
     ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
     ctx.stroke();
 
@@ -452,6 +466,12 @@ function init(e) {
         if (message.time === undefined) {
           document.getElementById("timer").innerHTML = 'Time out';
         }
+
+        console.log(message.message)
+
+        if (!message.data) {
+          createPlayersEl(message.nicknameHistory)
+        }
         break;
       case "getRandomWords":
         console.log(message.data)
@@ -461,6 +481,14 @@ function init(e) {
       case "getRandomPlayer":
         console.log(message.data[0].nickname)
         document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
+        break;
+      case "rightWord":
+        // console.log('rightWord', message.sec, message.nicknameHistory)
+        console.log('allowedToGuess', message.nicknameHistory)
+
+        if (!message.allowedToGuess) {
+          inputText.disabled = true; 
+        }
         break;
       case "text":
         console.log(message.type)
@@ -500,7 +528,8 @@ function init(e) {
 
   // listen on close event (server)
   websocket.addEventListener("close", (e) => {
-    document.getElementById("status").textContent = "Sry....server down";
+    gameBody.innerHTML = '';
+    gameBody.innerText = 'Sorry, something went wrong, try again'
   });
 
   // TODO: Connecting events with functions
@@ -541,6 +570,8 @@ window.onload = init;
 //rita linjer ist för prickar
 //Bara möjligt att gissa rätt ord en gång
 //rita med linjer inte prickar
+//använder jag ens allow to paint?
+//städa kod
 
 //DONE: orden ska bara synas för den som ritar
 //DONE: startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
