@@ -29,7 +29,7 @@ import {
 /* application variables
 ------------------------------- */
 // set port number >>> make sure client javascript uses same WebSocket port!
-const port = 80;
+const port = 3000;
 
 /* express
 ------------------------------- */
