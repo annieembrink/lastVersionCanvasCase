@@ -10,26 +10,18 @@ import {
     WebSocketServer
 } from "ws";
 
-// import functions
-import {
-    parseJSON,
-    broadcast,
-    broadcastButExclude
-} from "./libs/functions.js";
-
 import {
     v4 as uuidv4
 } from "uuid";
 
 import fs from 'fs';
-import {
-    Console
-} from "console";
+
 
 /* application variables
 ------------------------------- */
 // set port number >>> make sure client javascript uses same WebSocket port!
 const port = 3000;
+// const port = 80;
 
 /* express
 ------------------------------- */

@@ -1,7 +1,7 @@
 {
   "name": "lastversioncanvascase",
   "version": "1.0.0",
-  "description": "@aninesandberg",
+  "description": "@anniesandberg",
   "main": "express-ws-server.js",
   "type": "module",
   "scripts": {
