@@ -31,10 +31,16 @@ const app = express();
 // serve static files - every file in folder named 'public'
 app.use(express.static("public"));
 
-app.use(express.urlencoded({
-    extended: true
-}));
-app.use(express.json());
+/* listen on initial connection
+------------------------------- */
+server.listen(port, (req, res) => {
+    console.log(`Express server (and http) running on port ${port}`);
+});
+
+// app.use(express.urlencoded({
+//     extended: true
+// }));
+// app.use(express.json());
 
 /* server(s)
 ------------------------------- */
@@ -363,8 +369,3 @@ wss.on("connection", (ws) => {
 });
 
 
-/* listen on initial connection
-------------------------------- */
-server.listen(port, (req, res) => {
-    console.log(`Express server (and http) running on port ${port}`);
-});
