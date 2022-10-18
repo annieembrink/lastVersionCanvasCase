@@ -181,8 +181,6 @@ wss.on("connection", (ws) => {
             break;
         case "text": {
 
-           
-
             if (message.data !== undefined) {
                 chosenWordArr.push(message.data)
             }
@@ -195,13 +193,10 @@ wss.on("connection", (ws) => {
                 nicknameHistory[getIndex].points += addPoints
             }
 
-
-
             let playerWhoPaints = randomPlayerState[0]
             let getIndexOfPainter = nicknameHistory.indexOf(playerWhoPaints)
             let pointsForPainter = 30 / (wss.clients.size - 1) * guessedRight / wss.clients.size
             nicknameHistory[getIndexOfPainter].points += pointsForPainter;
-
 
             let objBroadcast = {
                 type: "text",
@@ -215,15 +210,21 @@ wss.on("connection", (ws) => {
 
 
             wss.clients.forEach((client) => {
+                
 
                 if (client.id !== randomPlayerState[0].id && message.msg !== chosenWordArr[0]) {
                     objBroadcast.allowedToGuess = true
                     client.send(JSON.stringify(objBroadcast))
-
-                } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
+                } else {
                     objBroadcast.allowedToGuess = false
                     client.send(JSON.stringify(objBroadcast))
                 }
+                
+                if (message.msg === chosenWordArr[0] && client.id === ws.id) {
+                    objBroadcast.allowedToGuess = false
+                    // objBroadcast.msg = `guessed the right word`
+                    // client.send(JSON.stringify(objBroadcast))
+                } 
             });
         }
         break;

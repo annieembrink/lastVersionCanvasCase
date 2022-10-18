@@ -208,17 +208,21 @@ function init(e) {
     // access content
     let newMsg = template.content;
 
+    if (obj.msg === obj.chosenWordArr[0]) {
+      obj.msg = `guessed the right word`
+    }
+
     // if (obj.msg === obj.chosenWordArr[0]) {
     //   // console.log(`${obj.nickname} guessed the right word!`)
     //   obj.msg = `guessed the right word`
 
-    //   console.log(document.getElementById('timer').innerHTML)
+    //   // console.log(document.getElementById('timer').innerHTML)
 
-    //   websocket.send(JSON.stringify({
-    //     type: 'rightWord',
-    //     sec: document.getElementById('timer').innerHTML.slice(0, 2),
-    //     id: obj.id
-    //   }));
+    //   // websocket.send(JSON.stringify({
+    //   //   type: 'rightWord',
+    //   //   sec: document.getElementById('timer').innerHTML.slice(0, 2),
+    //   //   id: obj.id
+    //   // }));
 
     //   // inputText.disabled = true; 
 
@@ -362,21 +366,11 @@ function init(e) {
         sec: document.getElementById('timer').innerHTML.slice(0, 2),
       };
 
-      // if (obj.msg === obj.chosenWordArr[0]) {
-      //   // console.log(`${obj.nickname} guessed the right word!`)
-      //   obj.msg = `guessed the right word`
-
-      //   console.log(document.getElementById('timer').innerHTML)
-      // }
-
       // send to server
       websocket.send(JSON.stringify(objMessage));
-      // console.log(objMessage.msg, chosenWord.textContent)
       inputText.value = "";
     }
   }
-
-
 
 
   // PAINT MESSAGE FUNCTIONS
@@ -466,10 +460,7 @@ function init(e) {
         // console.log(message.type);
         recreateCanvas(state);
         break;
-        // case "enoughPlayers":
-        //   break;
       case "timerStarted":
-        // console.log(message.data)
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
 
         if (message.time === undefined) {
@@ -480,12 +471,9 @@ function init(e) {
 
         break;
       case "getRandomWords":
-        // console.log(message.data)
-        // console.log('allowedtopaint', message.allowedToPaint)
         createRandomWordElement(message.data)
         break;
       case "getRandomPlayer":
-        // console.log(message.data[0].nickname)
         document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
 
         if (!message.allowedToGuess) {
@@ -497,22 +485,20 @@ function init(e) {
         console.log('allowedtoguess', message.allowedToGuess)
 
         break;
-      case "rightWord":
-        // console.log('rightWord', message.sec, message.nicknameHistory)
-        // console.log('allowedToGuess', message.nicknameHistory)
-
-     
-
-        break;
       case "text":
 
         if (!message.allowedToGuess) {
           inputText.disabled = true;
+          renderMessage(message)
+
         } else {
           inputText.disabled = false;
+          renderMessage(message)
+          
         }
 
-        renderMessage(message)
+        
+
         break;
       case "start":
         // console.log(message.type)
