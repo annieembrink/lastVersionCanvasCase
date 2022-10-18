@@ -222,10 +222,19 @@ wss.on("connection", (ws) => {
                         //Send data
                         client.send(JSON.stringify(objBroadcast))
                     } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
-                        //If your message is the right word...
+                        //If your message is the right word and you're th eon who guessed
 
                         //You're not allowed to guess anymore...
                         objBroadcast.allowedToGuess = false
+
+                        //Send data
+                        client.send(JSON.stringify(objBroadcast))
+                    } else if (message.msg === chosenWordArr[0] && client.id !== ws.id) {
+
+                        //If you're not the one who guessed...
+
+                        //You're still allowed to guess...
+                        objBroadcast.allowedToGuess = true
 
                         //Send data
                         client.send(JSON.stringify(objBroadcast))
