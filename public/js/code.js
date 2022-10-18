@@ -212,24 +212,6 @@ function init(e) {
       obj.msg = `guessed the right word`
     }
 
-    // if (obj.msg === obj.chosenWordArr[0]) {
-    //   // console.log(`${obj.nickname} guessed the right word!`)
-    //   obj.msg = `guessed the right word`
-
-    //   // console.log(document.getElementById('timer').innerHTML)
-
-    //   // websocket.send(JSON.stringify({
-    //   //   type: 'rightWord',
-    //   //   sec: document.getElementById('timer').innerHTML.slice(0, 2),
-    //   //   id: obj.id
-    //   // }));
-
-    //   // inputText.disabled = true; 
-
-    //   //not everyones field should be disabled
-    //   // inputText.disabled = true;
-    // }
-
     // change content...
     newMsg.querySelector("span").textContent = obj.nickname;
     // body.baseURI.split('=')[1]
@@ -489,16 +471,10 @@ function init(e) {
 
         if (!message.allowedToGuess) {
           inputText.disabled = true;
-          renderMessage(message)
-
         } else {
           inputText.disabled = false;
-          renderMessage(message)
-          
         }
-
-        
-
+        renderMessage(message)
         break;
       case "start":
         // console.log(message.type)
