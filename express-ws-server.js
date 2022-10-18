@@ -191,12 +191,11 @@ wss.on("connection", (ws) => {
                 let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
                 let addPoints = parseInt(message.sec)
                 nicknameHistory[getIndex].points += addPoints
-
             }
 
             let playerWhoPaints = randomPlayerState[0]
             let getIndexOfPainter = nicknameHistory.indexOf(playerWhoPaints)
-            let pointsForPainter = 30 / (wss.clients.size - 1) * guessedRight / wss.clients.size
+            let pointsForPainter = 5 * guessedRight 
             nicknameHistory[getIndexOfPainter].points += pointsForPainter;
 
             let objBroadcast = {
@@ -293,28 +292,15 @@ wss.on("connection", (ws) => {
             });
         }
         break;
-        case "rightWord": {
-
-        }
-        break;
         case "timerStarted": {
 
-
-            // let playerWhoPaints = nicknameHistory.find(player => player.id === ws.id);
-            // let getIndex = nicknameHistory.indexOf(playerWhoPaints)
-
-            // let pointsForPainter = 30 / (wss.clients.size - 1) * guessedRight / wss.clients.size
-            // nicknameHistory[getIndex].points = pointsForPainter;
-
+            guessedRight = 0
 
             if (!message.data) {
                 randomPlayerState.splice(0)
                 chosenWordArr.splice(0)
                 GenerateRandomPlayer()
                 GenerateRandomWords()
-                guessedRight = 0
-
-                // console.log(nicknameHistory, pointsForPainter)
             }
 
             wss.clients.forEach((client) => {
@@ -351,44 +337,26 @@ wss.on("connection", (ws) => {
         }
         }
 
-        // console.log('randomplayerstate', randomPlayerState)
-
     });
 
     // close event
     ws.on("close", () => {
 
-        // console.log('nicknameshistory before slice', nicknameHistory)
-
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
-        // console.log('clientDisconnected', clientDisconnected)
 
         let getIndex = nicknameHistory.indexOf(clientDisconnected)
-        // console.log('getIndex', getIndex)
 
         nicknameHistory.splice(getIndex, 1)
-        // console.log('nicknameistory after splice', nicknameHistory)
 
         if (nicknameHistory.length < 3) {
             toFewPlayers = true;
         }
 
         if ((randomPlayerState.length > 0) && (randomPlayerState[0].id === ws.id)) {
-            // console.log('random player left')
             randomPlayerState.splice(0)
             GenerateRandomPlayer()
             GenerateRandomWords()
         }
-
-        // if (randomPlayerState[0].id === ws.id) {
-        //     console.log('random player left')
-        //     randomPlayerState.slice(0)
-        //     GenerateRandomPlayer()
-        //     GenerateRandomWords()
-        // }
-
-        // console.log('randomplayerstate', randomPlayerState)
-
 
         wss.clients.forEach(client => {
 
@@ -396,7 +364,6 @@ wss.on("connection", (ws) => {
                 type: 'disconnect',
                 active: nicknameHistory,
                 toFewPlayers: toFewPlayers,
-                // randomPlayerState: randomPlayerState
             }))
         });
 

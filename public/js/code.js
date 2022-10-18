@@ -211,6 +211,7 @@ function init(e) {
     if (obj.msg === obj.chosenWordArr[0]) {
       obj.msg = `guessed the right word!`
       newMsg.querySelector("p").style.color = 'green'
+      newMsg.querySelector("p").style.fontWeight = 'bold'
     }
 
     // change content...
@@ -221,7 +222,7 @@ function init(e) {
     // render using prepend method - last message first
     document.getElementById("conversation").append(newMsg);
 
- 
+
   }
 
 
@@ -441,7 +442,7 @@ function init(e) {
     switch (message.type) {
       case "init":
         const state = message.payload.state;
-        console.log(message.payload.allowedToGuess)
+        // console.log(message.payload.allowedToGuess)
         // console.log(message.type);
         recreateCanvas(state);
         break;
@@ -467,7 +468,7 @@ function init(e) {
           inputText.disabled = false;
         }
 
-        console.log('allowedtoguess', message.allowedToGuess)
+        // console.log('allowedtoguess', message.allowedToGuess)
 
         break;
       case "text":
@@ -551,4 +552,3 @@ window.onload = init;
 //använder jag ens allow to paint?
 //städa kod
 //Om alla gissat rätt, avsluta timern och slumpa ny spelare
-
