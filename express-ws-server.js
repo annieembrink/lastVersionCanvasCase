@@ -10,21 +10,11 @@ import {
     WebSocketServer
 } from "ws";
 
-// import functions
-import {
-    parseJSON,
-    broadcast,
-    broadcastButExclude
-} from "./libs/functions.js";
-
 import {
     v4 as uuidv4
 } from "uuid";
 
 import fs from 'fs';
-import {
-    Console
-} from "console";
 
 /* application variables
 ------------------------------- */
