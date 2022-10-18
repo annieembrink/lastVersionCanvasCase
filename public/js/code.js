@@ -149,11 +149,10 @@ function parseJSON(data) {
 function createPlayersEl(obj) {
 
   const colors = [
-    "#F5FDC6",
-    "#F5C396",
-    "#D0B17A",
-    "#A89F68",
-    "#41521F"
+    "#2274A5",
+    "#F75C03",
+    "#F1C40F",
+    "#2E933C"
   ]
 
   playerDiv.innerHTML = '';
@@ -169,7 +168,7 @@ function createPlayersEl(obj) {
   let i = 0
   obj.forEach(player => {
     const onePlayerDiv = document.createElement('div');
-    if (i === 5) {
+    if (i === 4) {
       i = 0
     }
     onePlayerDiv.style.backgroundColor = colors[i++]

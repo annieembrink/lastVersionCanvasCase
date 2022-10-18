@@ -13,6 +13,7 @@
 
 
     background-color: lightgrey;
+    background-color: #2E933C;
     font-family: 'Poppins', sans-serif;
 
     height: 700px;
@@ -34,53 +35,56 @@
     text-align: center;
 }
 
-/* #startBody {
-    width: 100vw;
-    height: 100vh;
-}
-
-.startPageContent {
-    max-width: 40%;
-    margin: auto;
-
-} */
-
 #setNicknameContainer {
-    /* grid-area: 1 / 1 / 1 / 6; */
-    /* margin: 20px 0 0 20px; */
     margin: auto;
 }
 
 #setNicknameContainer button {
     border-radius: 10px;
-    padding: 10px;
+    padding: 10px 20px;
     border: none;
     font-family: 'Poppins', sans-serif;
-    color: darkgray;
+    background-color: #F75C03;
+    color: white;
+    font-weight: bold;
+
+    margin-left: 10px;
+    box-shadow:  2px 2px 12px #20672a,
+             -2px -2px 12px #3cbf4e;
 }
 
 #setNicknameContainer button:disabled {
     display: none;
 }
 
-#setNicknameContainer input, #inputText {
+#setNicknameContainer input,
+#inputText {
     border-radius: 10px;
     padding: 10px;
     border: none;
     font-family: 'Poppins', sans-serif;
+    color: #242423;
+
+    /* box-shadow: inset 4px 4px 7px #b3b3b3,
+        inset -4px -4px 7px #ffffff; */
 }
 
 #setNicknameContainer input:disabled {
 
-    background-color: lightgrey;
+    background-color:#2E933C;
     font-size: 2rem;
+    font-weight: bold;
     color: #F75C03;
     padding: 0;
     text-align: center;
     margin-top: 40%;
+    text-shadow: 1px 1px #242423;
+
+    box-shadow:none;
 }
 
-#setNicknameContainer input:focus, #inputText:focus {
+#setNicknameContainer input:focus,
+#inputText:focus {
     outline: none;
 }
 
@@ -118,7 +122,7 @@
 }
 
 #canvas {
-    /* border: 1px solid black; */
+    border: 10px solid #F75C03;
     grid-area: 2 / 1 / 5 / 3;
     background-color: #fffefb;
     border-radius: 10px;
@@ -178,7 +182,7 @@
     margin: 5px;
 }
 
-#conversation li span{
+#conversation li span {
     margin-right: 30px;
     margin-left: 10px;
 }
@@ -193,8 +197,9 @@
 }
 
 #players div:first-child {
-    border-radius: 10px 10px 0 0 ;
+    border-radius: 10px 10px 0 0;
 }
+
 #players div {
     width: auto;
 }
