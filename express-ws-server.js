@@ -81,7 +81,13 @@ const GenerateRandomWords = () => {
                 client.send(JSON.stringify({
                     type: 'getRandomWords',
                     data: arrOfWords,
-                    allowedToPaint: true
+                    // allowedToPaint: true
+                }))
+            } else {
+                client.send(JSON.stringify({
+                    type: 'getRandomWords',
+                    data: [],
+                    // allowedToPaint: true
                 }))
             }
         }

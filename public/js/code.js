@@ -457,19 +457,14 @@ function init(e) {
     switch (message.type) {
       case "init":
         const state = message.payload.state;
-        // console.log(message.payload.allowedToGuess)
-        // console.log(message.type);
         recreateCanvas(state);
         break;
       case "timerStarted":
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
-
         if (message.time === undefined) {
           document.getElementById("timer").innerHTML = 'Time out';
         }
-
         createPlayersEl(message.nicknameHistory)
-
         break;
       case "getRandomWords":
         createRandomWordElement(message.data)
@@ -482,12 +477,8 @@ function init(e) {
         } else {
           inputText.disabled = false;
         }
-
-        // console.log('allowedtoguess', message.allowedToGuess)
-
         break;
       case "text":
-
         if (!message.allowedToGuess) {
           inputText.disabled = true;
         } else {
@@ -496,34 +487,24 @@ function init(e) {
         renderMessage(message)
         break;
       case "start":
-        // console.log(message.type)
         theDiv()
         createPlayersEl(message.data.nicknameHistory)
         document.getElementById('whosTurn').textContent = `${message.data.randomPlayerState[0].nickname}s turn`
-
-        // console.log(message.data.randomPlayerState[0].nickname)
-        // document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         break;
       case "paint":
-        // console.log(message.type)
         const args = message.payload;
         paintLine(ctx, args);
         break;
       case "disconnect":
-        // console.log('active clients (in disconnect)', message.active)
-        // console.log(message.toFewPlayers)
-        // createWaitEl()
         toFewPlayers(message.toFewPlayers)
         createPlayersEl(message.active)
         break;
       case "clearCanvas":
-        // console.log(message.data)
         if (message.data) {
           ctx.clearRect(0, 0, canvas.width, canvas.height)
         }
         break;
       default:
-        // console.log("default case")
     }
   }
 
@@ -567,3 +548,5 @@ window.onload = init;
 //använder jag ens allow to paint?
 //städa kod
 //Om alla gissat rätt, avsluta timern och slumpa ny spelare
+//om ny spelar kommer mitt i ett spel, så funkar inte poängen
+//de som ritats valda ord är kvar...
