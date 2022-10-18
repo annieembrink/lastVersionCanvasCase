@@ -15,7 +15,7 @@ const colorPen = document.getElementById('colorPen')
 
 const canvas = document.querySelector("#canvas");
 canvas.width = window.innerWidth / 2.2
-canvas.height = window.innerHeight / 2;
+canvas.height = window.innerHeight / 1.5;
 const ctx = canvas.getContext("2d");
 let isPainting = false;
 
@@ -112,7 +112,7 @@ function startGame() {
   document.getElementById("setNickname").setAttribute("disabled", true);
 
   // enable input field
-  document.getElementById("inputText").removeAttribute("disabled");
+  // document.getElementById("inputText").removeAttribute("disabled");
 
   // focus input field
   document.getElementById("inputText").focus();
@@ -515,6 +515,11 @@ function init(e) {
   websocket.addEventListener("close", (e) => {
     gameBody.innerHTML = '';
     gameBody.innerText = 'Sorry, something went wrong, try again'
+    gameBody.style.fontSize = '2rem';
+    gameBody.style.fontWeight = 'bold';
+    gameBody.style.color = '#F75C03'
+    gameBody.style.textShadow = '1px 1px #242423';
+    gameBody.style.padding = '20px';
   });
 
   // TODO: Connecting events with functions
