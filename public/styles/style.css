@@ -122,11 +122,9 @@
 }
 
 #canvas {
-    border: 10px solid #F75C03;
     grid-area: 2 / 1 / 5 / 3;
     background-color: #fffefb;
     border-radius: 10px;
-    /* margin: 10px; */
     margin: 10px;
 
     display: flex;
@@ -134,29 +132,31 @@
     justify-content: left;
 
     position: relative;
+
+    box-shadow:  5px 5px 10px #2b8a38,
+             -5px -5px 10px #319c40;
+
 }
 
-.colorPen {
+#colorPen {
     height: 70px;
-    min-width: 33.3vw;
-
-    grid-area: 5 / 1 / 5/ 3;
-
+    grid-area: 6 / 1 / 6/ 2;
     display: flex;
     justify-content: space-between;
-
     border-radius: 10px;
     margin: 10px;
 
 }
 
 #clearBtn {
-    grid-area: 5 / 3 / 5 / 5;
+    grid-area: 5 / 1 / 5 / 2;
+    margin: 10px;
     border: none;
+    height: 50%;
     /* min-width: 100px;
     min-height: 50px; */
     border-radius: 10px;
-    padding: 5px;
+    padding: 5px 10px;
 }
 
 
@@ -168,6 +168,10 @@
     margin: 10px;
 
     position: relative;
+
+    box-shadow:  5px 5px 10px #2b8a38,
+             -5px -5px 10px #319c40;
+
 }
 
 #chatDiv #inputText {
@@ -194,6 +198,10 @@
     background-color: #fffefb;
     border-radius: 10px;
     margin: 10px;
+
+    box-shadow:  5px 5px 10px #2b8a38,
+             -5px -5px 10px #319c40;
+
 }
 
 #players div:first-child {
@@ -250,13 +258,12 @@ li p {
     display: inline-block;
     width: 20px;
     height: 20px;
-    margin: 5px;
+    margin: 8px;
     border-radius: 100%;
-    border: 0.5px solid black;
+    /* border: 0.5px solid black; */
 
-    /* border-radius: 150px;
-    box-shadow: 2px 2px 5px #bebebe,
-        -2px -2px 5px #ffffff; */
+    box-shadow:  5px 5px 6px #277b32,
+             -5px -5px 6px #35ab46;
 }
 
 #penContainer {
@@ -269,9 +276,6 @@ li p {
     margin: 5px;
     width: 30px;
     margin: 5px;
-
-    /* box-shadow: 2px 2px 5px #bebebe,
-        -2px -2px 5px #ffffff; */
 
     display: flex;
     flex-direction: row;

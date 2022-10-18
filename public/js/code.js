@@ -11,10 +11,10 @@ const clearBtn = document.getElementById("clearBtn");
 const body = document.querySelector('body')
 const playerDiv = document.getElementById('players')
 const gameBody = document.getElementById('gameBody')
-const colorPen = document.getElementsByClassName('colorPen')
+const colorPen = document.getElementById('colorPen')
 
 const canvas = document.querySelector("#canvas");
-canvas.width = window.innerWidth / 2.5
+canvas.width = window.innerWidth / 2.2
 canvas.height = window.innerHeight / 2;
 const ctx = canvas.getContext("2d");
 let isPainting = false;
@@ -149,7 +149,7 @@ function parseJSON(data) {
 function createPlayersEl(obj) {
 
   const colors = [
-    "#2274A5",
+    "#995D81",
     "#F75C03",
     "#F1C40F",
     "#2E933C"
@@ -342,6 +342,8 @@ function init(e) {
     document.getElementById('setNicknameContainer').style.margin = '0'
     nicknameInput.style.margin = '20px 0 0 20px'
     nicknameInput.style.textAlign = 'left'
+    clearBtn.style.width = `${canvas.width}px`
+    colorPen.style.width = `${canvas.width}px`
   }
 
   //TEXT MESSAGE FUNCTIONS
@@ -550,3 +552,4 @@ window.onload = init;
 //städa kod
 //Om alla gissat rätt, avsluta timern och slumpa ny spelare
 //canvas clearas inte korrekt??? eller ...
+//penn-ikoner
