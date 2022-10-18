@@ -211,19 +211,30 @@ wss.on("connection", (ws) => {
 
             wss.clients.forEach((client) => {
 
-                if (client.id !== randomPlayerState[0].id && message.msg !== chosenWordArr[0]) {
-                    objBroadcast.allowedToGuess = true
-                    client.send(JSON.stringify(objBroadcast))
-                } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
+                //If your not the one painting...
+                if (client.id !== randomPlayerState[0].id) {
+
+                    //If your msg is not the right word, send data to writing client
+                    if (message.msg !== chosenWordArr[0]) {
+                        //You're still allowed to guess...
+                        objBroadcast.allowedToGuess = true
+
+                        //Send data
+                        client.send(JSON.stringify(objBroadcast))
+                    } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
+                        //If your message is the right word...
+
+                        //You're not allowed to guess anymore...
+                        objBroadcast.allowedToGuess = false
+
+                        //Send data
+                        client.send(JSON.stringify(objBroadcast))
+                    }
+                } else {
+                    //If your ARE the one painting
                     objBroadcast.allowedToGuess = false
                     client.send(JSON.stringify(objBroadcast))
-                } 
-                
-                // else {
-                //     objBroadcast.allowedToGuess = false
-                //     client.send(JSON.stringify(objBroadcast))
-                // }
-
+                }
 
             });
         }
