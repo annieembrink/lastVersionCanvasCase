@@ -149,11 +149,11 @@ function parseJSON(data) {
 function createPlayersEl(obj) {
 
   const colors = [
-    "#CCC7B9",
-    "#EAF9D9",
-    "#E2D4BA",
-    "#AF7A6D",
-    "#653239"
+    "#F5FDC6",
+    "#F5C396",
+    "#D0B17A",
+    "#A89F68",
+    "#41521F"
   ]
 
   playerDiv.innerHTML = '';
@@ -282,6 +282,10 @@ function init(e) {
         }));
 
         printDuration()
+        websocket.send(JSON.stringify({
+          type: 'clearCanvas',
+          data: true
+        }));
       })
     })
   }
@@ -364,12 +368,14 @@ function init(e) {
     isPainting = true;
     ctx.beginPath()
     paint(e);
+
   };
 
   const finishPaint = () => {
     isPainting = false;
-    ctx.stroke()
+    // ctx.stroke()
     // ctx.closePath()
+    
   };
 
   const paint = (e) => {
@@ -380,42 +386,51 @@ function init(e) {
       color: objWithCurrentColor.color || 'black',
       x: e.clientX - canvas.offsetLeft,
       y: e.clientY - canvas.offsetTop,
-      line: objWithCurrentPen.pen
-      // radius: objWithCurrentPen.pen,
-      // startAngle: 0,
-      // endAngle: 2 * Math.PI,
+      line: objWithCurrentPen.pen,
+      radius: objWithCurrentPen.pen,
+      startAngle: 0,
+      endAngle: 2 * Math.PI,
     }
+
+  
     websocket.send(JSON.stringify({
       type: "paint",
       payload: args
     }));
 
-    ctx.strokeStyle = objWithCurrentColor.color;
-    ctx.lineWidth = objWithCurrentPen.pen;
+    // ctx.strokeStyle = objWithCurrentColor.color;
+    // ctx.lineWidth = objWithCurrentPen.pen;
 
-    ctx.lineCap = 'round';
+    // ctx.lineCap = 'round';
 
-    // ctx.beginPath()
-    ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-    ctx.stroke();
+    // // ctx.beginPath()
+    // // ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    // ctx.lineTo(args.x, args.y);
+    // ctx.stroke();
+
+    ctx.fillStyle = args.color;
+    ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
+    ctx.fill();
+    ctx.beginPath();
 
   };
 
   function paintLine(ctx, args) {
 
-    // ctx.fillStyle = args.color;
-    // ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
-    // ctx.fill();
-    // ctx.beginPath();
+    ctx.fillStyle = args.color;
+    ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
+    ctx.fill();
+    ctx.beginPath();
 
-    ctx.strokeStyle = args.color;
+    // ctx.strokeStyle = args.color;
 
-    ctx.lineWidth = args.line;
-    ctx.lineCap = 'round';
+    // ctx.lineWidth = args.line;
+    // ctx.lineCap = 'round';
 
-    ctx.beginPath()
-    ctx.lineTo(args.x, args.y);
-    ctx.stroke();
+    // ctx.beginPath()
+    // ctx.lineTo(args.x, args.y);
+    // ctx.stroke();
+
 
   }
 
