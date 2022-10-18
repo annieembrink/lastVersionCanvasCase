@@ -31,11 +31,7 @@ const app = express();
 // serve static files - every file in folder named 'public'
 app.use(express.static("public"));
 
-/* listen on initial connection
-------------------------------- */
-server.listen(port, (req, res) => {
-    console.log(`Express server (and http) running on port ${port}`);
-});
+
 
 // app.use(express.urlencoded({
 //     extended: true
@@ -50,6 +46,12 @@ const server = http.createServer(app);
 // create WebSocket server - use a predefined server
 const wss = new WebSocketServer({
     noServer: true
+});
+
+/* listen on initial connection
+------------------------------- */
+server.listen(port, (req, res) => {
+    console.log(`Express server (and http) running on port ${port}`);
 });
 
 const state = [];
