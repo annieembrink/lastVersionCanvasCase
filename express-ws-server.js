@@ -35,11 +35,6 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.json());
-app.set('view engine', 'ejs');
-
-app.get('/game', function (req, res) {
-    res.render('game')
-});
 
 /* server(s)
 ------------------------------- */

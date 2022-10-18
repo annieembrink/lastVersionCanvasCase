@@ -288,6 +288,10 @@ function init(e) {
         }));
 
         printDuration()
+        websocket.send(JSON.stringify({
+          type: 'clearCanvas',
+          data: true
+        }));
       })
     })
   }
@@ -370,12 +374,14 @@ function init(e) {
     isPainting = true;
     ctx.beginPath()
     paint(e);
+
   };
 
   const finishPaint = () => {
     isPainting = false;
-    ctx.stroke()
+    // ctx.stroke()
     // ctx.closePath()
+    
   };
 
   const paint = (e) => {
@@ -386,42 +392,51 @@ function init(e) {
       color: objWithCurrentColor.color || 'black',
       x: e.clientX - canvas.offsetLeft,
       y: e.clientY - canvas.offsetTop,
-      line: objWithCurrentPen.pen
-      // radius: objWithCurrentPen.pen,
-      // startAngle: 0,
-      // endAngle: 2 * Math.PI,
+      line: objWithCurrentPen.pen,
+      radius: objWithCurrentPen.pen,
+      startAngle: 0,
+      endAngle: 2 * Math.PI,
     }
+
+  
     websocket.send(JSON.stringify({
       type: "paint",
       payload: args
     }));
 
-    ctx.strokeStyle = objWithCurrentColor.color;
-    ctx.lineWidth = objWithCurrentPen.pen;
+    // ctx.strokeStyle = objWithCurrentColor.color;
+    // ctx.lineWidth = objWithCurrentPen.pen;
 
-    ctx.lineCap = 'round';
+    // ctx.lineCap = 'round';
 
-    // ctx.beginPath()
-    ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-    ctx.stroke();
+    // // ctx.beginPath()
+    // // ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    // ctx.lineTo(args.x, args.y);
+    // ctx.stroke();
+
+    ctx.fillStyle = args.color;
+    ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
+    ctx.fill();
+    ctx.beginPath();
 
   };
 
   function paintLine(ctx, args) {
 
-    // ctx.fillStyle = args.color;
-    // ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
-    // ctx.fill();
-    // ctx.beginPath();
+    ctx.fillStyle = args.color;
+    ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
+    ctx.fill();
+    ctx.beginPath();
 
-    ctx.strokeStyle = args.color;
+    // ctx.strokeStyle = args.color;
 
-    ctx.lineWidth = args.line;
-    ctx.lineCap = 'round';
+    // ctx.lineWidth = args.line;
+    // ctx.lineCap = 'round';
 
-    ctx.beginPath()
-    ctx.lineTo(args.x, args.y);
-    ctx.stroke();
+    // ctx.beginPath()
+    // ctx.lineTo(args.x, args.y);
+    // ctx.stroke();
+
 
   }
 
