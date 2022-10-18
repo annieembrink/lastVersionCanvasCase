@@ -180,16 +180,27 @@ wss.on("connection", (ws) => {
             }
             break;
         case "text": {
-            console.log('MESSAGE', message)
+
+           
 
             if (message.data !== undefined) {
                 chosenWordArr.push(message.data)
             }
+            if (message.msg === chosenWordArr[0]) {
+                guessedRight += 1
 
-            let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
-            let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
-            let addPoints = parseInt(message.sec)
-            nicknameHistory[getIndex].points += addPoints
+                let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
+                let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
+                let addPoints = parseInt(message.sec)
+                nicknameHistory[getIndex].points += addPoints
+            }
+
+
+
+            let playerWhoPaints = randomPlayerState[0]
+            let getIndexOfPainter = nicknameHistory.indexOf(playerWhoPaints)
+            let pointsForPainter = 30 / (wss.clients.size - 1) * guessedRight / wss.clients.size
+            nicknameHistory[getIndexOfPainter].points += pointsForPainter;
 
 
             let objBroadcast = {
@@ -206,20 +217,13 @@ wss.on("connection", (ws) => {
             wss.clients.forEach((client) => {
 
                 if (client.id !== randomPlayerState[0].id && message.msg !== chosenWordArr[0]) {
-                    console.log('if')
                     objBroadcast.allowedToGuess = true
                     client.send(JSON.stringify(objBroadcast))
 
                 } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
-                    console.log('else if')
                     objBroadcast.allowedToGuess = false
                     client.send(JSON.stringify(objBroadcast))
-
                 }
-
-
-                guessedRight += 1
-
             });
         }
         break;
@@ -275,10 +279,12 @@ wss.on("connection", (ws) => {
         case "timerStarted": {
 
 
-            let playerWhoPaints = nicknameHistory.find(player => player.id === ws.id);
-            let getIndex = nicknameHistory.indexOf(playerWhoPaints)
+            // let playerWhoPaints = nicknameHistory.find(player => player.id === ws.id);
+            // let getIndex = nicknameHistory.indexOf(playerWhoPaints)
 
-            let pointsForPainter = 30 / (wss.clients.size - 1) * guessedRight / wss.clients.size
+            // let pointsForPainter = 30 / (wss.clients.size - 1) * guessedRight / wss.clients.size
+            // nicknameHistory[getIndex].points = pointsForPainter;
+
 
             if (!message.data) {
                 randomPlayerState.splice(0)
@@ -286,9 +292,8 @@ wss.on("connection", (ws) => {
                 GenerateRandomPlayer()
                 GenerateRandomWords()
                 guessedRight = 0
-                nicknameHistory[getIndex].points += pointsForPainter;
 
-                // console.log('nicknameistory', nicknameHistory)
+                // console.log(nicknameHistory, pointsForPainter)
             }
 
             wss.clients.forEach((client) => {

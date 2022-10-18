@@ -505,15 +505,12 @@ function init(e) {
 
         break;
       case "text":
-        console.log(message)
 
         if (!message.allowedToGuess) {
           inputText.disabled = true;
         } else {
           inputText.disabled = false;
         }
-
-        console.log('allowedtoguess', message.allowedToGuess)
 
         renderMessage(message)
         break;
