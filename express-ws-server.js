@@ -68,13 +68,14 @@ let jsonData = [];
 let toFewPlayers = false;
 let chosenWordArr = [];
 let allowedToPaint = false;
-let allowedToGuess = true;
+let allowedToGuess;
 let guessedRight = 0
 // let arrOfWords = [];
 
 fs.readFile('motive.json', 'utf8', function (err, data) {
     jsonData.push(data)
 });
+
 
 //Generating three random words
 const GenerateRandomWords = () => {
@@ -171,112 +172,54 @@ wss.on("connection", (ws) => {
                         type: "init",
                         payload: {
                             id,
-                            state
+                            state,
+                            allowedToGuess: allowedToGuess
                         }
                     }));
                 });
             }
             break;
         case "text": {
-            console.log(message)
-
-
-
-
-            // console.log('nicknamehistory', nicknameHistory)
-            // console.log('playerwhoguessed', playerWhoGuessed)
-
-
-
-            // // console.log(nicknameHistory[getIndex].points += 23)
-            // // nicknameHistory[getIndex].points += addPoints
-
-            // wss.clients.forEach((client) => {
-            //     if (client.id === message.id) {
-            //         guessedRight += 1
-            //         client.send(JSON.stringify({
-            //             type: 'rightWord',
-            //             sec: addPoints,
-            //             nicknameHistory: nicknameHistory,
-            //             allowedToGuess: false
-            //         }))
-            //     } else if (client.id !== message.id) {
-            //         client.send(JSON.stringify({
-            //             type: 'rightWord',
-            //             sec: message.sec,
-            //             nicknameHistory: nicknameHistory,
-            //             allowedToGuess: true
-            //         }))
-            //     }
-            // });
-
-
-
-
+            console.log('MESSAGE', message)
 
             if (message.data !== undefined) {
                 chosenWordArr.push(message.data)
             }
 
-            // if (message.msg === chosenWordArr[0]) {
-            //     console.log('correct!')
+            let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
+            let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
+            let addPoints = parseInt(message.sec)
+            nicknameHistory[getIndex].points += addPoints
 
-            //     let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
-            //     let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
 
-            //     let addPoints = parseInt(message.sec)
-            //     nicknameHistory[getIndex].points += addPoints
-
-            //     console.log(playerWhoGuessed, getIndex, ws.id, nicknameHistory)
-            // }
-
-            // message to clients
-            // let objBroadcast = {
-            //     type: "text",
-            //     msg: message.msg,
-            //     id: ws.id,
-            //     nickname: message.nickname,
-            //     chosenWordArr: chosenWordArr
-            // };
-
-            // wss.clients.forEach((client) => {
-
-            //     client.send(JSON.stringify(objBroadcast));
-            // });
+            let objBroadcast = {
+                type: "text",
+                msg: message.msg,
+                id: ws.id,
+                nickname: message.nickname,
+                chosenWordArr: chosenWordArr,
+                nicknameHistory: nicknameHistory,
+                allowedToGuess: allowedToGuess
+            }
 
 
             wss.clients.forEach((client) => {
-                if (message.msg === chosenWordArr[0] && ws.id === client.id) {
 
-                    guessedRight += 1
+                if (client.id !== randomPlayerState[0].id && message.msg !== chosenWordArr[0]) {
+                    console.log('if')
+                    objBroadcast.allowedToGuess = true
+                    client.send(JSON.stringify(objBroadcast))
 
-                    let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
-                    let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
-                    let addPoints = parseInt(message.sec)
-                    nicknameHistory[getIndex].points += addPoints
+                } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
+                    console.log('else if')
+                    objBroadcast.allowedToGuess = false
+                    client.send(JSON.stringify(objBroadcast))
 
-                    client.send(JSON.stringify({
-
-                        type: "text",
-                        msg: message.msg,
-                        id: ws.id,
-                        nickname: message.nickname,
-                        chosenWordArr: chosenWordArr,
-                        nicknameHistory: nicknameHistory,
-                        allowedToGuess: false
-                    }))
-                } else if (client.id !== message.id) {
-                    client.send(JSON.stringify({
-
-                        type: "text",
-                        msg: message.msg,
-                        id: ws.id,
-                        nickname: message.nickname,
-                        chosenWordArr: chosenWordArr,
-                        nicknameHistory: nicknameHistory,
-                        allowedToGuess: true
-                    }))
                 }
+
+
+                guessedRight += 1
+
             });
         }
         break;
@@ -327,37 +270,6 @@ wss.on("connection", (ws) => {
         break;
         case "rightWord": {
 
-            // let playerWhoGuessed = nicknameHistory.find(player => player.id === message.id);
-            // let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
-
-            // console.log('nicknamehistory', nicknameHistory)
-            // console.log('playerwhoguessed', playerWhoGuessed)
-
-            // let addPoints = parseInt(message.sec)
-            // nicknameHistory[getIndex].points += addPoints
-
-            // // console.log(nicknameHistory[getIndex].points += 23)
-            // // nicknameHistory[getIndex].points += addPoints
-
-            // wss.clients.forEach((client) => {
-            //     if (client.id === message.id) {
-            //         guessedRight += 1
-            //         client.send(JSON.stringify({
-            //             type: 'rightWord',
-            //             sec: addPoints,
-            //             nicknameHistory: nicknameHistory,
-            //             allowedToGuess: false
-            //         }))
-            //     } else if (client.id !== message.id) {
-            //         client.send(JSON.stringify({
-            //             type: 'rightWord',
-            //             sec: message.sec,
-            //             nicknameHistory: nicknameHistory,
-            //             allowedToGuess: true
-            //         }))
-            //     }
-            // });
-
         }
         break;
         case "timerStarted": {
@@ -367,8 +279,6 @@ wss.on("connection", (ws) => {
             let getIndex = nicknameHistory.indexOf(playerWhoPaints)
 
             let pointsForPainter = 30 / (wss.clients.size - 1) * guessedRight / wss.clients.size
-            // nicknameHistory[getIndex].points += pointsForPainter;
-
 
             if (!message.data) {
                 randomPlayerState.splice(0)
@@ -378,7 +288,7 @@ wss.on("connection", (ws) => {
                 guessedRight = 0
                 nicknameHistory[getIndex].points += pointsForPainter;
 
-                console.log('nicknameistory', nicknameHistory)
+                // console.log('nicknameistory', nicknameHistory)
             }
 
             wss.clients.forEach((client) => {
@@ -397,8 +307,6 @@ wss.on("connection", (ws) => {
         }
         break;
         case "clearCanvas": {
-            // console.log(ws.id)
-            // console.log(randomPlayerState[0].id)
 
             if (ws.id === randomPlayerState[0].id) {
                 wss.clients.forEach((client) => {
@@ -416,6 +324,8 @@ wss.on("connection", (ws) => {
             console.log("Default");
         }
         }
+
+        // console.log('randomplayerstate', randomPlayerState)
 
     });
 

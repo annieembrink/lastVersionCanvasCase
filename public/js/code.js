@@ -462,6 +462,7 @@ function init(e) {
     switch (message.type) {
       case "init":
         const state = message.payload.state;
+        console.log(message.payload.allowedToGuess)
         // console.log(message.type);
         recreateCanvas(state);
         break;
@@ -493,6 +494,8 @@ function init(e) {
           inputText.disabled = false;
         }
 
+        console.log('allowedtoguess', message.allowedToGuess)
+
         break;
       case "rightWord":
         // console.log('rightWord', message.sec, message.nicknameHistory)
@@ -502,14 +505,16 @@ function init(e) {
 
         break;
       case "text":
-        // console.log(message.type)
+        console.log(message)
 
         if (!message.allowedToGuess) {
           inputText.disabled = true;
         } else {
           inputText.disabled = false;
         }
-        
+
+        console.log('allowedtoguess', message.allowedToGuess)
+
         renderMessage(message)
         break;
       case "start":
