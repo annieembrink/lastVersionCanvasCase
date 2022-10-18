@@ -22,6 +22,9 @@ import {
 } from "uuid";
 
 import fs from 'fs';
+import {
+    Console
+} from "console";
 
 /* application variables
 ------------------------------- */
@@ -66,6 +69,7 @@ let toFewPlayers = false;
 let chosenWordArr = [];
 let allowedToPaint = false;
 let allowedToGuess = true;
+let guessedRight = 0
 // let arrOfWords = [];
 
 fs.readFile('motive.json', 'utf8', function (err, data) {
@@ -117,7 +121,7 @@ const GenerateRandomPlayer = () => {
                 data: randomPlayerState,
                 allowedToGuess: true
             }))
-        } 
+        }
     });
 }
 
@@ -174,25 +178,105 @@ wss.on("connection", (ws) => {
             }
             break;
         case "text": {
-            // console.log('client trying to write')
-            // console.log(message.data)
+            console.log(message)
+
+
+
+
+            // console.log('nicknamehistory', nicknameHistory)
+            // console.log('playerwhoguessed', playerWhoGuessed)
+
+
+
+            // // console.log(nicknameHistory[getIndex].points += 23)
+            // // nicknameHistory[getIndex].points += addPoints
+
+            // wss.clients.forEach((client) => {
+            //     if (client.id === message.id) {
+            //         guessedRight += 1
+            //         client.send(JSON.stringify({
+            //             type: 'rightWord',
+            //             sec: addPoints,
+            //             nicknameHistory: nicknameHistory,
+            //             allowedToGuess: false
+            //         }))
+            //     } else if (client.id !== message.id) {
+            //         client.send(JSON.stringify({
+            //             type: 'rightWord',
+            //             sec: message.sec,
+            //             nicknameHistory: nicknameHistory,
+            //             allowedToGuess: true
+            //         }))
+            //     }
+            // });
+
+
+
+
+
             if (message.data !== undefined) {
                 chosenWordArr.push(message.data)
             }
-            // console.log('chosenWordArr', chosenWordArr)
+
+            // if (message.msg === chosenWordArr[0]) {
+            //     console.log('correct!')
+
+            //     let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
+            //     let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
+
+            //     let addPoints = parseInt(message.sec)
+            //     nicknameHistory[getIndex].points += addPoints
+
+            //     console.log(playerWhoGuessed, getIndex, ws.id, nicknameHistory)
+            // }
 
             // message to clients
-            let objBroadcast = {
-                type: "text",
-                msg: message.msg,
-                id: ws.id,
-                nickname: message.nickname,
-                chosenWordArr: chosenWordArr
-            };
+            // let objBroadcast = {
+            //     type: "text",
+            //     msg: message.msg,
+            //     id: ws.id,
+            //     nickname: message.nickname,
+            //     chosenWordArr: chosenWordArr
+            // };
+
+            // wss.clients.forEach((client) => {
+
+            //     client.send(JSON.stringify(objBroadcast));
+            // });
+
 
             wss.clients.forEach((client) => {
+                if (message.msg === chosenWordArr[0] && ws.id === client.id) {
 
-                client.send(JSON.stringify(objBroadcast));
+                    guessedRight += 1
+
+                    let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
+                    let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
+                    let addPoints = parseInt(message.sec)
+                    nicknameHistory[getIndex].points += addPoints
+
+                    client.send(JSON.stringify({
+
+                        type: "text",
+                        msg: message.msg,
+                        id: ws.id,
+                        nickname: message.nickname,
+                        chosenWordArr: chosenWordArr,
+                        nicknameHistory: nicknameHistory,
+                        allowedToGuess: false
+                    }))
+                } else if (client.id !== message.id) {
+                    client.send(JSON.stringify({
+
+                        type: "text",
+                        msg: message.msg,
+                        id: ws.id,
+                        nickname: message.nickname,
+                        chosenWordArr: chosenWordArr,
+                        nicknameHistory: nicknameHistory,
+                        allowedToGuess: true
+                    }))
+                }
             });
         }
         break;
@@ -243,39 +327,58 @@ wss.on("connection", (ws) => {
         break;
         case "rightWord": {
 
-            let playerWhoGuessed = nicknameHistory.find(player => player.id === message.id);
-            let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
+            // let playerWhoGuessed = nicknameHistory.find(player => player.id === message.id);
+            // let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
 
-            console.log('playerwhoguessed', playerWhoGuessed)
+            // console.log('nicknamehistory', nicknameHistory)
+            // console.log('playerwhoguessed', playerWhoGuessed)
 
-            nicknameHistory[getIndex].points = parseInt(message.sec)
+            // let addPoints = parseInt(message.sec)
+            // nicknameHistory[getIndex].points += addPoints
 
-            wss.clients.forEach((client) => {
-                if (client.id === message.id) {
-                    client.send(JSON.stringify({
-                        type: 'rightWord',
-                        sec: message.sec,
-                        nicknameHistory: nicknameHistory,
-                        allowedToGuess: false
-                    }))
-                } else if (client.id !== message.id) {
-                    client.send(JSON.stringify({
-                        type: 'rightWord',
-                        sec: message.sec,
-                        nicknameHistory: nicknameHistory,
-                        allowedToGuess: true
-                    }))
-                }
-            });
+            // // console.log(nicknameHistory[getIndex].points += 23)
+            // // nicknameHistory[getIndex].points += addPoints
+
+            // wss.clients.forEach((client) => {
+            //     if (client.id === message.id) {
+            //         guessedRight += 1
+            //         client.send(JSON.stringify({
+            //             type: 'rightWord',
+            //             sec: addPoints,
+            //             nicknameHistory: nicknameHistory,
+            //             allowedToGuess: false
+            //         }))
+            //     } else if (client.id !== message.id) {
+            //         client.send(JSON.stringify({
+            //             type: 'rightWord',
+            //             sec: message.sec,
+            //             nicknameHistory: nicknameHistory,
+            //             allowedToGuess: true
+            //         }))
+            //     }
+            // });
 
         }
         break;
         case "timerStarted": {
+
+
+            let playerWhoPaints = nicknameHistory.find(player => player.id === ws.id);
+            let getIndex = nicknameHistory.indexOf(playerWhoPaints)
+
+            let pointsForPainter = 30 / (wss.clients.size - 1) * guessedRight / wss.clients.size
+            // nicknameHistory[getIndex].points += pointsForPainter;
+
+
             if (!message.data) {
                 randomPlayerState.splice(0)
                 chosenWordArr.splice(0)
                 GenerateRandomPlayer()
                 GenerateRandomWords()
+                guessedRight = 0
+                nicknameHistory[getIndex].points += pointsForPainter;
+
+                console.log('nicknameistory', nicknameHistory)
             }
 
             wss.clients.forEach((client) => {

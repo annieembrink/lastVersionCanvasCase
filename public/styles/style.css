@@ -80,6 +80,10 @@
     outline: none;
 }
 
+#inputText:disabled {
+    display: none;
+}
+
 #whosTurn {
     grid-area: 1 / 6 / 1 / 8;
     color: #fffefb;
@@ -157,7 +161,7 @@
 }
 
 #chatDiv #inputText {
-    width: 90%;
+    width: 100%;
     position: absolute;
     bottom: 0;
     /* left: 0; */

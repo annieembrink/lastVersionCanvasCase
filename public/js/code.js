@@ -208,23 +208,23 @@ function init(e) {
     // access content
     let newMsg = template.content;
 
-    if (obj.msg === obj.chosenWordArr[0]) {
-      console.log(`${obj.nickname} guessed the right word!`)
-      obj.msg = `guessed the right word`
+    // if (obj.msg === obj.chosenWordArr[0]) {
+    //   // console.log(`${obj.nickname} guessed the right word!`)
+    //   obj.msg = `guessed the right word`
 
-      console.log(document.getElementById('timer').innerHTML)
+    //   console.log(document.getElementById('timer').innerHTML)
 
-      websocket.send(JSON.stringify({
-        type: 'rightWord',
-        sec: document.getElementById('timer').innerHTML.slice(0, 2),
-        id: obj.id
-      }));
+    //   websocket.send(JSON.stringify({
+    //     type: 'rightWord',
+    //     sec: document.getElementById('timer').innerHTML.slice(0, 2),
+    //     id: obj.id
+    //   }));
 
-      // inputText.disabled = true; 
+    //   // inputText.disabled = true; 
 
-      //not everyones field should be disabled
-      // inputText.disabled = true;
-    }
+    //   //not everyones field should be disabled
+    //   // inputText.disabled = true;
+    // }
 
     // change content...
     newMsg.querySelector("span").textContent = obj.nickname;
@@ -346,7 +346,7 @@ function init(e) {
   function theDiv() {
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
-    console.log('time to play')
+    // console.log('time to play')
   }
 
   //TEXT MESSAGE FUNCTIONS
@@ -358,12 +358,20 @@ function init(e) {
         type: "text",
         msg: inputText.value,
         id: id,
-        nickname: nickname
+        nickname: nickname,
+        sec: document.getElementById('timer').innerHTML.slice(0, 2),
       };
+
+      // if (obj.msg === obj.chosenWordArr[0]) {
+      //   // console.log(`${obj.nickname} guessed the right word!`)
+      //   obj.msg = `guessed the right word`
+
+      //   console.log(document.getElementById('timer').innerHTML)
+      // }
 
       // send to server
       websocket.send(JSON.stringify(objMessage));
-      console.log(objMessage.msg, chosenWord.textContent)
+      // console.log(objMessage.msg, chosenWord.textContent)
       inputText.value = "";
     }
   }
@@ -454,30 +462,29 @@ function init(e) {
     switch (message.type) {
       case "init":
         const state = message.payload.state;
-        console.log(message.type);
+        // console.log(message.type);
         recreateCanvas(state);
         break;
         // case "enoughPlayers":
         //   break;
       case "timerStarted":
-        // console.log(message.timerOn)
+        // console.log(message.data)
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
 
         if (message.time === undefined) {
           document.getElementById("timer").innerHTML = 'Time out';
         }
 
-        if (!message.data) {
-          createPlayersEl(message.nicknameHistory)
-        }
+        createPlayersEl(message.nicknameHistory)
+
         break;
       case "getRandomWords":
-        console.log(message.data)
-        console.log('allowedtopaint', message.allowedToPaint)
+        // console.log(message.data)
+        // console.log('allowedtopaint', message.allowedToPaint)
         createRandomWordElement(message.data)
         break;
       case "getRandomPlayer":
-        console.log(message.data[0].nickname)
+        // console.log(message.data[0].nickname)
         document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
 
         if (!message.allowedToGuess) {
@@ -485,30 +492,33 @@ function init(e) {
         } else {
           inputText.disabled = false;
         }
-        
+
         break;
       case "rightWord":
         // console.log('rightWord', message.sec, message.nicknameHistory)
-        console.log('allowedToGuess', message.nicknameHistory)
+        // console.log('allowedToGuess', message.nicknameHistory)
+
+     
+
+        break;
+      case "text":
+        // console.log(message.type)
 
         if (!message.allowedToGuess) {
           inputText.disabled = true;
         } else {
           inputText.disabled = false;
         }
-
-        break;
-      case "text":
-        console.log(message.type)
+        
         renderMessage(message)
         break;
       case "start":
-        console.log(message.type)
+        // console.log(message.type)
         theDiv()
         createPlayersEl(message.data.nicknameHistory)
         document.getElementById('whosTurn').textContent = `${message.data.randomPlayerState[0].nickname}s turn`
 
-        console.log(message.data.randomPlayerState[0].nickname)
+        // console.log(message.data.randomPlayerState[0].nickname)
         // document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
         break;
       case "paint":
@@ -517,14 +527,14 @@ function init(e) {
         paintLine(ctx, args);
         break;
       case "disconnect":
-        console.log('active clients (in disconnect)', message.active)
-        console.log(message.toFewPlayers)
+        // console.log('active clients (in disconnect)', message.active)
+        // console.log(message.toFewPlayers)
         // createWaitEl()
         toFewPlayers(message.toFewPlayers)
         createPlayersEl(message.active)
         break;
       case "clearCanvas":
-        console.log(message.data)
+        // console.log(message.data)
         if (message.data) {
           ctx.clearRect(0, 0, canvas.width, canvas.height)
         }
