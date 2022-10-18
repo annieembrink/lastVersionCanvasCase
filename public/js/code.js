@@ -209,7 +209,8 @@ function init(e) {
     let newMsg = template.content;
 
     if (obj.msg === obj.chosenWordArr[0]) {
-      obj.msg = `guessed the right word`
+      obj.msg = `guessed the right word!`
+      newMsg.querySelector("p").style.color = 'green'
     }
 
     // change content...
@@ -219,6 +220,8 @@ function init(e) {
 
     // render using prepend method - last message first
     document.getElementById("conversation").append(newMsg);
+
+ 
   }
 
 
@@ -541,24 +544,11 @@ window.onload = init;
 //funktionalitet att lägga till ------------------
 
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
-//poängräknare för deltagarna, den som svarar först får flest poäng
-//den som ritar får också poäng ju fler som gissar rätt ord
-//den som ritar ska inte kunna skriva i chatten och får poäng för rätt gissning. Poäng lika mkt som cnt
 //Timern ska nollas om randomplayer sticker mitt i 
 //time out bort när orden syns 
-// chat input field blir grå när ranodmplayer skriver men inte annars????
-//chosenArr should not be visible for everyone
-//om f5 när bara två spelar så crashar spelet? innan nickname är satt
 //rita linjer ist för prickar
-//Bara möjligt att gissa rätt ord en gång
 //rita med linjer inte prickar
 //använder jag ens allow to paint?
 //städa kod
+//Om alla gissat rätt, avsluta timern och slumpa ny spelare
 
-//DONE: orden ska bara synas för den som ritar
-//DONE: startsida där man börjar välja nickname, kanske förklarar regler SEN canvas och chatt
-//DONE: när tiden är ute, kan man inte rita längre
-//DONE: bara möjligt att svara rätt ord en gång, man kan inte lura sig till fler poäng
-//DONE: en div där deltagarna presenteras
-//DONE: en i taget kan rita på canvas, loop för vems tur det är helt enkelt
-//DONE: player guessed right word should be displayed for everyone
