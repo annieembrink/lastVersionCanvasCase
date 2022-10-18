@@ -47,7 +47,8 @@
 
 #setNicknameContainer {
     /* grid-area: 1 / 1 / 1 / 6; */
-    margin: 20px 0 0 20px;
+    /* margin: 20px 0 0 20px; */
+    margin: auto;
 }
 
 #setNicknameContainer button {
@@ -70,10 +71,13 @@
 }
 
 #setNicknameContainer input:disabled {
+
     background-color: lightgrey;
     font-size: 2rem;
-    color: #fffefb;
+    color: #F75C03;
     padding: 0;
+    text-align: center;
+    margin-top: 40%;
 }
 
 #setNicknameContainer input:focus, #inputText:focus {
@@ -96,6 +100,8 @@
     color: #fffefb;
     padding: 10px;
     font-family: 'Poppins', sans-serif;
+    margin: auto;
+    margin-bottom: 40%;
 }
 
 .forWords {

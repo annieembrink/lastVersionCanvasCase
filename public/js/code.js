@@ -14,7 +14,7 @@ const gameBody = document.getElementById('gameBody')
 const colorPen = document.getElementsByClassName('colorPen')
 
 const canvas = document.querySelector("#canvas");
-canvas.width = window.innerWidth / 3
+canvas.width = window.innerWidth / 2.5
 canvas.height = window.innerHeight / 2;
 const ctx = canvas.getContext("2d");
 let isPainting = false;
@@ -340,7 +340,9 @@ function init(e) {
   function theDiv() {
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
-    // console.log('time to play')
+    document.getElementById('setNicknameContainer').style.margin = '0'
+    nicknameInput.style.margin = '20px 0 0 20px'
+    nicknameInput.style.textAlign = 'left'
   }
 
   //TEXT MESSAGE FUNCTIONS
@@ -548,5 +550,4 @@ window.onload = init;
 //använder jag ens allow to paint?
 //städa kod
 //Om alla gissat rätt, avsluta timern och slumpa ny spelare
-//om ny spelar kommer mitt i ett spel, så funkar inte poängen
-//de som ritats valda ord är kvar...
+//canvas clearas inte korrekt??? eller ...
