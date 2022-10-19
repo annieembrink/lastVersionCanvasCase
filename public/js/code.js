@@ -26,7 +26,7 @@ fetch('motive.json')
   .then((response) => response.json())
   .then((data) => {
 
-    //Generat colors
+    //Generate colors
     function generateColors() {
       data.colors.map(color => {
         let pTag = document.createElement('p');
@@ -41,10 +41,16 @@ fetch('motive.json')
     //Generate pensize
     function generatePen() {
       data.pen.map(onePen => {
-        let pTag = document.createElement('p');
-        pTag.classList = `pen ${onePen}`
-        pTag.id = onePen.slice(-1);
-        penContainer.appendChild(pTag);
+        let imgTag = document.createElement('img');
+        imgTag.src = "img/carrot-darker.png"
+        imgTag.classList = `pen ${onePen}`
+        imgTag.id = onePen.slice(-1);
+        penContainer.appendChild(imgTag);
+
+        // let pTag = document.createElement('p');
+        // pTag.classList = `pen ${onePen}`
+        // pTag.id = onePen.slice(-1);
+        // penContainer.appendChild(pTag);
       })
     }
     generatePen()
@@ -202,11 +208,15 @@ function createPlayersEl(obj) {
     playerImg.src = images[a++];
     playerImg.style.width = '30px';
     playerImg.style.height = '30px';
+    playerImg.style.marginRight = '10px';
     onePlayerDiv.appendChild(playerImg)
+
+    onePlayerDiv.style.display = 'flex'
+    onePlayerDiv.style.justifyContent = 'space-between'
+    onePlayerDiv.style.alignItems = 'center'
   })
 
-  onePlayerDiv.style.display = 'flex'
-  onePlayerDiv.style.justifyContent = 'space-between'
+
 
 }
 
@@ -513,8 +523,10 @@ function init(e) {
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
         if (message.time === undefined) {
           document.getElementById("timer").innerHTML = 'Time out';
+          createPlayersEl(message.nicknameHistory)
+
         }
-        createPlayersEl(message.nicknameHistory)
+        // createPlayersEl(message.nicknameHistory)
         break;
       case "getRandomWords":
         createRandomWordElement(message.data)
