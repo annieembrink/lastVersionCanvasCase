@@ -206,10 +206,16 @@ function toFewPlayers(bool) {
   }
 }
 
+
+const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 //FUNCTION ----------------------------
 function init(e) {
 
-  const websocket = new WebSocket("ws://localhost:80");
+  // const websocket = new WebSocket("ws://localhost:80");
+
+  const baseURL = trimSlashes(window.location.href.split("//")[1]);
+  const protocol = 'wss';
+  const websocket = new WebSocket(`${protocol}://${baseURL}`);
 
   function scrollToBottom() {
     let conv = document.getElementById('conversation')

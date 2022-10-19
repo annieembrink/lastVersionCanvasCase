@@ -19,7 +19,8 @@ import fs from 'fs';
 /* application variables
 ------------------------------- */
 // set port number >>> make sure client javascript uses same WebSocket port!
-const port = 80;
+// const port = 80;
+const port = 3000;
 
 /* express
 ------------------------------- */
@@ -93,18 +94,20 @@ const GenerateRandomPlayer = () => {
 
     wss.clients.forEach(client => {
 
-        if (randomPlayerState[0].id === client.id) {
-            client.send(JSON.stringify({
-                type: 'getRandomPlayer',
-                data: randomPlayerState,
-                allowedToGuess: false
-            }))
-        } else if (randomPlayerState[0].id !== client.id) {
-            client.send(JSON.stringify({
-                type: 'getRandomPlayer',
-                data: randomPlayerState,
-                allowedToGuess: true
-            }))
+        if (randomPlayerState) {
+            if (randomPlayerState[0].id === client.id) {
+                client.send(JSON.stringify({
+                    type: 'getRandomPlayer',
+                    data: randomPlayerState,
+                    allowedToGuess: false
+                }))
+            } else if (randomPlayerState[0].id !== client.id) {
+                client.send(JSON.stringify({
+                    type: 'getRandomPlayer',
+                    data: randomPlayerState,
+                    allowedToGuess: true
+                }))
+            }
         }
     });
 }

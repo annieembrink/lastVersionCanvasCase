@@ -176,7 +176,7 @@ header img {
 }
 
 #clearBtn {
-    grid-area: 5 / 2 / 5 / 8;
+    grid-area: 5 / 2 / 5 / 5;
 
     margin: 10px;
     border: none;
