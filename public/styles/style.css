@@ -20,6 +20,30 @@
 
 }
 
+header {
+    display: flex;
+    /* justify-content: center; */
+    margin: 10px 0 0 20px;
+}
+
+header img {
+    margin-left: 10px;
+    text-shadow: 1px 1px #242424;
+
+}
+
+#head {
+    display: inline-block;
+    border-bottom: 5px solid #F75C03;
+    color: #F75C03;
+    text-shadow: 1px 1px #242423;
+    box-shadow: 0 0.5px #242424;
+    text-align: center;
+    max-width: 300px;
+    padding: 0 30px 0 0;
+
+}
+
 #theGameContainer {
 
     display: grid;
@@ -91,6 +115,8 @@
     text-shadow: 1px 1px #242423;
 
     box-shadow: none;
+
+    display: none;
 }
 
 #setNicknameContainer input:focus,

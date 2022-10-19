@@ -111,9 +111,12 @@ function startGame() {
   document.getElementById("nicknameInput").setAttribute("disabled", true);
   document.getElementById("setNickname").setAttribute("disabled", true);
 
-  document.getElementById('setNicknameContainer').style.flexDirection = 'column'
-  document.getElementById('carrotImg').style.margin = '40% 0 0 0'
+  // document.getElementById('setNicknameContainer').style.flexDirection = 'column'
+  document.getElementById('setNicknameContainer').style.display = 'none'
+
+  // document.getElementById('carrotImg').style.margin = '40% 0 0 0'
   document.getElementById('nicknameInput').style.margin = '0'
+  document.getElementById('head').innerText = nickname
 
   // enable input field
   // document.getElementById("inputText").removeAttribute("disabled");
@@ -199,8 +202,11 @@ function createPlayersEl(obj) {
     playerImg.src = images[a++];
     playerImg.style.width = '30px';
     playerImg.style.height = '30px';
-    playerEl.appendChild(playerImg)
+    onePlayerDiv.appendChild(playerImg)
   })
+
+  onePlayerDiv.style.display = 'flex'
+  onePlayerDiv.style.justifyContent = 'space-between'
 
 }
 
@@ -367,12 +373,18 @@ function init(e) {
     // document.getElementById('waiting').style.display = 'none';
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
-    document.getElementById('setNicknameContainer').style.margin = '10px'
-    document.getElementById('setNicknameContainer').style.flexDirection = 'row'
-    document.getElementById('setNicknameContainer').style.justifyContent = 'flex-start'
+
+    // document.getElementById('setNicknameContainer').style.margin = '10px'
+    // document.getElementById('setNicknameContainer').style.flexDirection = 'row'
+    // document.getElementById('setNicknameContainer').style.justifyContent = 'flex-start'
+    document.getElementById('setNicknameContainer').style.display = 'none'
+
     document.getElementById('carrotImg').style.margin = '10px 0 0 10px'
-    nicknameInput.style.margin = '10px 0 0 10px'
-    nicknameInput.style.textAlign = 'left'
+
+    // nicknameInput.style.margin = '10px 0 0 10px'
+    // nicknameInput.style.textAlign = 'left'
+    nicknameInput.style.display = 'none';
+
     clearBtn.style.width = `${canvas.width}px`
     colorPen.style.width = `${canvas.width}px`
     chatDiv.style.maxHeight = `${canvas.height}px`
@@ -605,3 +617,4 @@ window.onload = init;
 //read me
 //STÄDA KOD
 //snyggare text i player-div
+//kommentera kod
