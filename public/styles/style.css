@@ -126,6 +126,8 @@
     font-weight: bold;
     color: #F75C03;
     text-shadow: 1px 1px #242423;
+
+    text-align: center;
 }
 
 #waiting {
@@ -168,19 +170,23 @@
 
 #colorPen {
     /* height: 70px; */
-    grid-area: 6 / 1 / 6/ 2;
+    /* grid-area: 6 / 1 / 6/ 2; */
+    grid-area: 5 / 1 / 5 / 2;
+
+    max-height: 50%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    /* justify-content: space-between; */
     border-radius: 10px;
     margin: 10px;
 
 }
 
 #clearBtn {
-    grid-area: 5 / 1 / 5 / 2;
+    /* grid-area: 5 / 1 / 5 / 2; */
     margin: 10px;
     border: none;
-    height: 50%;
+    max-height: 50%;
 
     border-radius: 10px;
     padding: 5px 10px;
@@ -199,15 +205,21 @@
 
     position: relative;
 
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 
     box-shadow: 5px 5px 10px #2b8a38,
         -5px -5px 10px #319c40;
 }
 
-#chatDiv::-webkit-scrollbar {
+#conversation {
+    overflow-y: scroll;
+    height: 95%;
+    margin-bottom: 10px;
+}
+
+#conversation::-webkit-scrollbar {
     display: none;
-  }
+}
 
 #chatDiv #inputText {
     width: 100%;
@@ -215,7 +227,7 @@
     bottom: 0;
     background-color: rgb(239, 239, 239);
     border-radius: 0 0 10px 10px;
-   
+
 }
 
 #conversation li {
@@ -285,8 +297,8 @@ li p {
 }
 
 #colors {
-    /* display: grid;
-    grid-template-columns: repeat(7, 1fr); */
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
     /* max-height: 50%; */
     margin: 5px;
 
@@ -294,9 +306,9 @@ li p {
 }
 
 .theColorTags {
-    /* display: inline-block; */
-    /* width: 20px; */
-    /* height: 20px; */
+    display: inline-block;
+    width: 20px;
+    height: 20px;
     margin: 8px;
     border-radius: 100%;
     /* border: 0.5px solid black; */
@@ -308,6 +320,8 @@ li p {
 #penContainer {
     margin: 5px;
     margin-top: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 .pen {
@@ -315,9 +329,6 @@ li p {
     margin: 5px;
     width: 30px;
     margin: 5px;
-
-    display: flex;
-    flex-direction: row;
 }
 
 .small-2 {

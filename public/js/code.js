@@ -15,7 +15,7 @@ const colorPen = document.getElementById('colorPen')
 
 const canvas = document.querySelector("#canvas");
 canvas.width = window.innerWidth / 2.2
-canvas.height = window.innerHeight / 1.5;
+canvas.height = window.innerHeight / 2;
 const ctx = canvas.getContext("2d");
 let isPainting = false;
 
@@ -215,6 +215,11 @@ function init(e) {
 
   const websocket = new WebSocket("ws://localhost:80");
 
+  function scrollToBottom() {
+    let conv = document.getElementById('conversation')
+    conv.scrollTop = conv.scrollHeight
+  }
+
 
   /**
    * render new message
@@ -358,9 +363,10 @@ function init(e) {
   }
 
   function theDiv() {
+    // document.getElementById('waiting').style.display = 'none';
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
-    document.getElementById('setNicknameContainer').style.margin = '20px 0 40px 20px'
+    document.getElementById('setNicknameContainer').style.margin = '10px'
     document.getElementById('setNicknameContainer').style.flexDirection = 'row'
     document.getElementById('setNicknameContainer').style.justifyContent = 'flex-start'
     document.getElementById('carrotImg').style.margin = '10px 0 0 10px'
@@ -369,6 +375,7 @@ function init(e) {
     clearBtn.style.width = `${canvas.width}px`
     colorPen.style.width = `${canvas.width}px`
     chatDiv.style.maxHeight = `${canvas.height}px`
+    document.getElementById('players').style.maxHeight = `${canvas.height}px`
   }
 
 
@@ -520,6 +527,7 @@ function init(e) {
           inputText.placeholder = "Write your guess here..."
         }
         renderMessage(message)
+        scrollToBottom()
         break;
       case "start":
         theDiv()
