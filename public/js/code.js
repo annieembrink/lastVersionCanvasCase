@@ -46,11 +46,6 @@ fetch('motive.json')
         imgTag.classList = `pen ${onePen}`
         imgTag.id = onePen.slice(-1);
         penContainer.appendChild(imgTag);
-
-        // let pTag = document.createElement('p');
-        // pTag.classList = `pen ${onePen}`
-        // pTag.id = onePen.slice(-1);
-        // penContainer.appendChild(pTag);
       })
     }
     generatePen()
@@ -117,15 +112,10 @@ function startGame() {
   document.getElementById("nicknameInput").setAttribute("disabled", true);
   document.getElementById("setNickname").setAttribute("disabled", true);
 
-  // document.getElementById('setNicknameContainer').style.flexDirection = 'column'
   document.getElementById('setNicknameContainer').style.display = 'none'
 
-  // document.getElementById('carrotImg').style.margin = '40% 0 0 0'
   document.getElementById('nicknameInput').style.margin = '0'
   document.getElementById('head').innerText = nickname
-
-  // enable input field
-  // document.getElementById("inputText").removeAttribute("disabled");
 
   // focus input field
   document.getElementById("inputText").focus();
@@ -175,15 +165,7 @@ function createPlayersEl(obj) {
   ]
 
   playerDiv.innerHTML = '';
-  // console.log(obj.length)
-
-  // function getRandomColor() {
-  //   var r = 255 * Math.random() + 110 | 0,
-  //     g = 255 * Math.random() + 110 | 0,
-  //     b = 255 * Math.random() + 110 | 0;
-  //   return 'rgb(' + r + ',' + g + ',' + b + ')';
-  // }
-
+ 
   let i = 0
   a = 0
 
@@ -193,7 +175,6 @@ function createPlayersEl(obj) {
       i = 0
     }
     onePlayerDiv.style.backgroundColor = colors[i++]
-    // onePlayerDiv.style.backgroundColor = getRandomColor();
     playerDiv.appendChild(onePlayerDiv)
 
     const playerEl = document.createElement('p')
@@ -215,9 +196,6 @@ function createPlayersEl(obj) {
     onePlayerDiv.style.justifyContent = 'space-between'
     onePlayerDiv.style.alignItems = 'center'
   })
-
-
-
 }
 
 
@@ -258,7 +236,6 @@ function init(e) {
 
     // change content...
     newMsg.querySelector("span").textContent = obj.nickname;
-    // body.baseURI.split('=')[1]
     newMsg.querySelector("p").textContent = obj.msg;
 
     // render using prepend method - last message first
@@ -266,8 +243,6 @@ function init(e) {
 
 
   }
-
-
 
   //TIMER------------------------------
   var check = null;
@@ -369,7 +344,6 @@ function init(e) {
 
   function nickNameOnButton() {
     if (nicknameInput.value.length > 0) {
-      // document.getElementById('theGameContainer').style.display = 'grid';
       websocket.send(JSON.stringify({
         type: 'start',
         nickname: nicknameInput.value
@@ -380,22 +354,13 @@ function init(e) {
   }
 
   function theDiv() {
-    // document.getElementById('waiting').style.display = 'none';
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
-
-    // document.getElementById('setNicknameContainer').style.margin = '10px'
-    // document.getElementById('setNicknameContainer').style.flexDirection = 'row'
-    // document.getElementById('setNicknameContainer').style.justifyContent = 'flex-start'
     document.getElementById('setNicknameContainer').style.display = 'none'
-
     document.getElementById('carrotImg').style.margin = '10px 0 0 10px'
 
-    // nicknameInput.style.margin = '10px 0 0 10px'
-    // nicknameInput.style.textAlign = 'left'
     nicknameInput.style.display = 'none';
 
-    // clearBtn.style.width = `${canvas.width}px`
     colorPen.style.width = `${canvas.width}px`
     chatDiv.style.maxHeight = `${canvas.height}px`
     document.getElementById('players').style.maxHeight = `${canvas.height}px`
@@ -426,16 +391,12 @@ function init(e) {
   // PAINT MESSAGE FUNCTIONS
   const initPaint = (e) => {
     isPainting = true;
-    ctx.beginPath()
+    // ctx.beginPath()
     paint(e);
-
   };
 
   const finishPaint = () => {
     isPainting = false;
-    // ctx.stroke()
-    // ctx.closePath()
-
   };
 
   const paint = (e) => {
@@ -458,16 +419,6 @@ function init(e) {
       payload: args
     }));
 
-    // ctx.strokeStyle = objWithCurrentColor.color;
-    // ctx.lineWidth = objWithCurrentPen.pen;
-
-    // ctx.lineCap = 'round';
-
-    // // ctx.beginPath()
-    // // ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-    // ctx.lineTo(args.x, args.y);
-    // ctx.stroke();
-
     ctx.fillStyle = args.color;
     ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
     ctx.fill();
@@ -481,16 +432,6 @@ function init(e) {
     ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
     ctx.fill();
     ctx.beginPath();
-
-    // ctx.strokeStyle = args.color;
-
-    // ctx.lineWidth = args.line;
-    // ctx.lineCap = 'round';
-
-    // ctx.beginPath()
-    // ctx.lineTo(args.x, args.y);
-    // ctx.stroke();
-
 
   }
 
@@ -526,7 +467,6 @@ function init(e) {
           createPlayersEl(message.nicknameHistory)
 
         }
-        // createPlayersEl(message.nicknameHistory)
         break;
       case "getRandomWords":
         createRandomWordElement(message.data)
@@ -593,12 +533,10 @@ function init(e) {
   inputText.onkeydown = newTextMessage;
   websocket.onopen = handleSocketOpen;
   websocket.onmessage = handleSocketMessage;
-  // canvas.onmousedown = initPaint
   canvas.onmousemove = paint
   window.onmouseup = finishPaint
 
   clearBtn.addEventListener('click', () => {
-    // ctx.clearRect(0, 0, canvas.width, canvas.height)
     websocket.send(JSON.stringify({
       type: 'clearCanvas',
       data: true
@@ -624,7 +562,6 @@ window.onload = init;
 //canvas clearas inte korrekt??? eller ...
 //penn-ikoner
 
-//Välja färger
 //render
 //read me
 //STÄDA KOD

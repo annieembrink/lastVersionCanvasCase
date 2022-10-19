@@ -45,17 +45,14 @@ const wss = new WebSocketServer({
 });
 
 const state = [];
-// const history = [];
 let nicknameHistory = [];
 let randomPlayerState = [];
-// let newArr = []
 let jsonData = [];
 let toFewPlayers = false;
 let chosenWordArr = [];
 let allowedToPaint = false;
 let allowedToGuess;
 let guessedRight = 0
-// let arrOfWords = [];
 
 fs.readFile('motive.json', 'utf8', function (err, data) {
     jsonData.push(data)
@@ -66,8 +63,6 @@ fs.readFile('motive.json', 'utf8', function (err, data) {
 const GenerateRandomWords = () => {
     let data = JSON.parse(jsonData);
     let words = data.words;
-
-    // console.log('randomplayerstate', randomPlayerState.length)
 
     let arrOfWords = []
     for (let i = 0; i < 3; i++) {
@@ -80,14 +75,12 @@ const GenerateRandomWords = () => {
             if (randomPlayerState[0].id === client.id) {
                 client.send(JSON.stringify({
                     type: 'getRandomWords',
-                    data: arrOfWords,
-                    // allowedToPaint: true
+                    data: arrOfWords
                 }))
             } else {
                 client.send(JSON.stringify({
                     type: 'getRandomWords',
-                    data: [],
-                    // allowedToPaint: true
+                    data: []
                 }))
             }
         }
@@ -96,7 +89,6 @@ const GenerateRandomWords = () => {
 
 const GenerateRandomPlayer = () => {
     let randomPlayer = nicknameHistory[Math.floor(Math.random() * nicknameHistory.length)]
-    // console.log('random player', randomPlayer)
     randomPlayerState.push(randomPlayer);
 
     wss.clients.forEach(client => {
@@ -141,9 +133,6 @@ wss.getUniqueID = function () {
 wss.on("connection", (ws) => {
 
     ws.id = wss.getUniqueID();
-
-    console.log("New client connection from IP: ", ws._socket.remoteAddress);
-    console.log("Number of connected clients: ", wss.clients.size);
 
     // WebSocket events (ws) for single client
 
@@ -234,7 +223,6 @@ wss.on("connection", (ws) => {
                     objBroadcast.allowedToGuess = false
                     client.send(JSON.stringify(objBroadcast))
                 }
-
             });
         }
         break;
@@ -271,14 +259,12 @@ wss.on("connection", (ws) => {
                         }
                     }));
                 });
-
-            }
-        }
+            };
+        };
         break;
         case "paint": {
             state.push(message)
             wss.clients.forEach((client) => {
-
                 client.send(JSON.stringify(message))
             });
         }

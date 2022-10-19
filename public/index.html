@@ -19,29 +19,20 @@
     </header>
 
     <div id="setNicknameContainer">
-        <!-- <img id="carrotImg" src="img/carrot-darker.png" alt="" width="50px" height="50px"> -->
         <input name="nickname" type="text" id="nicknameInput" placeholder="Enter nickname">
         <button type="submit" id="setNickname">Let's play!</button>
     </div>
-
 
     <div id="theGameContainer">
         <p id="whosTurn"></p>
 
         <div class="forWords">
-            <div id="wordDiv">
-                <!-- <p id="randomWordTag"></p> -->
-                <!-- <h2>Pick a word!</h2> -->
-            </div>
+            <div id="wordDiv"></div>
             <div id="chosenWord"></div>
             <div id="timer">Wait for game to begin...</div>
         </div>
 
-        <canvas id="canvas">
-
-        </canvas>
-
-        <!-- <button id="clearBtn">Clear canvas</button> -->
+        <canvas id="canvas"></canvas>
 
         <div id="colorPen">
             <div id="colors"></div>
@@ -51,9 +42,6 @@
 
         <p id="yourGuess">Your guess here please!</p>
         <div id="chatDiv">
-            <!-- server status -->
-            <!-- <div id="status"></div> -->
-
 
             <!-- DOM chat -->
             <ul id="conversation"></ul>
@@ -71,30 +59,12 @@
             <!-- input nickname -->
             <div class="inputContainer">
                 <p id="theChosenNickname"></p>
-                <!-- <input type="text" id="nickname" placeholder="Enter nickname">
-        
-                    <button id="setNickname">Set nickname</button> -->
-
-                <!-- input chat -->
                 <input type="text" id="inputText" placeholder="Write your guess here...">
             </div>
-
         </div>
-
-
-        <!-- <div class="colorPen">
-            <div id="colors"></div>
-            <div id="penContainer"></div>
-        </div>
-
-        <button id="clearBtn">Clear canvas</button> -->
-
         <div id="players"></div>
-
-
     </div>
     <!-- SCRIPT -->
-
 
     <script src="js/code.js"></script>
 
