@@ -111,6 +111,10 @@ function startGame() {
   document.getElementById("nicknameInput").setAttribute("disabled", true);
   document.getElementById("setNickname").setAttribute("disabled", true);
 
+  document.getElementById('setNicknameContainer').style.flexDirection = 'column'
+  document.getElementById('carrotImg').style.margin = '40% 0 0 0'
+  document.getElementById('nicknameInput').style.margin = '0'
+
   // enable input field
   // document.getElementById("inputText").removeAttribute("disabled");
 
@@ -155,15 +159,21 @@ function createPlayersEl(obj) {
     "#2E933C"
   ]
 
+  const images = [
+    "img/rabbit.png",
+    "img/rabbit2.png",
+    "img/rabbit3.png"
+  ]
+
   playerDiv.innerHTML = '';
   // console.log(obj.length)
 
-  function getRandomColor() {
-    var r = 255 * Math.random() + 110 | 0,
-      g = 255 * Math.random() + 110 | 0,
-      b = 255 * Math.random() + 110 | 0;
-    return 'rgb(' + r + ',' + g + ',' + b + ')';
-  }
+  // function getRandomColor() {
+  //   var r = 255 * Math.random() + 110 | 0,
+  //     g = 255 * Math.random() + 110 | 0,
+  //     b = 255 * Math.random() + 110 | 0;
+  //   return 'rgb(' + r + ',' + g + ',' + b + ')';
+  // }
 
   let i = 0
   obj.forEach(player => {
@@ -178,6 +188,16 @@ function createPlayersEl(obj) {
     const playerEl = document.createElement('p')
     playerEl.innerText = `${player.nickname}: ${player.points} points`
     onePlayerDiv.appendChild(playerEl)
+
+    if (i === 3) {
+      i = 0
+    }
+
+    const playerImg = document.createElement('img');
+    playerImg.src = images[i++];
+    playerImg.style.width = '30px';
+    playerImg.style.height = '30px';
+    playerEl.appendChild(playerImg)
   })
 
 }
@@ -339,8 +359,11 @@ function init(e) {
   function theDiv() {
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
-    document.getElementById('setNicknameContainer').style.margin = '0'
-    nicknameInput.style.margin = '20px 0 0 20px'
+    document.getElementById('setNicknameContainer').style.margin = '20px 0 40px 20px'
+    document.getElementById('setNicknameContainer').style.flexDirection = 'row'
+    document.getElementById('setNicknameContainer').style.justifyContent = 'flex-start'
+    document.getElementById('carrotImg').style.margin = '10px 0 0 10px'
+    nicknameInput.style.margin = '10px 0 0 10px'
     nicknameInput.style.textAlign = 'left'
     clearBtn.style.width = `${canvas.width}px`
     colorPen.style.width = `${canvas.width}px`
@@ -477,6 +500,8 @@ function init(e) {
 
         if (!message.allowedToGuess) {
           inputText.disabled = true;
+          inputText.placeholder = 'Sorry, you can´t write right now...'
+          inputText.style.backgroundColor = 'white'
         } else {
           inputText.disabled = false;
         }
@@ -484,6 +509,9 @@ function init(e) {
       case "text":
         if (!message.allowedToGuess) {
           inputText.disabled = true;
+          inputText.placeholder = 'Sorry, you can´t write right now...'
+          inputText.style.backgroundColor = 'white'
+
         } else {
           inputText.disabled = false;
         }

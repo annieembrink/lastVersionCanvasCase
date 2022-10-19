@@ -36,8 +36,17 @@
 }
 
 #setNicknameContainer {
+    display: flex;
     margin: auto;
+    justify-content: space-between;
+    align-items: center;
 }
+
+#setNicknameContainer img{
+   margin-right: 10px;
+   margin-bottom: 15px;
+}
+
 
 #setNicknameContainer button {
     border-radius: 10px;
@@ -89,12 +98,24 @@
     outline: none;
 }
 
-#inputText:disabled {
+/* #inputText:disabled {
     display: none;
-}
+} */
 
 #whosTurn {
-    grid-area: 1 / 6 / 1 / 8;
+    grid-area: 1 / 5 / 1 / 8;
+    color: #fffefb;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    font-size: 1rem;
+    font-weight: bold;
+    color: #F75C03;
+    text-shadow: 1px 1px #242423;
+}
+#yourGuess {
+    grid-area: 1 / 2 / 1 / 5;
     color: #fffefb;
     display: flex;
     align-items: flex-end;
@@ -159,15 +180,17 @@
     margin: 10px;
     border: none;
     height: 50%;
-    /* min-width: 100px;
-    min-height: 50px; */
+   
     border-radius: 10px;
     padding: 5px 10px;
+    background-color:#F75C03; 
+    color: white;
+    font-size: 2rem;
 }
 
 
 #chatDiv {
-    grid-area: 2 / 3 / 5 / 6;
+    grid-area: 2 / 2 / 5 / 5;
 
     background-color: #fffefb;
     border-radius: 10px;
@@ -199,7 +222,7 @@
 
 
 #players {
-    grid-area: 2 / 6 / 5 / 8;
+    grid-area: 2 / 5 / 5 / 8;
 
     background-color: #fffefb;
     border-radius: 10px;
@@ -313,5 +336,10 @@ li p {
 #timer {
     margin: 5px;
     text-align: center;
-    color: #fffefb;
+    /* color: #fffefb; */
+
+    font-size: 1rem;
+    font-weight: bold;
+    color: #F75C03;
+    text-shadow: 1px 1px #242423;
 }
