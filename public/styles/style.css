@@ -262,9 +262,15 @@ header img {
     border-radius: 10px;
     margin: 10px;
 
+    overflow-y: scroll;
+
     box-shadow: 5px 5px 10px #2b8a38,
         -5px -5px 10px #319c40;
 
+}
+
+#players::-webkit-scrollbar {
+    display: none;
 }
 
 #players div:first-child {
