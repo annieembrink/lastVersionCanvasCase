@@ -337,10 +337,7 @@ wss.on("connection", (ws) => {
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
 
         if (clientDisconnected) {
-
             //Get index of the client who disconnected 
-            //Every client who sets nickname is pushed to nicknamehistory
-            //Every client who inits should be logged somewhere
             let getIndex = nicknameHistory.indexOf(clientDisconnected)
 
             //Remove the client who disconnects from array
@@ -365,12 +362,6 @@ wss.on("connection", (ws) => {
                     toFewPlayers: toFewPlayers,
                 }))
             });
-
-            console.log("Client disconnected");
-            console.log(
-                "Number of remaining connected clients: ",
-                wss.clients.size
-            );
         };
     });
 });

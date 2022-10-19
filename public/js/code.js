@@ -395,7 +395,7 @@ function init(e) {
     // nicknameInput.style.textAlign = 'left'
     nicknameInput.style.display = 'none';
 
-    clearBtn.style.width = `${canvas.width}px`
+    // clearBtn.style.width = `${canvas.width}px`
     colorPen.style.width = `${canvas.width}px`
     chatDiv.style.maxHeight = `${canvas.height}px`
     document.getElementById('players').style.maxHeight = `${canvas.height}px`
