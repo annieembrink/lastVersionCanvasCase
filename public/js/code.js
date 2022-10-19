@@ -176,6 +176,8 @@ function createPlayersEl(obj) {
   // }
 
   let i = 0
+  a = 0
+
   obj.forEach(player => {
     const onePlayerDiv = document.createElement('div');
     if (i === 4) {
@@ -189,7 +191,6 @@ function createPlayersEl(obj) {
     playerEl.innerText = `${player.nickname}: ${player.points} points`
     onePlayerDiv.appendChild(playerEl)
 
-    a = 0
     if (a === 3) {
       a = 0
     }
@@ -602,6 +603,5 @@ window.onload = init;
 //Välja färger
 //render
 //read me
-//chat input position on scroll
-//meddelande när man får resp inte får skriva i chatten
-//kaninbild när fler än 3 spelare
+//STÄDA KOD
+//snyggare text i player-div
