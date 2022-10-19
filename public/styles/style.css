@@ -55,9 +55,9 @@ header img {
 
 }
 
-#wordDiv h2 {
+/* #wordDiv h2 {
     text-align: center;
-}
+} */
 
 #setNicknameContainer {
     display: flex;
@@ -193,7 +193,6 @@ header img {
 
     box-shadow: 5px 5px 10px #2b8a38,
         -5px -5px 10px #319c40;
-
 }
 
 #clearBtn {
@@ -307,8 +306,9 @@ li p {
 }
 
 #chosenWord h1 {
-    text-align: center;
+    /* text-align: center; */
     font-size: 3rem;
+    color: white;
 }
 
 #colorPen {
