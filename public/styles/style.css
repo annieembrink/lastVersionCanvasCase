@@ -42,9 +42,9 @@
     align-items: center;
 }
 
-#setNicknameContainer img{
-   margin-right: 10px;
-   margin-bottom: 15px;
+#setNicknameContainer img {
+    margin-right: 10px;
+    margin-bottom: 15px;
 }
 
 
@@ -58,8 +58,8 @@
     font-weight: bold;
 
     margin-left: 10px;
-    box-shadow:  2px 2px 12px #20672a,
-             -2px -2px 12px #3cbf4e;
+    box-shadow: 2px 2px 12px #20672a,
+        -2px -2px 12px #3cbf4e;
 }
 
 #setNicknameContainer button:disabled {
@@ -80,7 +80,7 @@
 
 #setNicknameContainer input:disabled {
 
-    background-color:#2E933C;
+    background-color: #2E933C;
     padding: 0;
     text-align: center;
     margin-top: 40%;
@@ -90,7 +90,7 @@
     color: #F75C03;
     text-shadow: 1px 1px #242423;
 
-    box-shadow:none;
+    box-shadow: none;
 }
 
 #setNicknameContainer input:focus,
@@ -114,6 +114,7 @@
     color: #F75C03;
     text-shadow: 1px 1px #242423;
 }
+
 #yourGuess {
     grid-area: 1 / 2 / 1 / 5;
     color: #fffefb;
@@ -160,8 +161,8 @@
 
     position: relative;
 
-    box-shadow:  5px 5px 10px #2b8a38,
-             -5px -5px 10px #319c40;
+    box-shadow: 5px 5px 10px #2b8a38,
+        -5px -5px 10px #319c40;
 
 }
 
@@ -180,10 +181,10 @@
     margin: 10px;
     border: none;
     height: 50%;
-   
+
     border-radius: 10px;
     padding: 5px 10px;
-    background-color:#F75C03; 
+    background-color: #F75C03;
     color: white;
     font-size: 2rem;
 }
@@ -198,16 +199,23 @@
 
     position: relative;
 
-    box-shadow:  5px 5px 10px #2b8a38,
-             -5px -5px 10px #319c40;
+    overflow-y: scroll;
 
+    box-shadow: 5px 5px 10px #2b8a38,
+        -5px -5px 10px #319c40;
 }
+
+#chatDiv::-webkit-scrollbar {
+    display: none;
+  }
 
 #chatDiv #inputText {
     width: 100%;
     position: absolute;
     bottom: 0;
-    /* left: 0; */
+    background-color: rgb(239, 239, 239);
+    border-radius: 0 0 10px 10px;
+   
 }
 
 #conversation li {
@@ -228,8 +236,8 @@
     border-radius: 10px;
     margin: 10px;
 
-    box-shadow:  5px 5px 10px #2b8a38,
-             -5px -5px 10px #319c40;
+    box-shadow: 5px 5px 10px #2b8a38,
+        -5px -5px 10px #319c40;
 
 }
 
@@ -293,8 +301,8 @@ li p {
     border-radius: 100%;
     /* border: 0.5px solid black; */
 
-    box-shadow:  5px 5px 6px #277b32,
-             -5px -5px 6px #35ab46;
+    box-shadow: 5px 5px 6px #277b32,
+        -5px -5px 6px #35ab46;
 }
 
 #penContainer {

@@ -189,12 +189,13 @@ function createPlayersEl(obj) {
     playerEl.innerText = `${player.nickname}: ${player.points} points`
     onePlayerDiv.appendChild(playerEl)
 
-    if (i === 3) {
-      i = 0
+    a = 0
+    if (a === 3) {
+      a = 0
     }
 
     const playerImg = document.createElement('img');
-    playerImg.src = images[i++];
+    playerImg.src = images[a++];
     playerImg.style.width = '30px';
     playerImg.style.height = '30px';
     playerEl.appendChild(playerImg)
@@ -367,7 +368,9 @@ function init(e) {
     nicknameInput.style.textAlign = 'left'
     clearBtn.style.width = `${canvas.width}px`
     colorPen.style.width = `${canvas.width}px`
+    chatDiv.style.maxHeight = `${canvas.height}px`
   }
+
 
   //TEXT MESSAGE FUNCTIONS
   function newTextMessage(e) {
@@ -386,6 +389,7 @@ function init(e) {
       websocket.send(JSON.stringify(objMessage));
       inputText.value = "";
     }
+
   }
 
 
@@ -401,7 +405,7 @@ function init(e) {
     isPainting = false;
     // ctx.stroke()
     // ctx.closePath()
-    
+
   };
 
   const paint = (e) => {
@@ -418,7 +422,7 @@ function init(e) {
       endAngle: 2 * Math.PI,
     }
 
-  
+
     websocket.send(JSON.stringify({
       type: "paint",
       payload: args
@@ -500,20 +504,20 @@ function init(e) {
 
         if (!message.allowedToGuess) {
           inputText.disabled = true;
-          inputText.placeholder = 'Sorry, you can´t write right now...'
-          inputText.style.backgroundColor = 'white'
+          inputText.placeholder = 'It`s your time to PAINT!'
         } else {
           inputText.disabled = false;
+          inputText.placeholder = "Write your guess here..."
         }
         break;
       case "text":
         if (!message.allowedToGuess) {
           inputText.disabled = true;
-          inputText.placeholder = 'Sorry, you can´t write right now...'
-          inputText.style.backgroundColor = 'white'
+          inputText.placeholder = 'It`s your time to PAINT!'
 
         } else {
           inputText.disabled = false;
+          inputText.placeholder = "Write your guess here..."
         }
         renderMessage(message)
         break;
@@ -586,3 +590,10 @@ window.onload = init;
 //Om alla gissat rätt, avsluta timern och slumpa ny spelare
 //canvas clearas inte korrekt??? eller ...
 //penn-ikoner
+
+//Välja färger
+//render
+//read me
+//chat input position on scroll
+//meddelande när man får resp inte får skriva i chatten
+//kaninbild när fler än 3 spelare
