@@ -186,7 +186,7 @@ wss.on("connection", (ws) => {
 
             let playerWhoPaints = randomPlayerState[0]
             let getIndexOfPainter = nicknameHistory.indexOf(playerWhoPaints)
-            let pointsForPainter = 5 * guessedRight 
+            let pointsForPainter = 5 * guessedRight
             nicknameHistory[getIndexOfPainter].points += pointsForPainter;
 
             let objBroadcast = {
@@ -333,36 +333,45 @@ wss.on("connection", (ws) => {
     // close event
     ws.on("close", () => {
 
+        //Find client who disconnected (if client has no nickname, can't be found)
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
 
-        let getIndex = nicknameHistory.indexOf(clientDisconnected)
+        if (clientDisconnected) {
 
-        nicknameHistory.splice(getIndex, 1)
+            //Get index of the client who disconnected 
+            //Every client who sets nickname is pushed to nicknamehistory
+            //Every client who inits should be logged somewhere
+            let getIndex = nicknameHistory.indexOf(clientDisconnected)
 
-        if (nicknameHistory.length < 3) {
-            toFewPlayers = true;
-        }
+            //Remove the client who disconnects from array
+            nicknameHistory.splice(getIndex, 1)
 
-        if ((randomPlayerState.length > 0) && (randomPlayerState[0].id === ws.id)) {
-            randomPlayerState.splice(0)
-            GenerateRandomPlayer()
-            GenerateRandomWords()
-        }
+            //The array nicknamehistory must be at least 3 players
+            if (nicknameHistory.length < 3) {
+                toFewPlayers = true;
+            }
 
-        wss.clients.forEach(client => {
+            if ((randomPlayerState.length > 0) && (randomPlayerState[0].id === ws.id)) {
+                randomPlayerState.splice(0)
+                GenerateRandomPlayer()
+                GenerateRandomWords()
+            }
 
-            client.send(JSON.stringify({
-                type: 'disconnect',
-                active: nicknameHistory,
-                toFewPlayers: toFewPlayers,
-            }))
-        });
+            wss.clients.forEach(client => {
 
-        console.log("Client disconnected");
-        console.log(
-            "Number of remaining connected clients: ",
-            wss.clients.size
-        );
+                client.send(JSON.stringify({
+                    type: 'disconnect',
+                    active: nicknameHistory,
+                    toFewPlayers: toFewPlayers,
+                }))
+            });
+
+            console.log("Client disconnected");
+            console.log(
+                "Number of remaining connected clients: ",
+                wss.clients.size
+            );
+        };
     });
 });
 
