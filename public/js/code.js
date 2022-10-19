@@ -21,6 +21,7 @@ let isPainting = false;
 
 let nickname;
 let id;
+let chosenWordArr = [];
 
 fetch('motive.json')
   .then((response) => response.json())
@@ -462,10 +463,13 @@ function init(e) {
         break;
       case "timerStarted":
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
+        let test = message.chosenWordArr[0]
+        chosenWordArr.push(test)
         if (message.time === undefined) {
-          document.getElementById("timer").innerHTML = 'Time out';
+          document.getElementById("timer").innerHTML = `The right word was "${chosenWordArr[0]}"`;
           createPlayersEl(message.nicknameHistory)
 
+          chosenWordArr.splice(0);
         }
         break;
       case "getRandomWords":
@@ -567,3 +571,5 @@ window.onload = init;
 //STÄDA KOD
 //snyggare text i player-div
 //kommentera kod
+//clear canvas bör inte synas för de som gissar (färg och pennor?)
+//vilket ord som var rätt borde synas när timern tar slut

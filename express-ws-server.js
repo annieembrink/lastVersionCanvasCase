@@ -287,6 +287,7 @@ wss.on("connection", (ws) => {
                     time: message.time,
                     id: ws.id,
                     message: message,
+                    chosenWordArr: chosenWordArr,
                     timerOn: message.data,
                     allowedToPaint: allowedToPaint,
                     nicknameHistory: nicknameHistory
