@@ -203,8 +203,9 @@ header img {
 
 #conversation {
     overflow-y: scroll;
-    height: 95%;
-    margin-bottom: 10px;
+    /* height: 95%; */
+    height: 80%;
+    margin-bottom: 20px;
 }
 
 #conversation::-webkit-scrollbar {

@@ -207,15 +207,15 @@ function toFewPlayers(bool) {
 }
 
 
-const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+// const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 //FUNCTION ----------------------------
 function init(e) {
 
-  // const websocket = new WebSocket("ws://localhost:80");
+  const websocket = new WebSocket("ws://localhost:80");
 
-  const baseURL = trimSlashes(window.location.href.split("//")[1]);
-  const protocol = 'wss';
-  const websocket = new WebSocket(`${protocol}://${baseURL}`);
+  // const baseURL = trimSlashes(window.location.href.split("//")[1]);
+  // const protocol = 'wss';
+  // const websocket = new WebSocket(`${protocol}://${baseURL}`);
 
   function scrollToBottom() {
     let conv = document.getElementById('conversation')
@@ -486,20 +486,20 @@ function init(e) {
 
         if (!message.allowedToGuess) {
           inputText.disabled = true;
-          inputText.placeholder = 'It`s your time to PAINT!'
+          // inputText.placeholder = 'It`s your time to PAINT!'
         } else {
           inputText.disabled = false;
-          inputText.placeholder = "Write your guess here..."
+          // inputText.placeholder = "Write your guess here..."
         }
         break;
       case "text":
         if (!message.allowedToGuess) {
           inputText.disabled = true;
-          inputText.placeholder = 'It`s your time to PAINT!'
+          // inputText.placeholder = 'You guessed the right word!'
 
         } else {
           inputText.disabled = false;
-          inputText.placeholder = "Write your guess here..."
+          // inputText.placeholder = "Write your guess here..."
         }
         renderMessage(message)
         scrollToBottom()
@@ -579,3 +579,8 @@ window.onload = init;
 //kommentera kod
 //clear canvas bör inte synas för de som gissar (färg och pennor?)
 //vilket ord som var rätt borde synas när timern tar slut
+//chatten konstig när för lång
+//meddelande u chatten när man gissat rätt (its your time to paint)
+//töm canvas när nytt spel startas (alla bilder lagras på varandra...)
+//the right word was dosent work all the time...
+//canvas blir alla blider när nån ny kommer in i chatten (recreate funkar ej)
