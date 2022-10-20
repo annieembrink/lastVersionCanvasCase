@@ -235,18 +235,18 @@ function toFewPlayers(bool) {
 }
 
 //Fixing with url. Use when hosting on render.com
-const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+// const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 
 //The great big init-function (should all code be inside of this?)
 function init(e) {
 
   //Use this when using localhost
-  // const websocket = new WebSocket("ws://localhost:80");
+  const websocket = new WebSocket("ws://localhost:80");
 
   //Use when hosting on render.com
-  const baseURL = trimSlashes(window.location.href.split("//")[1]);
-  const protocol = 'wss';
-  const websocket = new WebSocket(`${protocol}://${baseURL}`);
+  // const baseURL = trimSlashes(window.location.href.split("//")[1]);
+  // const protocol = 'wss';
+  // const websocket = new WebSocket(`${protocol}://${baseURL}`);
 
   //For scrolling in conversation
   function scrollToBottom() {
