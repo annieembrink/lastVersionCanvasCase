@@ -474,6 +474,7 @@ function init(e) {
         if (message.time === undefined) {
           document.getElementById("timer").innerHTML = `The right word was "${chosenWordArr[0]}"`;
           createPlayersEl(message.nicknameHistory)
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
 
           chosenWordArr.splice(0);
         }
@@ -572,15 +573,13 @@ window.onload = init;
 //canvas clearas inte korrekt??? eller ...
 //penn-ikoner
 
-//render
 //read me
 //STÄDA KOD
 //snyggare text i player-div
 //kommentera kod
 //clear canvas bör inte synas för de som gissar (färg och pennor?)
-//vilket ord som var rätt borde synas när timern tar slut
-//chatten konstig när för lång
-//meddelande u chatten när man gissat rätt (its your time to paint)
 //töm canvas när nytt spel startas (alla bilder lagras på varandra...)
 //the right word was dosent work all the time...
-//canvas blir alla blider när nån ny kommer in i chatten (recreate funkar ej)
+//canvas blir alla bilder när nån ny kommer in i chatten (recreate funkar ej)
+//töm state on clear
+//töm state när timern är slut

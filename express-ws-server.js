@@ -151,11 +151,21 @@ wss.on("connection", (ws) => {
                 const id = ws.id;
                 wss.clients.forEach((client) => {
 
+                    if (id === client.id) {
+                        client.send(JSON.stringify({
+                            type: "init",
+                            payload: {
+                                id,
+                                state,
+                                allowedToGuess: allowedToGuess
+                            }
+                        }));
+                    }
+
                     client.send(JSON.stringify({
                         type: "init",
                         payload: {
                             id,
-                            state,
                             allowedToGuess: allowedToGuess
                         }
                     }));
@@ -281,6 +291,7 @@ wss.on("connection", (ws) => {
                 chosenWordArr.splice(0)
                 GenerateRandomPlayer()
                 GenerateRandomWords()
+                let deletedItems = state.splice(0, state.length)
             }
 
             wss.clients.forEach((client) => {
@@ -300,6 +311,8 @@ wss.on("connection", (ws) => {
         }
         break;
         case "clearCanvas": {
+
+            let deletedItems = state.splice(0, state.length)
 
             if (ws.id === randomPlayerState[0].id) {
                 wss.clients.forEach((client) => {
