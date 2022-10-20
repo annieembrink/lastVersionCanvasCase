@@ -578,12 +578,8 @@ window.onload = init;
 //snyggare text i player-div
 //kommentera kod
 //clear canvas bör inte synas för de som gissar (färg och pennor?)
-//töm canvas när nytt spel startas (alla bilder lagras på varandra...)
 //the right word was dosent work all the time...
-//canvas blir alla bilder när nån ny kommer in i chatten (recreate funkar ej)
-//töm state on clear
-//töm state när timern är slut
 //mellanpennan förvald
-//synasvilken penna som är förvald, och färg
+//synas vilken penna som är förvald, och färg
 //transform, pennan
 //linjer inte prickar
