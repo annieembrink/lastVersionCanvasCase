@@ -430,8 +430,8 @@ function init(e) {
   function newTextMessage(e) {
     // press Enter...make sure at least one char
     if (e.key === "Enter" && inputText.value.length > 0) {
+      
       // chat message object
-      //Send data to server
       let objMessage = {
         type: "text",
         msg: inputText.value,
@@ -450,7 +450,7 @@ function init(e) {
   // PAINT MESSAGE FUNCTIONS
   const initPaint = (e) => {
     isPainting = true;
-    // ctx.beginPath()
+    //When randomplayer begins to paint, call function below
     paint(e);
   };
 
@@ -458,6 +458,7 @@ function init(e) {
     isPainting = false;
   };
 
+  //Painter paints and send data to server
   const paint = (e) => {
     if (!isPainting) return;
 
@@ -472,12 +473,13 @@ function init(e) {
       endAngle: 2 * Math.PI,
     }
 
-
+    //send to server
     websocket.send(JSON.stringify({
       type: "paint",
       payload: args
     }));
 
+    //Paint on client side
     ctx.fillStyle = args.color;
     ctx.arc(args.x, args.y, args.radius, args.startAngle, args.endAngle);
     ctx.fill();
@@ -485,6 +487,7 @@ function init(e) {
 
   };
 
+  //Paint with info from server
   function paintLine(ctx, args) {
 
     ctx.fillStyle = args.color;
@@ -494,6 +497,7 @@ function init(e) {
 
   }
 
+  //Use this when new players arrive
   const recreateCanvas = (state) => {
     state.forEach((message) => {
       if (message.type == "paint") {
@@ -502,6 +506,9 @@ function init(e) {
     });
   };
 
+  //Websocket functions
+
+  //on open
   const handleSocketOpen = (e) => {
     console.log('Socket has been opened');
     websocket.send(JSON.stringify({
@@ -510,66 +517,88 @@ function init(e) {
   }
 
 
+  //on message
   const handleSocketMessage = (e) => {
     const message = JSON.parse(e.data);
 
     //switch statement
     switch (message.type) {
+      //When new window is opened
       case "init":
         const state = message.payload.state;
         recreateCanvas(state);
         break;
+      //When timer is started
       case "timerStarted":
+        //When started, count down on dom
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
+        //saving the chosen word
         let test = message.chosenWordArr[0]
+        //And push it to global variable
         chosenWordArr.push(test)
-        if (message.time === undefined) {
-          document.getElementById("timer").innerHTML = `The right word was "${chosenWordArr[0]}"`;
-          createPlayersEl(message.nicknameHistory)
-          ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+        //When timer is done
+        if (message.time === undefined) {
+          //Tell players the right word, using the global variable we declared above
+          document.getElementById("timer").innerHTML = `The right word was "${chosenWordArr[0]}"`;
+          //Recreate the players el, with new info about points
+          createPlayersEl(message.nicknameHistory)
+          //Clear the canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+          //Reset the global variable chosenwordarr
           chosenWordArr.splice(0);
         }
         break;
+        //When random words are generated
       case "getRandomWords":
         createRandomWordElement(message.data)
         break;
+        //When random player is generated
       case "getRandomPlayer":
         document.getElementById('whosTurn').textContent = `${message.data[0].nickname}s turn`
 
+        //With data from server, who is allowed to guess
         if (!message.allowedToGuess) {
           inputText.disabled = true;
-          // inputText.placeholder = 'It`s your time to PAINT!'
         } else {
           inputText.disabled = false;
-          // inputText.placeholder = "Write your guess here..."
         }
         break;
+        //When textmessages are sent
       case "text":
+        //Using allowedtoguess again, from server
         if (!message.allowedToGuess) {
           inputText.disabled = true;
-          // inputText.placeholder = 'You guessed the right word!'
-
         } else {
           inputText.disabled = false;
-          // inputText.placeholder = "Write your guess here..."
         }
+        //Rendering mesages
         renderMessage(message)
+        //Scroll function for message div
         scrollToBottom()
         break;
+        //when nickname is set
       case "start":
+        //The div that shows the actual game
         theDiv()
+        //The div with players
         createPlayersEl(message.data.nicknameHistory)
+        //Whos turn
         document.getElementById('whosTurn').textContent = `${message.data.randomPlayerState[0].nickname}s turn`
         break;
+        //When painting
       case "paint":
+        //Info about x, y, color etc
         const args = message.payload;
+        //Function that paints with info from server
         paintLine(ctx, args);
         break;
+        //When client is disconnected
       case "disconnect":
         toFewPlayers(message.toFewPlayers)
         createPlayersEl(message.active)
         break;
+        //When clearbutton is clicked
       case "clearCanvas":
         if (message.data) {
           ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -583,6 +612,8 @@ function init(e) {
   websocket.addEventListener("close", (e) => {
     gameBody.innerHTML = '';
     gameBody.innerText = 'Sorry, something went wrong, try again'
+
+    //Some styling
     gameBody.style.fontSize = '2rem';
     gameBody.style.fontWeight = 'bold';
     gameBody.style.color = '#F75C03'
@@ -590,7 +621,7 @@ function init(e) {
     gameBody.style.padding = '20px';
   });
 
-  // TODO: Connecting events with functions
+  //Connecting events with functions
   nicknameInput.onkeydown = nickNameOnEnter;
   setNickname.onclick = nickNameOnButton;
   inputText.onkeydown = newTextMessage;
@@ -599,39 +630,32 @@ function init(e) {
   canvas.onmousemove = paint
   window.onmouseup = finishPaint
 
+  //Clear button event listener
   clearBtn.addEventListener('click', () => {
     websocket.send(JSON.stringify({
       type: 'clearCanvas',
       data: true
     }));
   })
-
 }
 
-
-
+//Every time window is opened, load init-function
 window.onload = init;
 
 //funktionalitet att lägga till ------------------
 
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
 //Timern ska nollas om randomplayer sticker mitt i 
-//time out bort när orden syns 
-//rita linjer ist för prickar
 //rita med linjer inte prickar
 //använder jag ens allow to paint?
 //städa kod
 //Om alla gissat rätt, avsluta timern och slumpa ny spelare
-//canvas clearas inte korrekt??? eller ...
 //penn-ikoner
 
-//read me
-//STÄDA KOD
 //snyggare text i player-div
 //kommentera kod
 //clear canvas bör inte synas för de som gissar (färg och pennor?)
-//the right word was dosent work all the time...
+//the right word was - dosent work all the time...
 //mellanpennan förvald
 //synas vilken penna som är förvald, och färg
 //transform, pennan
-//linjer inte prickar
