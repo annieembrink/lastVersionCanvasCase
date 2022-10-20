@@ -235,18 +235,18 @@ function toFewPlayers(bool) {
 }
 
 //Fixing with url. Use when hosting on render.com
-// const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 
 //The great big init-function (should all code be inside of this?)
 function init(e) {
 
   //Use this when using localhost
-  const websocket = new WebSocket("ws://localhost:80");
+  // const websocket = new WebSocket("ws://localhost:80");
 
   //Use when hosting on render.com
-  // const baseURL = trimSlashes(window.location.href.split("//")[1]);
-  // const protocol = 'wss';
-  // const websocket = new WebSocket(`${protocol}://${baseURL}`);
+  const baseURL = trimSlashes(window.location.href.split("//")[1]);
+  const protocol = 'wss';
+  const websocket = new WebSocket(`${protocol}://${baseURL}`);
 
   //For scrolling in conversation
   function scrollToBottom() {
@@ -655,7 +655,8 @@ window.onload = init;
 //snyggare text i player-div
 //kommentera kod
 //clear canvas bör inte synas för de som gissar (färg och pennor?)
-//the right word was - dosent work all the time...
+//the right word was - dosent work all the time... NÄR gör den fel?
 //mellanpennan förvald
 //synas vilken penna som är förvald, och färg
 //transform, pennan
+//Om folk lämnar, bara två kvar, waiting-meddelande

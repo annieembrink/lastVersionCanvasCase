@@ -203,7 +203,6 @@ header img {
 
 #conversation {
     overflow-y: scroll;
-    /* height: 95%; */
     height: 80%;
     margin-bottom: 20px;
 }
