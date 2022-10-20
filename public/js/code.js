@@ -660,3 +660,9 @@ window.onload = init;
 //synas vilken penna som är förvald, och färg
 //transform, pennan
 //Om folk lämnar, bara två kvar, waiting-meddelande
+//radera branches, uppdatera main så read-me stämmer, vad är utkommenterat och inte?
+//Main och online ska vara likadana förutom port etc
+//Switch, endast en rad per case - wrappa ihop i funktioner
+//ladda om sidan automatiskt om den kraschar, med intervall
+//Tydligare read-me, beskriv spelet
+//skicka repo, teams eller github, men se till att main är uppdaterad som online
