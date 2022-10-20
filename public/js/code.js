@@ -583,3 +583,7 @@ window.onload = init;
 //canvas blir alla bilder när nån ny kommer in i chatten (recreate funkar ej)
 //töm state on clear
 //töm state när timern är slut
+//mellanpennan förvald
+//synasvilken penna som är förvald, och färg
+//transform, pennan
+//linjer inte prickar
