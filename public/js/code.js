@@ -13,16 +13,19 @@ const playerDiv = document.getElementById('players')
 const gameBody = document.getElementById('gameBody')
 const colorPen = document.getElementById('colorPen')
 
+//Canvas elements
 const canvas = document.querySelector("#canvas");
 canvas.width = window.innerWidth / 2.2
 canvas.height = window.innerHeight / 2;
 const ctx = canvas.getContext("2d");
 let isPainting = false;
 
+//Few global variables
 let nickname;
 let id;
 let chosenWordArr = [];
 
+//Fetch json
 fetch('motive.json')
   .then((response) => response.json())
   .then((data) => {
@@ -37,6 +40,8 @@ fetch('motive.json')
         colors.appendChild(pTag);
       })
     }
+
+    //call function
     generateColors()
 
     //Generate pensize
@@ -49,31 +54,38 @@ fetch('motive.json')
         penContainer.appendChild(imgTag);
       })
     }
+
+    //Call function
     generatePen()
 
-    //Not good code, but solved for now
+    //The following code seems a bit complicated, but I couldn´t make it work in any other way
+    //Why is pen-listener inside fetch, and color-listener outside?
+    //Wrap in function...
+    //Connect with pen-element
     let pTags = document.getElementsByClassName('pen')
 
+    //For every pen size...
     for (let i = 0; i < pTags.length; i++) {
       const element = pTags[i];
 
+      //... add event listener
       element.addEventListener('click', (e) => {
         objWithCurrentPen.pen = e.target.id
 
         for (let i = 0; i < pTags.length; i++) {
           const element = pTags[i];
 
+          //Every time a pen is clicked, check if it has classlist and remove it
           if (element.classList.contains("penBoxFocus")) {
-            element.classList.remove("penBoxFocus")
-          }
-        }
+            element.classList.remove("penBoxFocus");
+          };
+        };
 
+        //The add classlist for clicked element
         e.target.classList.add('penBoxFocus');
 
-      })
-    }
-
-
+      });
+    };
   })
   .catch(err => console.log(err))
 
@@ -89,6 +101,7 @@ let objWithCurrentColor = {
   color: 'black'
 }
 
+//Eventlistener for colors
 colors.addEventListener('click', (e) => {
   objWithCurrentColor.color = e.target.id;
 
@@ -103,8 +116,8 @@ colors.addEventListener('click', (e) => {
   e.target.classList.add('colorBoxFocus');
 })
 
-// ---------------------------------
 
+//Call this function when setnicknameinput is done
 function startGame() {
   // get value from input nickname
   nickname = document.getElementById("nicknameInput").value;
@@ -122,16 +135,7 @@ function startGame() {
   document.getElementById("inputText").focus();
 }
 
-
-/* functions...
-------------------------------- */
-
-/**
- * parse JSON
- *
- * @param {*} data
- * @return {obj}
- */
+//Where is this function called?
 function parseJSON(data) {
   // try to parse json
   try {
@@ -146,12 +150,10 @@ function parseJSON(data) {
   }
 }
 
-
-// --------------------------------------------------
-
-
+//Create the div with active players
 function createPlayersEl(obj) {
 
+  //Backgroundcolors for players
   const colors = [
     "#995D81",
     "#F75C03",
@@ -159,75 +161,100 @@ function createPlayersEl(obj) {
     "#2E933C"
   ]
 
+  //Rabbit-images for player
   const images = [
     "img/rabbit.png",
     "img/rabbit2.png",
     "img/rabbit3.png"
   ]
 
+  //Every time div is created, start by emptying it
   playerDiv.innerHTML = '';
  
+  //To iterate over colors and images
   let i = 0
   a = 0
 
+  //For every object with info about player (nickname, id etc)
   obj.forEach(player => {
+
+    //Create a div
     const onePlayerDiv = document.createElement('div');
+
+    //For colors, if i is 4, start from the beginning
     if (i === 4) {
       i = 0
     }
+
+    //Backgroundcolor for eveyr player div
     onePlayerDiv.style.backgroundColor = colors[i++]
+
+    //Append div to parentdiv
     playerDiv.appendChild(onePlayerDiv)
 
+    //Every div contains a p-tag
     const playerEl = document.createElement('p')
+
+    //With nickname and player points
     playerEl.innerText = `${player.nickname}: ${player.points} points`
+
+    //Append it to div
     onePlayerDiv.appendChild(playerEl)
 
+    //Iterate over images
     if (a === 3) {
       a = 0
     }
 
+    //Create img-element
     const playerImg = document.createElement('img');
+
+    //Source from array of images
     playerImg.src = images[a++];
+
+    //Some img-styling
     playerImg.style.width = '30px';
     playerImg.style.height = '30px';
     playerImg.style.marginRight = '10px';
+
+    //Append it to div
     onePlayerDiv.appendChild(playerImg)
 
+    //And some more styling
     onePlayerDiv.style.display = 'flex'
     onePlayerDiv.style.justifyContent = 'space-between'
     onePlayerDiv.style.alignItems = 'center'
   })
 }
 
-
+//If to few players, dont show gamecontainer yet
 function toFewPlayers(bool) {
   if (bool) {
     document.getElementById('theGameContainer').style.display = 'none';
   }
 }
 
-
+//Fixing with url. Use when hosting on render.com
 // const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
-//FUNCTION ----------------------------
+
+//The great big init-function (should all code be inside of this?)
 function init(e) {
 
+  //Use this when using localhost
   const websocket = new WebSocket("ws://localhost:80");
 
+  //Use when hosting on render.com
   // const baseURL = trimSlashes(window.location.href.split("//")[1]);
   // const protocol = 'wss';
   // const websocket = new WebSocket(`${protocol}://${baseURL}`);
 
+  //For scrolling in conversation
   function scrollToBottom() {
     let conv = document.getElementById('conversation')
     conv.scrollTop = conv.scrollHeight
   }
 
-
-  /**
-   * render new message
-   *
-   * @param {obj}
-   */
+  //Rendering messages to dom
   function renderMessage(obj) {
     // use template - cloneNode to get a document fragment
     let template = document.getElementById("message").cloneNode(true);
@@ -235,8 +262,13 @@ function init(e) {
     // access content
     let newMsg = template.content;
 
+    //If the message is the same as the right wors
     if (obj.msg === obj.chosenWordArr[0]) {
+
+      //Dont type the word but type the following
       obj.msg = `guessed the right word!`
+
+      //And style it
       newMsg.querySelector("p").style.color = 'green'
       newMsg.querySelector("p").style.fontWeight = 'bold'
     }
@@ -245,51 +277,60 @@ function init(e) {
     newMsg.querySelector("span").textContent = obj.nickname;
     newMsg.querySelector("p").textContent = obj.msg;
 
-    // render using prepend method - last message first
+    // render using append, last message last
     document.getElementById("conversation").append(newMsg);
+  };
 
-
-  }
-
-  //TIMER------------------------------
+  //Timer function
   var check = null;
 
   function printDuration() {
     if (check == null) {
+
+      //30 seconds to paint
       var cnt = 30;
 
       check = setInterval(function () {
 
+        //When timer is started, you´re allowed to paint
         canvas.onmousedown = initPaint
 
+        //Send message to server. Timer is started, and the count
         websocket.send(JSON.stringify({
           type: 'timerStarted',
           data: true,
           time: cnt
         }));
 
+        //Count down from 30, -1 per second
         cnt -= 1;
 
+        //When count is 0
         if (cnt === 0) {
+          //Not possible to paint anymore
           canvas.onmousedown = null;
           isPainting = false;
+
+          //Stop timer
           stop()
 
+          //Send info to server that timer is stopped
           websocket.send(JSON.stringify({
             type: 'timerStarted',
             data: false
           }));
-
         }
       }, 1000);
-    }
-  }
+    };
+  };
 
+  //The stop timer function
   function stop() {
     clearInterval(check);
     check = null;
   }
 
+  //Eventlistener for the words to choose from
   function addlistenerForWords() {
 
     wordDiv.querySelectorAll('p').forEach(tag => {
@@ -300,12 +341,16 @@ function init(e) {
         chosenWord.appendChild(pTag);
         wordDiv.style.display = 'none';
 
+        //Send message to server, data is the chosen word
         websocket.send(JSON.stringify({
           type: 'text',
           data: e.target.innerText
         }));
 
+        //When word is chosen - start the timer
         printDuration()
+
+        //And clear the canvas, from last game
         websocket.send(JSON.stringify({
           type: 'clearCanvas',
           data: true
@@ -314,6 +359,7 @@ function init(e) {
     })
   }
 
+  //Creating elements for the random words (three at a time)
   function createRandomWordElement(data) {
     wordDiv.style.display = 'block';
     wordDiv.textContent = '';
@@ -325,10 +371,12 @@ function init(e) {
       pTag.innerText = tag;
       wordDiv.appendChild(pTag)
     })
+
+    //Add listener for the words
     addlistenerForWords()
   }
 
-  //Not working perfect
+  //If not enough players, create a element that says that
   function createWaitEl() {
     let pTag = document.createElement('h2');
     pTag.id = 'waiting'
@@ -337,6 +385,7 @@ function init(e) {
     gameBody.appendChild(pTag);
   }
 
+  //Set nickname functions (for both enter and button click) ----------------
   function nickNameOnEnter(e) {
     if (e.key === "Enter" && nicknameInput.value.length > 0) {
       websocket.send(JSON.stringify({
@@ -359,7 +408,10 @@ function init(e) {
       startGame()
     }
   }
+  // ------------------------------------------------------
 
+  //This function is called when players are enough (at least three) and game is ON
+  //Change this terrible function-name...
   function theDiv() {
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
@@ -379,6 +431,7 @@ function init(e) {
     // press Enter...make sure at least one char
     if (e.key === "Enter" && inputText.value.length > 0) {
       // chat message object
+      //Send data to server
       let objMessage = {
         type: "text",
         msg: inputText.value,
@@ -391,7 +444,6 @@ function init(e) {
       websocket.send(JSON.stringify(objMessage));
       inputText.value = "";
     }
-
   }
 
 
