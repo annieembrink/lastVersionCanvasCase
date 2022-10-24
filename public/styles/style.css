@@ -365,9 +365,11 @@ li p {
 .small-2.penBoxFocus {
     transform: rotate(90deg) scale(0.7);
 }
+
 .medium-5.penBoxFocus {
     transform: rotate(90deg) scale(0.8);
 }
+
 .large-9.penBoxFocus {
     transform: rotate(90deg);
 }
@@ -378,4 +380,14 @@ li p {
     font-size: 1rem;
     font-weight: bold;
     color: white;
+}
+
+.serverDown {
+    /* background-image: url("/img/serverdown.png"); */
+    background-color: #267A31;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #F75C03;
+    text-shadow: 1px 1px #242423;
+    padding: 20px;
 }

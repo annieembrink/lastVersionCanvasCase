@@ -613,15 +613,13 @@ function init(e) {
 
   // listen on close event (server)
   websocket.addEventListener("close", (e) => {
+    gameBody.classList.add('serverDown')
     gameBody.innerHTML = '';
+    gameBody.style.backgroundImage = "url('/img/backgroundOnGame.png')"; 
     gameBody.innerText = 'Sorry, something went wrong, try again'
 
-    //Some styling
-    gameBody.style.fontSize = '2rem';
-    gameBody.style.fontWeight = 'bold';
-    gameBody.style.color = '#F75C03'
-    gameBody.style.textShadow = '1px 1px #242423';
-    gameBody.style.padding = '20px';
+    console.log(gameBody)
+
   });
 
   //Connecting events with functions
