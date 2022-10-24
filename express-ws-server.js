@@ -351,6 +351,7 @@ function onClear(message, wss, ws) {
 
             client.send(JSON.stringify({
                 type: 'clearCanvas',
+                //is below needed?
                 data: message.data
             }))
         });

@@ -155,11 +155,9 @@ function createPlayersEl(obj) {
 
   //Backgroundcolors for players
   const colors = [
-    "#995D81",
+    "#2E933C",
     "#F75C03",
-    "#F1C40F",
-    "#2E933C"
-  ]
+    "#F1C40F"  ]
 
   //Rabbit-images for player
   const images = [
@@ -170,7 +168,7 @@ function createPlayersEl(obj) {
 
   //Every time div is created, start by emptying it
   playerDiv.innerHTML = '';
- 
+
   //To iterate over colors and images
   let i = 0
   a = 0
@@ -182,7 +180,7 @@ function createPlayersEl(obj) {
     const onePlayerDiv = document.createElement('div');
 
     //For colors, if i is 4, start from the beginning
-    if (i === 4) {
+    if (i === 3) {
       i = 0
     }
 
@@ -292,6 +290,9 @@ function init(e) {
 
       check = setInterval(function () {
 
+        //Clearbtn is visible for painter
+        clearBtn.style.display = 'block';
+
         //When timer is started, you´re allowed to paint
         canvas.onmousedown = initPaint
 
@@ -310,6 +311,8 @@ function init(e) {
           //Not possible to paint anymore
           canvas.onmousedown = null;
           isPainting = false;
+          //Clearbtn is visible for painter
+          clearBtn.style.display = 'none';
 
           //Stop timer
           stop()
@@ -430,7 +433,7 @@ function init(e) {
   function newTextMessage(e) {
     // press Enter...make sure at least one char
     if (e.key === "Enter" && inputText.value.length > 0) {
-      
+
       // chat message object
       let objMessage = {
         type: "text",
@@ -528,7 +531,7 @@ function init(e) {
         const state = message.payload.state;
         recreateCanvas(state);
         break;
-      //When timer is started
+        //When timer is started
       case "timerStarted":
         //When started, count down on dom
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
@@ -634,6 +637,7 @@ function init(e) {
   clearBtn.addEventListener('click', () => {
     websocket.send(JSON.stringify({
       type: 'clearCanvas',
+      //Is below needed?
       data: true
     }));
   })
@@ -650,21 +654,20 @@ window.onload = init;
 //använder jag ens allow to paint?
 //städa kod
 //Om alla gissat rätt, avsluta timern och slumpa ny spelare
-//penn-ikoner
 
 //snyggare text i player-div
-//kommentera kod
-//clear canvas bör inte synas för de som gissar (färg och pennor?)
-//the right word was - dosent work all the time... NÄR gör den fel?
+//snyggare chat
 //mellanpennan förvald
+//Canvas lite blurrad/dold när man inte får rita
+//Canvas on different screens
 //synas vilken penna som är förvald, och färg
-//transform, pennan
 //Om folk lämnar, bara två kvar, waiting-meddelande
 //Main och online ska vara likadana förutom port etc
-//Switch, endast en rad per case - wrappa ihop i funktioner
 //ladda om sidan automatiskt om den kraschar, med intervall
 //Tydligare read-me, beskriv spelet
 //Max 10 spelare per game, fixa olika spel-rum
 
 //random player should be able to write in chat as long as game hasnt begun
-//Alert are you surw you want to leave game
+//Alert are you sure you want to leave game
+
+//wrap functions on client side
