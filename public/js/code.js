@@ -419,7 +419,6 @@ function init(e) {
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
     document.getElementById('setNicknameContainer').style.display = 'none'
-    document.getElementById('carrotImg').style.margin = '10px 0 0 10px'
 
     nicknameInput.style.display = 'none';
 
@@ -671,3 +670,8 @@ window.onload = init;
 //Alert are you sure you want to leave game
 
 //wrap functions on client side
+//sortera efter vem som har flest poäng
+//high score
+//Unactive players get kicked out
+//should colors be carrots?
+//Head carrot moves when name is set

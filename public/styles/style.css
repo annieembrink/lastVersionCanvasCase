@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,600;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
 
 * {
     margin: 0;
@@ -37,15 +39,19 @@ header {
 
 header img {
     margin-left: 10px;
+    margin-top: 20px;
     text-shadow: 1px 1px #242424;
 
 }
 
 #head {
     display: inline-block;
-    border-bottom: 5px solid #F75C03;
+    border-bottom: 8px solid #F75C03;
     color: #10611B;
-    font-family: 'Fuzzy Bubbles', cursive;
+    /* font-family: 'Fuzzy Bubbles', cursive; */
+    /* font-family: 'Anton', sans-serif; */
+    font-family: 'Amatic SC', cursive;
+    font-size: 3.5rem;
     font-weight: 700;
 
     text-align: center;
