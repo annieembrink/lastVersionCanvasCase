@@ -666,3 +666,5 @@ window.onload = init;
 //Tydligare read-me, beskriv spelet
 //Max 10 spelare per game, fixa olika spel-rum
 
+//random player should be able to write in chat as long as game hasnt begun
+//Alert are you surw you want to leave game

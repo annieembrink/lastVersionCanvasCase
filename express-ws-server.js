@@ -100,7 +100,7 @@ const GenerateRandomWords = () => {
     wss.clients.forEach(client => {
 
         //There must be a random player chosen
-        if (randomPlayerState[0].id !== undefined) {
+        if (randomPlayerState[0] !== undefined) {
             //Send this data to the chosen client
             if (randomPlayerState[0].id === client.id) {
                 client.send(JSON.stringify({
@@ -127,12 +127,15 @@ const GenerateRandomPlayer = () => {
 
     //Push the chosen player to global variable
     randomPlayerState.push(randomPlayer);
+    console.log('randomplayer', randomPlayer)
+    console.log('nicknamehistory', nicknameHistory)
+    console.log('randomplayerstate', randomPlayerState)
 
     //All clients
     wss.clients.forEach(client => {
 
         //If a random player has been chosen
-        if (randomPlayerState) {
+        if (randomPlayerState[0] !== undefined) {
             //And if YOU are the random player
             if (randomPlayerState[0].id === client.id) {
                 client.send(JSON.stringify({
@@ -167,7 +170,6 @@ function onInit(ws) {
         }
     }))
 }
-
 //Break down into smaller functions
 function onText(message, wss, ws) {
     //If data (the chosen word) from client is not undefined
@@ -264,6 +266,7 @@ function onText(message, wss, ws) {
         }
     });
 }
+//Break down into smaller functions
 function onStart(message, wss, ws) {
     //The id
     const id = ws.id
@@ -309,7 +312,6 @@ function onStart(message, wss, ws) {
         });
     };
 }
-
 
 /* allow websockets - listener
 ------------------------------- */
@@ -422,8 +424,9 @@ wss.on("connection", (ws) => {
     // close event
     ws.on("close", () => {
 
-        //Find client who disconnected
+        //Find client who disconnects
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
+        console.log('clientdisconnected', clientDisconnected)
 
         if (clientDisconnected) {
             //Get index of the client who disconnected 
@@ -434,21 +437,35 @@ wss.on("connection", (ws) => {
 
             //The array nicknamehistory must be at least 3 players
             if (nicknameHistory.length < 3) {
+                //If not, tofewplayers
                 toFewPlayers = true;
             }
 
+            //If the randomplayer isnt 0 AND the randomplayer is the disconnected client
             if ((randomPlayerState.length > 0) && (randomPlayerState[0].id === ws.id)) {
+                //randomplayer is none
                 randomPlayerState.splice(0)
+                //chosenword is none
                 chosenWordArr.splice(0)
-                GenerateRandomPlayer()
-                GenerateRandomWords()
+
+                //If more than two players are active
+                if (nicknameHistory.length > 2) {
+                    //Generate new random player
+                    GenerateRandomPlayer()
+                    //Generate new random words
+                    GenerateRandomWords()
+                }
             }
 
+            //All clients
             wss.clients.forEach(client => {
 
+                console.log('tofewplayers', toFewPlayers)
                 client.send(JSON.stringify({
                     type: 'disconnect',
+                    //Clients still actove
                     active: nicknameHistory,
+                    //to few players, true or false
                     toFewPlayers: toFewPlayers,
                 }))
             });
