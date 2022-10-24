@@ -310,6 +310,39 @@ function onStart(message, wss, ws) {
     };
 }
 
+function onPaint(message, wss) {
+    state.push(message)
+    wss.clients.forEach((client) => {
+        client.send(JSON.stringify(message))
+    });
+}
+
+function onTimer(message, wss, ws) {
+    guessedRight = 0
+
+    if (!message.data) {
+        randomPlayerState.splice(0)
+        chosenWordArr.splice(0)
+        GenerateRandomPlayer()
+        GenerateRandomWords()
+        let deletedItems = state.splice(0, state.length)
+    }
+
+    wss.clients.forEach((client) => {
+
+        client.send(JSON.stringify({
+            type: 'timerStarted',
+            time: message.time,
+            id: ws.id,
+            message: message,
+            chosenWordArr: chosenWordArr,
+            timerOn: message.data,
+            allowedToPaint: allowedToPaint,
+            nicknameHistory: nicknameHistory
+        }))
+    });
+}
+
 /* allow websockets - listener
 ------------------------------- */
 // upgrade event - websocket communication
@@ -359,38 +392,11 @@ wss.on("connection", (ws) => {
         };
         break;
         case "paint": {
-            state.push(message)
-            wss.clients.forEach((client) => {
-                client.send(JSON.stringify(message))
-            });
+            onPaint(message, wss)
         }
         break;
         case "timerStarted": {
-
-            guessedRight = 0
-
-            if (!message.data) {
-                randomPlayerState.splice(0)
-                chosenWordArr.splice(0)
-                GenerateRandomPlayer()
-                GenerateRandomWords()
-                let deletedItems = state.splice(0, state.length)
-            }
-
-            wss.clients.forEach((client) => {
-
-                client.send(JSON.stringify({
-                    type: 'timerStarted',
-                    time: message.time,
-                    id: ws.id,
-                    message: message,
-                    chosenWordArr: chosenWordArr,
-                    timerOn: message.data,
-                    allowedToPaint: allowedToPaint,
-                    nicknameHistory: nicknameHistory
-                }))
-
-            });
+            onTimer(message, wss, ws)
         }
         break;
         case "clearCanvas": {
