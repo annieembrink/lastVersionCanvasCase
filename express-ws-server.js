@@ -206,16 +206,24 @@ function onText(message, wss, ws) {
     //Add the points to painter-player obj
     nicknameHistory[getIndexOfPainter].points += pointsForPainter;
 
+    //What to send to clients
     let objBroadcast = {
         type: "text",
+        //The actual message written in chat
         msg: message.msg,
+        //The id of writer (why send this?)
         id: ws.id,
+        //Nickname of writer
         nickname: message.nickname,
+        //The chosen word (why send this?)
         chosenWordArr: chosenWordArr,
+        //All the current players (why send this?)
         nicknameHistory: nicknameHistory,
+        //This is determined in code below
         allowedToGuess: allowedToGuess
     }
 
+    //All clients
     wss.clients.forEach((client) => {
 
         //If your not the one painting...
@@ -248,10 +256,58 @@ function onText(message, wss, ws) {
             }
         } else {
             //If your ARE the one painting
+            //You're not allowed to guess
             objBroadcast.allowedToGuess = false
+
+            //Send data
             client.send(JSON.stringify(objBroadcast))
         }
     });
+}
+function onStart(message, wss, ws) {
+    //The id
+    const id = ws.id
+    //The nickname
+    const nickname = message.nickname
+
+    //Creating the player obj
+    let obj = {
+        //The nickname
+        nickname: nickname,
+        //The id
+        id: id,
+        //Start with 0 points
+        points: 0
+    }
+    //Push the player-obj to array with all active clients
+    nicknameHistory.push(obj)
+
+    //If more than active players
+    if (nicknameHistory.length > 2) {
+
+        //If there is not yet a chosen random player
+        if (randomPlayerState.length === 0) {
+            //Generate a random player
+            GenerateRandomPlayer()
+            //Generate 3 random words
+            GenerateRandomWords()
+        }
+
+        //Send following to all clients
+        wss.clients.forEach((client) => {
+
+            client.send(JSON.stringify({
+                type: "start",
+                //Enough with nicknamehistory and randomplayerstate?
+                data: {
+                    id,
+                    nickname,
+                    nicknameHistory,
+                    randomPlayerState
+                }
+            }));
+        });
+    };
 }
 
 
@@ -295,44 +351,14 @@ wss.on("connection", (ws) => {
                 onInit(ws)
             }
             break;
+            //For every text-message
         case "text": {
             onText(message, wss, ws)
         }
         break;
+        //For every player that enters with nickname
         case "start": {
-
-            const id = ws.id
-            const nickname = message.nickname
-
-            let obj = {
-                nickname: nickname,
-                id: id,
-                points: 0
-            }
-            nicknameHistory.push(obj)
-
-            if (nicknameHistory.length > 2) {
-
-                if (randomPlayerState.length === 0) {
-                    GenerateRandomPlayer()
-                    GenerateRandomWords()
-                }
-
-                console.log('ready to play')
-
-                wss.clients.forEach((client) => {
-
-                    client.send(JSON.stringify({
-                        type: "start",
-                        data: {
-                            id,
-                            nickname,
-                            nicknameHistory,
-                            randomPlayerState
-                        }
-                    }));
-                });
-            };
+            onStart(message, wss, ws)
         };
         break;
         case "paint": {
