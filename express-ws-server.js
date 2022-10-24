@@ -45,39 +45,71 @@ const wss = new WebSocketServer({
     noServer: true
 });
 
+//Canvas X and Y coordinates
 const state = [];
+
+//All players
 let nicknameHistory = [];
+
+//Whos turn
 let randomPlayerState = [];
+
+//Data from json
 let jsonData = [];
+
+//Less than 3 players
 let toFewPlayers = false;
+
+//The chosen word (the word to paint)
 let chosenWordArr = [];
+
+//Is player allowed to paint (is this even used?)
 let allowedToPaint = false;
+
+//Is player allowed to guess
 let allowedToGuess;
+
+//How many players have guessed the right word
 let guessedRight = 0
 
+//get json data
 fs.readFile('motive.json', 'utf8', function (err, data) {
+    //Push json data to global variable
     jsonData.push(data)
 });
 
 
 //Generating three random words
 const GenerateRandomWords = () => {
+    //All json data
     let data = JSON.parse(jsonData);
+
+    //All json word
     let words = data.words;
 
+    //Array to push to (should this be global?)
     let arrOfWords = []
+
+    //Counter för 3 words
     for (let i = 0; i < 3; i++) {
+        //Get random words from all words in json, 3 every time
         arrOfWords[i] = words[Math.floor(Math.random() * words.length)]
     }
 
+    //All clients
     wss.clients.forEach(client => {
 
+        //There must be a random player chosen
         if (randomPlayerState[0].id !== undefined) {
+            //Send this data to the chosen client
             if (randomPlayerState[0].id === client.id) {
                 client.send(JSON.stringify({
                     type: 'getRandomWords',
+                    //The random words (only displayed for chosen client)
                     data: arrOfWords
                 }))
+                //Send this data to every other client
+                //Do I have to send anything to every other client?
             } else {
                 client.send(JSON.stringify({
                     type: 'getRandomWords',
@@ -88,28 +120,52 @@ const GenerateRandomWords = () => {
     });
 }
 
+//Generate the random player, from nicknameHistory (arr with all active clients)
 const GenerateRandomPlayer = () => {
+    //Pick random player, same player can be chosen in a row
     let randomPlayer = nicknameHistory[Math.floor(Math.random() * nicknameHistory.length)]
+
+    //Push the chosen player to global variable
     randomPlayerState.push(randomPlayer);
 
+    //All clients
     wss.clients.forEach(client => {
 
+        //If a random player has been chosen
         if (randomPlayerState) {
+            //And if YOU are the random player
             if (randomPlayerState[0].id === client.id) {
                 client.send(JSON.stringify({
                     type: 'getRandomPlayer',
                     data: randomPlayerState,
+                    //You are not allowed to guess word in chat
                     allowedToGuess: false
                 }))
+                //If you´re not the chosen player
             } else if (randomPlayerState[0].id !== client.id) {
                 client.send(JSON.stringify({
                     type: 'getRandomPlayer',
                     data: randomPlayerState,
+                    //You are allowed to guess word in chat
                     allowedToGuess: true
                 }))
             }
         }
     });
+}
+
+function onInit(ws) {
+    //Ev unnecessary?
+    const id = ws.id;
+
+    //Think this is enough?
+    ws.send(JSON.stringify({
+        type: "init",
+        payload: {
+            id,
+            state
+        }
+    }))
 }
 
 
@@ -126,6 +182,7 @@ server.on("upgrade", (req, socket, head) => {
     });
 });
 
+//Generate unique ids
 wss.getUniqueID = function () {
     let id = uuidv4();
     return id;
@@ -135,6 +192,7 @@ wss.getUniqueID = function () {
 ------------------------------- */
 wss.on("connection", (ws) => {
 
+    //Give every player an unique id
     ws.id = wss.getUniqueID();
 
     // WebSocket events (ws) for single client
@@ -142,34 +200,58 @@ wss.on("connection", (ws) => {
     // message event
     ws.on("message", (data) => {
 
+        //The message receive from client
         const message = JSON.parse(data);
 
         switch (message.type) {
+            //For every player that connects with page
             case "init": {
-                console.log("Attempting to send init data to client");
+                onInit(ws)
 
-                const id = ws.id;
-                wss.clients.forEach((client) => {
+                // function onInit() {
+                //     //Ev unnecessary?
+                //     const id = ws.id;
 
-                    if (id === client.id) {
-                        client.send(JSON.stringify({
-                            type: "init",
-                            payload: {
-                                id,
-                                state,
-                                allowedToGuess: allowedToGuess
-                            }
-                        }));
-                    }
+                //     //Think this is enough?
+                //     ws.send(JSON.stringify({
+                //         type: "init",
+                //         payload: {
+                //             id,
+                //             state
+                //         }
+                //     }))
+                // }
 
-                    client.send(JSON.stringify({
-                        type: "init",
-                        payload: {
-                            id,
-                            allowedToGuess: allowedToGuess
-                        }
-                    }));
-                });
+
+                //All clients
+                //Client on init should get id, current canvas-state and allowed to guess or not
+                //If init when game is ongoing, you will always be allowed to guess
+                //If init when game is not ongoing, you could be the random player, then not allowed to guess
+                //Data doesnt have to be send to all clients when someone inits, but when someone enters with nickname ('start')
+                //only the client who inits should get data (ws.send... id, state)
+
+                // wss.clients.forEach((client) => {
+
+                //     //Is this needed?
+                //     if (id === client.id) {
+                //         client.send(JSON.stringify({
+                //             type: "init",
+                //             payload: {
+                //                 id,
+                //                 state,
+                //                 allowedToGuess: allowedToGuess
+                //             }
+                //         }));
+                //     }
+
+                //     client.send(JSON.stringify({
+                //         type: "init",
+                //         payload: {
+                //             id,
+                //             allowedToGuess: allowedToGuess
+                //         }
+                //     }));
+                // });
             }
             break;
         case "text": {
