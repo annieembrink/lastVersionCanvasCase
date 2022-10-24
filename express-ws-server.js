@@ -336,7 +336,7 @@ wss.on("connection", (ws) => {
     // close event
     ws.on("close", () => {
 
-        //Find client who disconnected (if client has no nickname, can't be found)
+        //Find client who disconnected
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
 
         if (clientDisconnected) {
@@ -353,6 +353,7 @@ wss.on("connection", (ws) => {
 
             if ((randomPlayerState.length > 0) && (randomPlayerState[0].id === ws.id)) {
                 randomPlayerState.splice(0)
+                chosenWordArr.splice(0)
                 GenerateRandomPlayer()
                 GenerateRandomWords()
             }

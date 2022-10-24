@@ -666,3 +666,5 @@ window.onload = init;
 //ladda om sidan automatiskt om den kraschar, med intervall
 //Tydligare read-me, beskriv spelet
 //skicka repo, teams eller github, men se till att main är uppdaterad som online
+
+//om randomplayer lämnar när spelet börjar, ligger randomord kvar till nästa omngång trots att nytt ord valts
