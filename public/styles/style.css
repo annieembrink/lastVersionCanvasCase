@@ -343,15 +343,13 @@ li p {
     border-radius: 0%;
 }
 
-.small-2 .penBoxFocus {
-    transform: rotate(90deg);
-    transform: scale(0.7);
+.small-2.penBoxFocus {
+    transform: rotate(90deg) scale(0.7);
 }
-.medium-5 .penBoxFocus {
-    transform: rotate(90deg);
-    transform: scale(0.8);
+.medium-5.penBoxFocus {
+    transform: rotate(90deg) scale(0.8);
 }
-.large-9 .penBoxFocus {
+.large-9.penBoxFocus {
     transform: rotate(90deg);
 }
 

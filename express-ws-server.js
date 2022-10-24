@@ -127,9 +127,6 @@ const GenerateRandomPlayer = () => {
 
     //Push the chosen player to global variable
     randomPlayerState.push(randomPlayer);
-    console.log('randomplayer', randomPlayer)
-    console.log('nicknamehistory', nicknameHistory)
-    console.log('randomplayerstate', randomPlayerState)
 
     //All clients
     wss.clients.forEach(client => {
@@ -320,8 +317,6 @@ server.on("upgrade", (req, socket, head) => {
 
     // start websocket
     wss.handleUpgrade(req, socket, head, (ws) => {
-        console.log("let user use websocket...");
-
         wss.emit("connection", ws, req);
     });
 });
@@ -426,7 +421,6 @@ wss.on("connection", (ws) => {
 
         //Find client who disconnects
         let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
-        console.log('clientdisconnected', clientDisconnected)
 
         if (clientDisconnected) {
             //Get index of the client who disconnected 
@@ -460,7 +454,6 @@ wss.on("connection", (ws) => {
             //All clients
             wss.clients.forEach(client => {
 
-                console.log('tofewplayers', toFewPlayers)
                 client.send(JSON.stringify({
                     type: 'disconnect',
                     //Clients still actove
