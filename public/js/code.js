@@ -118,7 +118,7 @@ colors.addEventListener('click', (e) => {
 
 
 //Call this function when setnicknameinput is done
-function startGame() {
+function waitForGameToStart() {
   // get value from input nickname
   nickname = document.getElementById("nicknameInput").value;
 
@@ -397,7 +397,7 @@ function init(e) {
       }));
 
       createWaitEl()
-      startGame()
+      waitForGameToStart()
     }
   }
 
@@ -408,17 +408,18 @@ function init(e) {
         nickname: nicknameInput.value
       }));
       createWaitEl()
-      startGame()
+      waitForGameToStart()
     }
   }
   // ------------------------------------------------------
 
   //This function is called when players are enough (at least three) and game is ON
   //Change this terrible function-name...
-  function theDiv() {
+  function startGame() {
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
-    document.getElementById('setNicknameContainer').style.display = 'none'
+    document.getElementById('setNicknameContainer').style.display = 'none';
+    document.getElementById('gameBody').style.backgroundImage = "url('/img/backgroundOnGame3.png')"
 
     nicknameInput.style.display = 'none';
 
@@ -582,7 +583,7 @@ function init(e) {
         //when nickname is set
       case "start":
         //The div that shows the actual game
-        theDiv()
+        startGame()
         //The div with players
         createPlayersEl(message.data.nicknameHistory)
         //Whos turn
