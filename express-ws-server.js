@@ -168,6 +168,92 @@ function onInit(ws) {
     }))
 }
 
+//Break down into smaller functions
+function onText(message, wss, ws) {
+    //If data (the chosen word) from client is not undefined
+    if (message.data !== undefined) {
+        //Push the chosen word to global variable "chosenWordArr"
+        chosenWordArr.push(message.data)
+    }
+
+    //If the message sent in chat IS the same as the chosen word
+    if (message.msg === chosenWordArr[0]) {
+        //Add +1 to variable "guessedRight"
+        guessedRight += 1
+
+        //Find the player who guessed the right word in the nicknamehistory-array
+        let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
+
+        //Get index of that player in array
+        let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
+
+        //The second the player guessed is turned into points
+        let addPoints = parseInt(message.sec)
+
+        //And is added to 'points' in player obj
+        nicknameHistory[getIndex].points += addPoints
+    }
+
+    //The player who paints
+    let playerWhoPaints = randomPlayerState[0]
+
+    //Index of that player in array of player-objects
+    let getIndexOfPainter = nicknameHistory.indexOf(playerWhoPaints)
+
+    //The player who paints get 5 points for every player who guessed the right word
+    let pointsForPainter = 5 * guessedRight
+
+    //Add the points to painter-player obj
+    nicknameHistory[getIndexOfPainter].points += pointsForPainter;
+
+    let objBroadcast = {
+        type: "text",
+        msg: message.msg,
+        id: ws.id,
+        nickname: message.nickname,
+        chosenWordArr: chosenWordArr,
+        nicknameHistory: nicknameHistory,
+        allowedToGuess: allowedToGuess
+    }
+
+    wss.clients.forEach((client) => {
+
+        //If your not the one painting...
+        if (client.id !== randomPlayerState[0].id) {
+
+            //If your msg is not the right word, send data to writing client
+            if (message.msg !== chosenWordArr[0]) {
+                //You're still allowed to guess...
+                objBroadcast.allowedToGuess = true
+
+                //Send data
+                client.send(JSON.stringify(objBroadcast))
+            } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
+                //If your message is the right word and you're th eon who guessed
+
+                //You're not allowed to guess anymore...
+                objBroadcast.allowedToGuess = false
+
+                //Send data
+                client.send(JSON.stringify(objBroadcast))
+            } else if (message.msg === chosenWordArr[0] && client.id !== ws.id) {
+
+                //If you're not the one who guessed...
+
+                //You're still allowed to guess...
+                objBroadcast.allowedToGuess = true
+
+                //Send data
+                client.send(JSON.stringify(objBroadcast))
+            }
+        } else {
+            //If your ARE the one painting
+            objBroadcast.allowedToGuess = false
+            client.send(JSON.stringify(objBroadcast))
+        }
+    });
+}
+
 
 /* allow websockets - listener
 ------------------------------- */
@@ -207,118 +293,10 @@ wss.on("connection", (ws) => {
             //For every player that connects with page
             case "init": {
                 onInit(ws)
-
-                // function onInit() {
-                //     //Ev unnecessary?
-                //     const id = ws.id;
-
-                //     //Think this is enough?
-                //     ws.send(JSON.stringify({
-                //         type: "init",
-                //         payload: {
-                //             id,
-                //             state
-                //         }
-                //     }))
-                // }
-
-
-                //All clients
-                //Client on init should get id, current canvas-state and allowed to guess or not
-                //If init when game is ongoing, you will always be allowed to guess
-                //If init when game is not ongoing, you could be the random player, then not allowed to guess
-                //Data doesnt have to be send to all clients when someone inits, but when someone enters with nickname ('start')
-                //only the client who inits should get data (ws.send... id, state)
-
-                // wss.clients.forEach((client) => {
-
-                //     //Is this needed?
-                //     if (id === client.id) {
-                //         client.send(JSON.stringify({
-                //             type: "init",
-                //             payload: {
-                //                 id,
-                //                 state,
-                //                 allowedToGuess: allowedToGuess
-                //             }
-                //         }));
-                //     }
-
-                //     client.send(JSON.stringify({
-                //         type: "init",
-                //         payload: {
-                //             id,
-                //             allowedToGuess: allowedToGuess
-                //         }
-                //     }));
-                // });
             }
             break;
         case "text": {
-
-            if (message.data !== undefined) {
-                chosenWordArr.push(message.data)
-            }
-            if (message.msg === chosenWordArr[0]) {
-                guessedRight += 1
-
-                let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
-                let getIndex = nicknameHistory.indexOf(playerWhoGuessed)
-                let addPoints = parseInt(message.sec)
-                nicknameHistory[getIndex].points += addPoints
-            }
-
-            let playerWhoPaints = randomPlayerState[0]
-            let getIndexOfPainter = nicknameHistory.indexOf(playerWhoPaints)
-            let pointsForPainter = 5 * guessedRight
-            nicknameHistory[getIndexOfPainter].points += pointsForPainter;
-
-            let objBroadcast = {
-                type: "text",
-                msg: message.msg,
-                id: ws.id,
-                nickname: message.nickname,
-                chosenWordArr: chosenWordArr,
-                nicknameHistory: nicknameHistory,
-                allowedToGuess: allowedToGuess
-            }
-
-            wss.clients.forEach((client) => {
-
-                //If your not the one painting...
-                if (client.id !== randomPlayerState[0].id) {
-
-                    //If your msg is not the right word, send data to writing client
-                    if (message.msg !== chosenWordArr[0]) {
-                        //You're still allowed to guess...
-                        objBroadcast.allowedToGuess = true
-
-                        //Send data
-                        client.send(JSON.stringify(objBroadcast))
-                    } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
-                        //If your message is the right word and you're th eon who guessed
-
-                        //You're not allowed to guess anymore...
-                        objBroadcast.allowedToGuess = false
-
-                        //Send data
-                        client.send(JSON.stringify(objBroadcast))
-                    } else if (message.msg === chosenWordArr[0] && client.id !== ws.id) {
-
-                        //If you're not the one who guessed...
-
-                        //You're still allowed to guess...
-                        objBroadcast.allowedToGuess = true
-
-                        //Send data
-                        client.send(JSON.stringify(objBroadcast))
-                    }
-                } else {
-                    //If your ARE the one painting
-                    objBroadcast.allowedToGuess = false
-                    client.send(JSON.stringify(objBroadcast))
-                }
-            });
+            onText(message, wss, ws)
         }
         break;
         case "start": {
