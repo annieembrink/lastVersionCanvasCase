@@ -343,6 +343,67 @@ function onTimer(message, wss, ws) {
     });
 }
 
+function onClear(message, wss, ws) {
+    let deletedItems = state.splice(0, state.length)
+
+    if (ws.id === randomPlayerState[0].id) {
+        wss.clients.forEach((client) => {
+
+            client.send(JSON.stringify({
+                type: 'clearCanvas',
+                data: message.data
+            }))
+        });
+    }
+}
+
+function onDisconnect(wss, ws) {
+    //Find client who disconnects
+    let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
+
+    if (clientDisconnected) {
+        //Get index of the client who disconnected 
+        let getIndex = nicknameHistory.indexOf(clientDisconnected)
+
+        //Remove the client who disconnects from array
+        nicknameHistory.splice(getIndex, 1)
+
+        //The array nicknamehistory must be at least 3 players
+        if (nicknameHistory.length < 3) {
+            //If not, tofewplayers
+            toFewPlayers = true;
+        }
+
+        //If the randomplayer isnt 0 AND the randomplayer is the disconnected client
+        if ((randomPlayerState.length > 0) && (randomPlayerState[0].id === ws.id)) {
+            //randomplayer is none
+            randomPlayerState.splice(0)
+            //chosenword is none
+            chosenWordArr.splice(0)
+
+            //If more than two players are active
+            if (nicknameHistory.length > 2) {
+                //Generate new random player
+                GenerateRandomPlayer()
+                //Generate new random words
+                GenerateRandomWords()
+            }
+        }
+
+        //All clients
+        wss.clients.forEach(client => {
+
+            client.send(JSON.stringify({
+                type: 'disconnect',
+                //Clients still actove
+                active: nicknameHistory,
+                //to few players, true or false
+                toFewPlayers: toFewPlayers,
+            }))
+        });
+    };
+}
+
 /* allow websockets - listener
 ------------------------------- */
 // upgrade event - websocket communication
@@ -391,28 +452,19 @@ wss.on("connection", (ws) => {
             onStart(message, wss, ws)
         };
         break;
+        //When painting
         case "paint": {
             onPaint(message, wss)
         }
         break;
+        //Timer events
         case "timerStarted": {
             onTimer(message, wss, ws)
         }
         break;
+        //When canvas is cleared
         case "clearCanvas": {
-
-            let deletedItems = state.splice(0, state.length)
-
-            if (ws.id === randomPlayerState[0].id) {
-                wss.clients.forEach((client) => {
-
-                    client.send(JSON.stringify({
-                        type: 'clearCanvas',
-                        data: message.data
-                    }))
-                });
-            }
-
+            onClear(message, wss, ws)
         }
         break;
         default: {
@@ -424,51 +476,7 @@ wss.on("connection", (ws) => {
 
     // close event
     ws.on("close", () => {
-
-        //Find client who disconnects
-        let clientDisconnected = nicknameHistory.find(player => player.id === ws.id);
-
-        if (clientDisconnected) {
-            //Get index of the client who disconnected 
-            let getIndex = nicknameHistory.indexOf(clientDisconnected)
-
-            //Remove the client who disconnects from array
-            nicknameHistory.splice(getIndex, 1)
-
-            //The array nicknamehistory must be at least 3 players
-            if (nicknameHistory.length < 3) {
-                //If not, tofewplayers
-                toFewPlayers = true;
-            }
-
-            //If the randomplayer isnt 0 AND the randomplayer is the disconnected client
-            if ((randomPlayerState.length > 0) && (randomPlayerState[0].id === ws.id)) {
-                //randomplayer is none
-                randomPlayerState.splice(0)
-                //chosenword is none
-                chosenWordArr.splice(0)
-
-                //If more than two players are active
-                if (nicknameHistory.length > 2) {
-                    //Generate new random player
-                    GenerateRandomPlayer()
-                    //Generate new random words
-                    GenerateRandomWords()
-                }
-            }
-
-            //All clients
-            wss.clients.forEach(client => {
-
-                client.send(JSON.stringify({
-                    type: 'disconnect',
-                    //Clients still actove
-                    active: nicknameHistory,
-                    //to few players, true or false
-                    toFewPlayers: toFewPlayers,
-                }))
-            });
-        };
+        onDisconnect(wss, ws)
     });
 });
 
