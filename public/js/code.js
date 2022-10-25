@@ -23,7 +23,7 @@ let isPainting = false;
 //Few global variables
 let nickname;
 let id;
-let chosenWordArr = [];
+// let chosenWordArr = [];
 
 function init(e) {
   //Fetch json
@@ -270,7 +270,7 @@ function init(e) {
     // access content
     let newMsg = template.content;
 
-    //If the message is the same as the right wors
+    //If the message is the same as the right word
     if (obj.msg === obj.chosenWordArr[0]) {
 
       //Dont type the word but type the following
@@ -326,12 +326,6 @@ function init(e) {
 
           //Stop timer
           stop()
-
-          //Send info to server that timer is stopped
-          websocket.send(JSON.stringify({
-            type: 'timerStarted',
-            data: false
-          }));
         }
       }, 1000);
     };
@@ -341,6 +335,12 @@ function init(e) {
   function stop() {
     clearInterval(check);
     check = null;
+
+    //Send info to server that timer is stopped
+    websocket.send(JSON.stringify({
+      type: 'timerStarted',
+      data: false
+    }));
   }
 
   //Eventlistener for the words to choose from
@@ -543,23 +543,22 @@ function init(e) {
         break;
         //When timer is started
       case "timerStarted":
+        console.log(message)
+
         //When started, count down on dom
         document.getElementById('timer').innerText = `${message.time-1} seconds left`;
-        //saving the chosen word
-        let test = message.chosenWordArr[0]
-        //And push it to global variable
-        chosenWordArr.push(test)
 
         //When timer is done
-        if (message.time === undefined) {
+        if ((message.time === undefined) || (!message.timerOn)) {
+          console.log(message.chosenWordArr[0])
           //Tell players the right word, using the global variable we declared above
-          document.getElementById("timer").innerHTML = `The right word was "${chosenWordArr[0]}"`;
+          document.getElementById("timer").innerHTML = `The right word was "${message.chosenWordArr[0]}"`;
           //Recreate the players el, with new info about points
           createPlayersEl(message.nicknameHistory)
           //Clear the canvas
           ctx.clearRect(0, 0, canvas.width, canvas.height)
           //Reset the global variable chosenwordarr
-          chosenWordArr.splice(0);
+          // chosenWordArr.splice(0);
         }
         break;
         //When random words are generated
@@ -579,6 +578,12 @@ function init(e) {
         break;
         //When textmessages are sent
       case "text":
+        //If all players have guessed the right word
+        if (message.stopTimer) {
+          //Stop the timer
+          stop()
+        }
+
         //Using allowedtoguess again, from server
         if (!message.allowedToGuess) {
           inputText.disabled = true;

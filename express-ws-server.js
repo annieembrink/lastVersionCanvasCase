@@ -72,6 +72,9 @@ let allowedToGuess;
 //How many players have guessed the right word
 let guessedRight = 0
 
+//Stop timer, true or false
+let stopTimer = false;
+
 //get json data
 fs.readFile('motive.json', 'utf8', function (err, data) {
     //Push json data to global variable
@@ -81,6 +84,7 @@ fs.readFile('motive.json', 'utf8', function (err, data) {
 
 //Generating three random words
 const GenerateRandomWords = () => {
+
     //All json data
     let data = JSON.parse(jsonData);
 
@@ -169,16 +173,21 @@ function onInit(ws) {
 }
 //Break down into smaller functions
 function onText(message, wss, ws) {
+
+
     //If data (the chosen word) from client is not undefined
     if (message.data !== undefined) {
+        //Empty arr with the previous word
+        chosenWordArr.splice(0)
         //Push the chosen word to global variable "chosenWordArr"
         chosenWordArr.push(message.data)
     }
 
     //If the message sent in chat IS the same as the chosen word
     if (message.msg === chosenWordArr[0]) {
+        console.log('the chosen word!!!')
         //Add +1 to variable "guessedRight"
-        guessedRight += 1
+        guessedRight++
 
         //Find the player who guessed the right word in the nicknamehistory-array
         let playerWhoGuessed = nicknameHistory.find(player => player.id === ws.id);
@@ -191,19 +200,16 @@ function onText(message, wss, ws) {
 
         //And is added to 'points' in player obj
         nicknameHistory[getIndex].points += addPoints
+
+        //The player who paints
+        let playerWhoPaints = randomPlayerState[0]
+
+        //Index of that player in array of player-objects
+        let getIndexOfPainter = nicknameHistory.indexOf(playerWhoPaints)
+
+        //Add the points to painter-player obj
+        nicknameHistory[getIndexOfPainter].points += 5;
     }
-
-    //The player who paints
-    let playerWhoPaints = randomPlayerState[0]
-
-    //Index of that player in array of player-objects
-    let getIndexOfPainter = nicknameHistory.indexOf(playerWhoPaints)
-
-    //The player who paints get 5 points for every player who guessed the right word
-    let pointsForPainter = 5 * guessedRight
-
-    //Add the points to painter-player obj
-    nicknameHistory[getIndexOfPainter].points += pointsForPainter;
 
     //What to send to clients
     let objBroadcast = {
@@ -219,7 +225,14 @@ function onText(message, wss, ws) {
         //All the current players (why send this?)
         nicknameHistory: nicknameHistory,
         //This is determined in code below
-        allowedToGuess: allowedToGuess
+        allowedToGuess: allowedToGuess,
+        //Stop timer if all players guessed the right word
+        stopTimer: stopTimer
+    }
+
+    if ((nicknameHistory.length - 1) === guessedRight) {
+        console.log('all people guessed right')
+        objBroadcast.stopTimer = true;
     }
 
     //All clients
@@ -318,11 +331,11 @@ function onPaint(message, wss) {
 }
 
 function onTimer(message, wss, ws) {
-    guessedRight = 0
 
     if (!message.data) {
+        guessedRight = 0
         randomPlayerState.splice(0)
-        chosenWordArr.splice(0)
+        // chosenWordArr.splice(0)
         GenerateRandomPlayer()
         GenerateRandomWords()
         let deletedItems = state.splice(0, state.length)
