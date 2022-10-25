@@ -75,6 +75,9 @@ let guessedRight = 0
 //Stop timer, true or false
 let stopTimer = false;
 
+//Painter left
+let painterLeft = false;
+
 //get json data
 fs.readFile('motive.json', 'utf8', function (err, data) {
     //Push json data to global variable
@@ -402,6 +405,8 @@ function onDisconnect(wss, ws) {
                 //Generate new random words
                 GenerateRandomWords()
             }
+             //Painter left
+             painterLeft = true; 
         }
 
         //All clients
@@ -409,10 +414,12 @@ function onDisconnect(wss, ws) {
 
             client.send(JSON.stringify({
                 type: 'disconnect',
-                //Clients still actove
+                //Clients still active
                 active: nicknameHistory,
                 //to few players, true or false
                 toFewPlayers: toFewPlayers,
+                //Painter left
+                painterLeft: painterLeft
             }))
         });
     };

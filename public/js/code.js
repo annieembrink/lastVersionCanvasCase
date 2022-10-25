@@ -62,7 +62,6 @@ function init(e) {
       function getImg() {
         let img = document.createElement('img')
         img.src = 'img/smallerbgimg.png'
-        console.log(img)
       }
       getImg()
 
@@ -613,6 +612,9 @@ function init(e) {
         break;
         //When client is disconnected
       case "disconnect":
+        if (message.painterLeft) {
+          document.getElementById('timer').innerText = "Wait for game to begin...";
+        }
         toFewPlayers(message.toFewPlayers)
         createPlayersEl(message.active)
         break;
@@ -671,7 +673,6 @@ window.onload = init;
 //rita med linjer inte prickar
 //använder jag ens allow to paint?
 //städa kod
-//Om alla gissat rätt, avsluta timern och slumpa ny spelare
 
 //snyggare text i player-div
 //snyggare chat
