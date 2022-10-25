@@ -615,6 +615,9 @@ function init(e) {
         if (message.painterLeft) {
           document.getElementById('timer').innerText = "Wait for game to begin...";
         }
+        if (message.toFewPlayers) {
+          document.getElementById('waiting').textContent = 'Waiting for more players...';
+        }
         toFewPlayers(message.toFewPlayers)
         createPlayersEl(message.active)
         break;
