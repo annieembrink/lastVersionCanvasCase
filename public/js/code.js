@@ -165,7 +165,8 @@ function init(e) {
     const colors = [
       "#2E933C",
       "#F75C03",
-      "#F1C40F"
+      "#F1C40F",
+      "#A9E4EF"
     ]
 
     //Rabbit-images for player
@@ -189,7 +190,7 @@ function init(e) {
       const onePlayerDiv = document.createElement('div');
 
       //For colors, if i is 4, start from the beginning
-      if (i === 3) {
+      if (i === 4) {
         i = 0
       }
 
@@ -685,6 +686,8 @@ window.onload = init;
 //wrap functions on client side
 //sortera efter vem som har flest poäng
 //high score
-//Unactive players get kicked out
+//Unactive players get kicked out. Check message activity
 //should colors be carrots?
-//Head carrot moves when name is set
+//onclose, button to try again/reload?
+
+//border and crarot on sorry server down

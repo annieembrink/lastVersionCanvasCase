@@ -380,9 +380,8 @@ li p {
 }
 
 .serverDown {
-    /* background-image: url("/img/serverdown2.png"); */
-    /* background-color: #267A31; */
-    font-size: 2rem;
+    font-family: 'Amatic SC', cursive !important;
+    font-size: 4rem;
     font-weight: bold;
     color: #F75C03;
     text-shadow: 1px 1px #242423;
