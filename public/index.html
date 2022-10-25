@@ -11,62 +11,63 @@
 
 </head>
 
-<body id="gameBody">
+<body>
+    <div id="gameBody">
 
-    <header>
-        <h1 id="head">Carrot painter</h1>
-        <img id="carrotImg" src="img/carrot-darker.png" alt="" width="60px" height="60px">
-    </header>
+        <header>
+            <h1 id="head">Carrot painter</h1>
+            <img id="carrotImg" src="img/carrot-darker.png" alt="" width="60px" height="60px">
+        </header>
 
-    <div id="setNicknameContainer">
-        <input name="nickname" type="text" id="nicknameInput" placeholder="Enter nickname">
-        <button type="submit" id="setNickname">Let's play!</button>
-    </div>
-
-    <div id="theGameContainer">
-        <p id="whosTurn"></p>
-
-        <div class="forWords">
-            <div id="wordDiv"></div>
-            <div id="chosenWord"></div>
-            <div id="timer">Wait for game to begin...</div>
+        <div id="setNicknameContainer">
+            <input name="nickname" type="text" id="nicknameInput" placeholder="Enter nickname">
+            <button type="submit" id="setNickname">Let's play!</button>
         </div>
 
-        <canvas id="canvas"></canvas>
+        <div id="theGameContainer">
+            <p id="whosTurn"></p>
 
-        <div id="colorPen">
-            <div id="colors"></div>
-            <div id="penContainer"></div>
-        </div>
-        <button id="clearBtn">Clear canvas</button>
-
-        <p id="yourGuess">Your guess here please!</p>
-        <div id="chatDiv">
-
-            <!-- DOM chat -->
-            <ul id="conversation"></ul>
-
-            <!-- use template to set html structure for a message -->
-            <template id="message">
-
-                <li>
-                    <span></span>
-                    <p></p>
-                </li>
-            </template>
-
-            <!-- input nickname -->
-            <div class="inputContainer">
-                <p id="theChosenNickname"></p>
-                <input type="text" id="inputText" placeholder="Write something...">
+            <div class="forWords">
+                <div id="wordDiv"></div>
+                <div id="chosenWord"></div>
+                <div id="timer">Wait for game to begin...</div>
             </div>
+
+            <canvas id="canvas"></canvas>
+
+            <div id="colorPen">
+                <div id="colors"></div>
+                <div id="penContainer"></div>
+            </div>
+            <button id="clearBtn">Clear canvas</button>
+
+            <p id="yourGuess">Your guess here please!</p>
+            <div id="chatDiv">
+
+                <!-- DOM chat -->
+                <ul id="conversation"></ul>
+
+                <!-- use template to set html structure for a message -->
+                <template id="message">
+
+                    <li>
+                        <span></span>
+                        <p></p>
+                    </li>
+                </template>
+
+                <!-- input nickname -->
+                <div class="inputContainer">
+                    <p id="theChosenNickname"></p>
+                    <input type="text" id="inputText" placeholder="Write something...">
+                </div>
+            </div>
+            <div id="players"></div>
         </div>
-        <div id="players"></div>
+        <!-- SCRIPT -->
+
+        <script src="js/code.js"></script>
     </div>
-    <!-- SCRIPT -->
-
-    <script src="js/code.js"></script>
-
 
 </body>
 

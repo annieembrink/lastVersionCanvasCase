@@ -25,218 +25,226 @@ let nickname;
 let id;
 let chosenWordArr = [];
 
-//Fetch json
-fetch('motive.json')
-  .then((response) => response.json())
-  .then((data) => {
+function init(e) {
+  //Fetch json
+  fetch('motive.json')
+    .then((response) => response.json())
+    .then((data) => {
 
-    //Generate colors
-    function generateColors() {
-      data.colors.map(color => {
-        let pTag = document.createElement('p');
-        pTag.classList = "theColorTags"
-        pTag.id = color;
-        pTag.style.backgroundColor = color;
-        colors.appendChild(pTag);
-      })
-    }
+      //Generate colors
+      function generateColors() {
+        data.colors.map(color => {
+          let pTag = document.createElement('p');
+          pTag.classList = "theColorTags"
+          pTag.id = color;
+          pTag.style.backgroundColor = color;
+          colors.appendChild(pTag);
+        })
+      }
 
-    //call function
-    generateColors()
+      //call function
+      generateColors()
 
-    //Generate pensize
-    function generatePen() {
-      data.pen.map(onePen => {
-        let imgTag = document.createElement('img');
-        imgTag.src = "img/carrot-darker.png"
-        imgTag.classList = `pen ${onePen}`
-        imgTag.id = onePen.slice(-1);
-        penContainer.appendChild(imgTag);
-      })
-    }
+      //Generate pensize
+      function generatePen() {
+        data.pen.map(onePen => {
+          let imgTag = document.createElement('img');
+          imgTag.src = "img/carrot-darker.png"
+          imgTag.classList = `pen ${onePen}`
+          imgTag.id = onePen.slice(-1);
+          penContainer.appendChild(imgTag);
+        })
+      }
 
-    //Call function
-    generatePen()
+      //Call function
+      generatePen()
 
-    //The following code seems a bit complicated, but I couldn´t make it work in any other way
-    //Why is pen-listener inside fetch, and color-listener outside?
-    //Wrap in function...
-    //Connect with pen-element
-    let pTags = document.getElementsByClassName('pen')
+      function getImg() {
+        let img = document.createElement('img')
+        img.src = 'img/smallerbgimg.png'
+        console.log(img)
+      }
+      getImg()
 
-    //For every pen size...
+      //The following code seems a bit complicated, but I couldn´t make it work in any other way
+      //Why is pen-listener inside fetch, and color-listener outside?
+      //Wrap in function...
+      //Connect with pen-element
+      let pTags = document.getElementsByClassName('pen')
+
+      //For every pen size...
+      for (let i = 0; i < pTags.length; i++) {
+        const element = pTags[i];
+
+        //... add event listener
+        element.addEventListener('click', (e) => {
+          objWithCurrentPen.pen = e.target.id
+
+          for (let i = 0; i < pTags.length; i++) {
+            const element = pTags[i];
+
+            //Every time a pen is clicked, check if it has classlist and remove it
+            if (element.classList.contains("penBoxFocus")) {
+              element.classList.remove("penBoxFocus");
+            };
+          };
+
+          //The add classlist for clicked element
+          e.target.classList.add('penBoxFocus');
+
+        });
+      };
+    })
+    .catch(err => console.log(err))
+
+  //Outside fetch
+
+  //Chosen pen size
+  let objWithCurrentPen = {
+    pen: '2'
+  }
+
+  //Chosen color
+  let objWithCurrentColor = {
+    color: 'black'
+  }
+
+  //Eventlistener for colors
+  colors.addEventListener('click', (e) => {
+    objWithCurrentColor.color = e.target.id;
+
+    let pTags = colors.querySelectorAll('p');
+
     for (let i = 0; i < pTags.length; i++) {
       const element = pTags[i];
-
-      //... add event listener
-      element.addEventListener('click', (e) => {
-        objWithCurrentPen.pen = e.target.id
-
-        for (let i = 0; i < pTags.length; i++) {
-          const element = pTags[i];
-
-          //Every time a pen is clicked, check if it has classlist and remove it
-          if (element.classList.contains("penBoxFocus")) {
-            element.classList.remove("penBoxFocus");
-          };
-        };
-
-        //The add classlist for clicked element
-        e.target.classList.add('penBoxFocus');
-
-      });
-    };
+      if (element.classList.contains('colorBoxFocus')) {
+        element.classList.remove('colorBoxFocus')
+      }
+    }
+    e.target.classList.add('colorBoxFocus');
   })
-  .catch(err => console.log(err))
 
-//Outside fetch
 
-//Chosen pen size
-let objWithCurrentPen = {
-  pen: '2'
-}
+  //Call this function when setnicknameinput is done
+  function waitForGameToStart() {
+    // get value from input nickname
+    nickname = document.getElementById("nicknameInput").value;
 
-//Chosen color
-let objWithCurrentColor = {
-  color: 'black'
-}
+    // if set - disable input nickname
+    document.getElementById("nicknameInput").setAttribute("disabled", true);
+    document.getElementById("setNickname").setAttribute("disabled", true);
 
-//Eventlistener for colors
-colors.addEventListener('click', (e) => {
-  objWithCurrentColor.color = e.target.id;
+    document.getElementById('setNicknameContainer').style.display = 'none'
 
-  let pTags = colors.querySelectorAll('p');
+    document.getElementById('nicknameInput').style.margin = '0'
+    document.getElementById('head').innerText = nickname
 
-  for (let i = 0; i < pTags.length; i++) {
-    const element = pTags[i];
-    if (element.classList.contains('colorBoxFocus')) {
-      element.classList.remove('colorBoxFocus')
+    // focus input field
+    document.getElementById("inputText").focus();
+  }
+
+  //Where is this function called?
+  function parseJSON(data) {
+    // try to parse json
+    try {
+      let obj = JSON.parse(data);
+
+      return obj;
+    } catch (error) {
+      // log to file in real application....
+      return {
+        error: "An error receving data...expected json format"
+      };
     }
   }
-  e.target.classList.add('colorBoxFocus');
-})
 
+  //Create the div with active players
+  function createPlayersEl(obj) {
 
-//Call this function when setnicknameinput is done
-function waitForGameToStart() {
-  // get value from input nickname
-  nickname = document.getElementById("nicknameInput").value;
+    //Backgroundcolors for players
+    const colors = [
+      "#2E933C",
+      "#F75C03",
+      "#F1C40F"
+    ]
 
-  // if set - disable input nickname
-  document.getElementById("nicknameInput").setAttribute("disabled", true);
-  document.getElementById("setNickname").setAttribute("disabled", true);
+    //Rabbit-images for player
+    const images = [
+      "img/rabbit.png",
+      "img/rabbit2.png",
+      "img/rabbit3.png"
+    ]
 
-  document.getElementById('setNicknameContainer').style.display = 'none'
+    //Every time div is created, start by emptying it
+    playerDiv.innerHTML = '';
 
-  document.getElementById('nicknameInput').style.margin = '0'
-  document.getElementById('head').innerText = nickname
+    //To iterate over colors and images
+    let i = 0
+    a = 0
 
-  // focus input field
-  document.getElementById("inputText").focus();
-}
+    //For every object with info about player (nickname, id etc)
+    obj.forEach(player => {
 
-//Where is this function called?
-function parseJSON(data) {
-  // try to parse json
-  try {
-    let obj = JSON.parse(data);
+      //Create a div
+      const onePlayerDiv = document.createElement('div');
 
-    return obj;
-  } catch (error) {
-    // log to file in real application....
-    return {
-      error: "An error receving data...expected json format"
-    };
+      //For colors, if i is 4, start from the beginning
+      if (i === 3) {
+        i = 0
+      }
+
+      //Backgroundcolor for eveyr player div
+      onePlayerDiv.style.backgroundColor = colors[i++]
+
+      //Append div to parentdiv
+      playerDiv.appendChild(onePlayerDiv)
+
+      //Every div contains a p-tag
+      const playerEl = document.createElement('p')
+
+      //With nickname and player points
+      playerEl.innerText = `${player.nickname}: ${player.points} points`
+
+      //Append it to div
+      onePlayerDiv.appendChild(playerEl)
+
+      //Iterate over images
+      if (a === 3) {
+        a = 0
+      }
+
+      //Create img-element
+      const playerImg = document.createElement('img');
+
+      //Source from array of images
+      playerImg.src = images[a++];
+
+      //Some img-styling
+      playerImg.style.width = '30px';
+      playerImg.style.height = '30px';
+      playerImg.style.marginRight = '10px';
+
+      //Append it to div
+      onePlayerDiv.appendChild(playerImg)
+
+      //And some more styling
+      onePlayerDiv.style.display = 'flex'
+      onePlayerDiv.style.justifyContent = 'space-between'
+      onePlayerDiv.style.alignItems = 'center'
+    })
   }
-}
 
-//Create the div with active players
-function createPlayersEl(obj) {
-
-  //Backgroundcolors for players
-  const colors = [
-    "#2E933C",
-    "#F75C03",
-    "#F1C40F"  ]
-
-  //Rabbit-images for player
-  const images = [
-    "img/rabbit.png",
-    "img/rabbit2.png",
-    "img/rabbit3.png"
-  ]
-
-  //Every time div is created, start by emptying it
-  playerDiv.innerHTML = '';
-
-  //To iterate over colors and images
-  let i = 0
-  a = 0
-
-  //For every object with info about player (nickname, id etc)
-  obj.forEach(player => {
-
-    //Create a div
-    const onePlayerDiv = document.createElement('div');
-
-    //For colors, if i is 4, start from the beginning
-    if (i === 3) {
-      i = 0
+  //If to few players, dont show gamecontainer yet
+  function toFewPlayers(bool) {
+    if (bool) {
+      document.getElementById('theGameContainer').style.display = 'none';
     }
-
-    //Backgroundcolor for eveyr player div
-    onePlayerDiv.style.backgroundColor = colors[i++]
-
-    //Append div to parentdiv
-    playerDiv.appendChild(onePlayerDiv)
-
-    //Every div contains a p-tag
-    const playerEl = document.createElement('p')
-
-    //With nickname and player points
-    playerEl.innerText = `${player.nickname}: ${player.points} points`
-
-    //Append it to div
-    onePlayerDiv.appendChild(playerEl)
-
-    //Iterate over images
-    if (a === 3) {
-      a = 0
-    }
-
-    //Create img-element
-    const playerImg = document.createElement('img');
-
-    //Source from array of images
-    playerImg.src = images[a++];
-
-    //Some img-styling
-    playerImg.style.width = '30px';
-    playerImg.style.height = '30px';
-    playerImg.style.marginRight = '10px';
-
-    //Append it to div
-    onePlayerDiv.appendChild(playerImg)
-
-    //And some more styling
-    onePlayerDiv.style.display = 'flex'
-    onePlayerDiv.style.justifyContent = 'space-between'
-    onePlayerDiv.style.alignItems = 'center'
-  })
-}
-
-//If to few players, dont show gamecontainer yet
-function toFewPlayers(bool) {
-  if (bool) {
-    document.getElementById('theGameContainer').style.display = 'none';
   }
-}
 
-//Fixing with url. Use when hosting on render.com
-// const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 
-//The great big init-function (should all code be inside of this?)
-function init(e) {
+  //----------------------------------------------------------------------------------
+  //Fixing with url. Use when hosting on render.com
+  // const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 
   //Use this when using localhost
   const websocket = new WebSocket("ws://localhost:80");
@@ -245,6 +253,7 @@ function init(e) {
   // const baseURL = trimSlashes(window.location.href.split("//")[1]);
   // const protocol = 'wss';
   // const websocket = new WebSocket(`${protocol}://${baseURL}`);
+  //-------------------------------------------------------------------------------------
 
   //For scrolling in conversation
   function scrollToBottom() {
@@ -419,7 +428,7 @@ function init(e) {
     document.getElementById('waiting').innerHTML = '';
     document.getElementById('theGameContainer').style.display = 'grid';
     document.getElementById('setNicknameContainer').style.display = 'none';
-    document.getElementById('gameBody').style.backgroundImage = "url('/img/backgroundOnGame3.png')"
+    document.body.style.backgroundImage = "url('/img/backgroundOnGame3.png')"
 
     nicknameInput.style.display = 'none';
 
@@ -611,15 +620,18 @@ function init(e) {
     }
   }
 
+  function serverDown() {
+    gameBody.innerHTML = '';
+    gameBody.classList.add('serverDown');
+    gameBody.innerText = 'Sorry, something went wrong, try again'
+    document.body.style.backgroundImage = "url('img/smallerbgimg.png')";
+    document.body.style.backgroundColor = "#267A31";
+  }
+
   // listen on close event (server)
   websocket.addEventListener("close", (e) => {
-    gameBody.classList.add('serverDown')
-    gameBody.innerHTML = '';
-    gameBody.style.backgroundImage = "url('/img/backgroundOnGame.png')"; 
-    gameBody.innerText = 'Sorry, something went wrong, try again'
-
-    console.log(gameBody)
-
+    e.preventDefault()
+    serverDown()
   });
 
   //Connecting events with functions
@@ -640,6 +652,8 @@ function init(e) {
     }));
   })
 }
+
+
 
 //Every time window is opened, load init-function
 window.onload = init;

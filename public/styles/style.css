@@ -7,7 +7,15 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* margin: 10px; */
+}
+
+body {
+    background-image: url("/img/sunnyday.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom right 10%;
+    background-color: #2E933C;
+
 }
 
 #gameBody {
@@ -15,21 +23,8 @@
     display: flex;
     flex-direction: column;
     margin: 10px;
-
-    background-color: lightgrey;
-    background-color: #2E933C;
-    /* background-color: #FFE0B5; */
-
-    background-image: url("/img/sunnyday.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: bottom right 10%;
-
-
     font-family: 'Poppins', sans-serif;
-
     height: 700px;
-
 }
 
 header {
@@ -71,9 +66,11 @@ header img {
 
 #setNicknameContainer {
     display: flex;
-    margin: auto;
-    justify-content: space-between;
-    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8%;
+    /* justify-content: space-between; */
+    /* align-items: center; */
 }
 
 #setNicknameContainer img {
@@ -383,11 +380,12 @@ li p {
 }
 
 .serverDown {
-    /* background-image: url("/img/serverdown.png"); */
-    background-color: #267A31;
+    /* background-image: url("/img/serverdown2.png"); */
+    /* background-color: #267A31; */
     font-size: 2rem;
     font-weight: bold;
     color: #F75C03;
     text-shadow: 1px 1px #242423;
     padding: 20px;
 }
+
