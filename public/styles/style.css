@@ -155,12 +155,26 @@ header img {
 
 }
 
+/* The animation code */
+@keyframes example {
+    from {font-size: 2rem;}
+    to {font-size: 3rem;}
+}
+  
+
 #waiting {
     color: #fffefb;
     padding: 10px;
-    font-family: 'Poppins', sans-serif;
+    /* font-family: 'Poppins', sans-serif; */
+    font-family: 'Amatic SC', cursive;
     margin: auto;
     margin-bottom: 40%;
+    font-size: 2rem;
+
+    animation-name: example;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 .forWords {

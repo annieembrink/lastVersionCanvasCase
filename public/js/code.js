@@ -664,18 +664,14 @@ function init(e) {
   })
 }
 
-
-
 //Every time window is opened, load init-function
 window.onload = init;
 
 //funktionalitet att lägga till ------------------
 
 //timer för att välja ord, om inte valt inom 60 sek, slumpa fram ord att rita
-//Timern ska nollas om randomplayer sticker mitt i 
 //rita med linjer inte prickar
 //använder jag ens allow to paint?
-//städa kod
 
 //snyggare text i player-div
 //snyggare chat
@@ -683,7 +679,6 @@ window.onload = init;
 //Canvas lite blurrad/dold när man inte får rita
 //Canvas on different screens
 //synas vilken penna som är förvald, och färg
-//Om folk lämnar, bara två kvar, waiting-meddelande
 //Main och online ska vara likadana förutom port etc
 //ladda om sidan automatiskt om den kraschar, med intervall
 //Tydligare read-me, beskriv spelet
@@ -699,4 +694,4 @@ window.onload = init;
 //should colors be carrots?
 //onclose, button to try again/reload?
 
-//border and crarot on sorry server down
+//border and carrot on sorry server down
