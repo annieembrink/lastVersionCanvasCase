@@ -19,8 +19,8 @@ import fs from 'fs';
 /* application variables
 ------------------------------- */
 // set port number >>> make sure client javascript uses same WebSocket port!
-const port = 80;
-// const port = 3000;
+// const port = 80;
+const port = 3000;
 
 /* express
 ------------------------------- */

@@ -244,15 +244,15 @@ function init(e) {
 
   //----------------------------------------------------------------------------------
   //Fixing with url. Use when hosting on render.com
-  // const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+  const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 
   //Use this when using localhost
-  const websocket = new WebSocket("ws://localhost:80");
+  // const websocket = new WebSocket("ws://localhost:80");
 
   //Use when hosting on render.com
-  // const baseURL = trimSlashes(window.location.href.split("//")[1]);
-  // const protocol = 'wss';
-  // const websocket = new WebSocket(`${protocol}://${baseURL}`);
+  const baseURL = trimSlashes(window.location.href.split("//")[1]);
+  const protocol = 'wss';
+  const websocket = new WebSocket(`${protocol}://${baseURL}`);
   //-------------------------------------------------------------------------------------
 
   //For scrolling in conversation
