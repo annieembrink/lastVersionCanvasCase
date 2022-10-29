@@ -446,7 +446,7 @@ function init(e) {
       // chat message object
       let objMessage = {
         type: "text",
-        msg: inputText.value,
+        msg: inputText.value.toLowerCase(),
         id: id,
         nickname: nickname,
         sec: document.getElementById('timer').innerHTML.slice(0, 2),

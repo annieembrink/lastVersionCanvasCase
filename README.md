@@ -14,7 +14,7 @@ HOW TO USE THE GAME
 1. You have to be at least 3 players to be able to play the game
 2. One of the players will randomly be chosen as "painter"
 3. The painter choses a word and try to paint it on the canvas as good as possible (because the painter gets points for every player that guesses the right word)
-4. The other players guess the right word in the chat
+4. The other players guess the right word in the chat and get more points the sooner they guess
 5. When the timer (30sec) is out a new player will randomly be chosen to paint
 6. The painter is not allowed to write in the chat (so they can´t get points because the know the word)
 7. If someone has guessed the right word, they can´t write in the chat (so they can´t get points multiple times for the same word)
