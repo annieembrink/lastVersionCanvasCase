@@ -270,7 +270,7 @@ function init(e) {
     let newMsg = template.content;
 
     //If the message is the same as the right word
-    if (obj.msg === obj.chosenWordArr[0]) {
+    if (obj.msg.toLowerCase() === obj.chosenWordArr[0]) {
 
       //Dont type the word but type the following
       obj.msg = `guessed the right word!`
@@ -695,3 +695,7 @@ window.onload = init;
 //onclose, button to try again/reload?
 
 //border and carrot on sorry server down
+
+//skriva ordte med stora bokstäver ska bli rätt
+//inte slumpa samma spelare två gånger i rad
+//ritfunktionen

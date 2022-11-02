@@ -177,6 +177,7 @@ function onInit(ws) {
 //Break down into smaller functions
 function onText(message, wss, ws) {
 
+    console.log(message.msg)
 
     //If data (the chosen word) from client is not undefined
     if (message.data !== undefined) {
