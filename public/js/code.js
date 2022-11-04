@@ -295,7 +295,7 @@ function init(e) {
     if (check == null) {
 
       //30 seconds to paint
-      var cnt = 30;
+      var cnt = 10;
 
       check = setInterval(function () {
 
@@ -325,6 +325,12 @@ function init(e) {
 
           //Stop timer
           stop()
+
+          //Send info to server that timer is stopped
+          websocket.send(JSON.stringify({
+            type: 'timerStarted',
+            data: false
+          }));
         }
       }, 1000);
     };
@@ -334,12 +340,6 @@ function init(e) {
   function stop() {
     clearInterval(check);
     check = null;
-
-    //Send info to server that timer is stopped
-    websocket.send(JSON.stringify({
-      type: 'timerStarted',
-      data: false
-    }));
   }
 
   //Eventlistener for the words to choose from
@@ -578,10 +578,10 @@ function init(e) {
         //When textmessages are sent
       case "text":
         //If all players have guessed the right word
-        if (message.stopTimer) {
-          //Stop the timer
-          stop()
-        }
+        // if (message.stopTimer) {
+        //   //Stop the timer
+        //   stop()
+        // }
 
         //Using allowedtoguess again, from server
         if (!message.allowedToGuess) {

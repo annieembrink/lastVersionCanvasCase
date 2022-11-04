@@ -129,36 +129,46 @@ const GenerateRandomWords = () => {
 
 //Generate the random player, from nicknameHistory (arr with all active clients)
 const GenerateRandomPlayer = () => {
+
+    console.log('former random player', randomPlayerState[0])
+
     //Pick random player, same player can be chosen in a row
+
     let randomPlayer = nicknameHistory[Math.floor(Math.random() * nicknameHistory.length)]
 
-    //Push the chosen player to global variable
-    randomPlayerState.push(randomPlayer);
+    if (randomPlayer === randomPlayerState.at(-1)) {
+        console.log('the same player again')
+        GenerateRandomPlayer()
+    } else {
+        randomPlayerState.splice(0)
+        randomPlayerState.push(randomPlayer);
+        console.log('new player', randomPlayerState[0])
 
-    //All clients
-    wss.clients.forEach(client => {
+        //All clients
+        wss.clients.forEach(client => {
 
-        //If a random player has been chosen
-        if (randomPlayerState[0] !== undefined) {
-            //And if YOU are the random player
-            if (randomPlayerState[0].id === client.id) {
-                client.send(JSON.stringify({
-                    type: 'getRandomPlayer',
-                    data: randomPlayerState,
-                    //You are not allowed to guess word in chat
-                    allowedToGuess: false
-                }))
-                //If you´re not the chosen player
-            } else if (randomPlayerState[0].id !== client.id) {
-                client.send(JSON.stringify({
-                    type: 'getRandomPlayer',
-                    data: randomPlayerState,
-                    //You are allowed to guess word in chat
-                    allowedToGuess: true
-                }))
+            //If a random player has been chosen
+            if (randomPlayerState[0] !== undefined) {
+                //And if YOU are the random player
+                if (randomPlayerState[0].id === client.id) {
+                    client.send(JSON.stringify({
+                        type: 'getRandomPlayer',
+                        data: randomPlayerState,
+                        //You are not allowed to guess word in chat
+                        allowedToGuess: false
+                    }))
+                    //If you´re not the chosen player
+                } else if (randomPlayerState[0].id !== client.id) {
+                    client.send(JSON.stringify({
+                        type: 'getRandomPlayer',
+                        data: randomPlayerState,
+                        //You are allowed to guess word in chat
+                        allowedToGuess: true
+                    }))
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 function onInit(ws) {
@@ -231,18 +241,19 @@ function onText(message, wss, ws) {
         //This is determined in code below
         allowedToGuess: allowedToGuess,
         //Stop timer if all players guessed the right word
-        stopTimer: stopTimer
+        // stopTimer: stopTimer
     }
 
     if ((nicknameHistory.length - 1) === guessedRight) {
         console.log('all people guessed right')
-        objBroadcast.stopTimer = true;
+        stopTimer = true;
     }
 
     //All clients
     wss.clients.forEach((client) => {
 
         //If your not the one painting...
+        //This is unnecessary becuase the painter cant even guess to start with?
         if (client.id !== randomPlayerState[0].id) {
 
             //If your msg is not the right word, send data to writing client
@@ -253,7 +264,7 @@ function onText(message, wss, ws) {
                 //Send data
                 client.send(JSON.stringify(objBroadcast))
             } else if (message.msg === chosenWordArr[0] && client.id === ws.id) {
-                //If your message is the right word and you're th eon who guessed
+                //If your message is the right word and you're th one who guessed
 
                 //You're not allowed to guess anymore...
                 objBroadcast.allowedToGuess = false
@@ -300,7 +311,7 @@ function onStart(message, wss, ws) {
     nicknameHistory.push(obj)
 
     //If more than active players
-    if (nicknameHistory.length > 2) {
+    if (nicknameHistory.length > 1) {
 
         //If there is not yet a chosen random player
         if (randomPlayerState.length === 0) {
@@ -335,10 +346,12 @@ function onPaint(message, wss) {
 }
 
 function onTimer(message, wss, ws) {
+    console.log('message.data', message.data)
+    console.log('stopTimer', stopTimer)
 
     if (!message.data) {
         guessedRight = 0
-        randomPlayerState.splice(0)
+        // randomPlayerState.splice(0)
         // chosenWordArr.splice(0)
         GenerateRandomPlayer()
         GenerateRandomWords()
@@ -400,14 +413,14 @@ function onDisconnect(wss, ws) {
             chosenWordArr.splice(0)
 
             //If more than two players are active
-            if (nicknameHistory.length > 2) {
+            if (nicknameHistory.length > 1) {
                 //Generate new random player
                 GenerateRandomPlayer()
                 //Generate new random words
                 GenerateRandomWords()
             }
-             //Painter left
-             painterLeft = true; 
+            //Painter left
+            painterLeft = true;
         }
 
         //All clients
